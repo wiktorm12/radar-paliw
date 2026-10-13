@@ -61,10 +61,10 @@ return [
             // 'visibility' => 'public', // https://statamic.dev/assets#container-visibility
         ],
 
-        'assets' => [
+        'img' => [
             'driver' => 'local',
-            'root' => public_path('assets'),
-            'url' => '/assets',
+            'root' => public_path('img'),
+            'url' => '/img',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

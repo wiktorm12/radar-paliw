@@ -1,0 +1,19 @@
+title: Ustawienia
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: logo
+            field:
+              type: assets
+              display: Logo
+              container: img
+              max_files: 1
+          -
+            handle: footer_text
+            field:
+              type: textarea
+              display: 'Tekst w stopce'

@@ -1,0 +1,5 @@
+title: 'Menu w stopce'
+collections:
+  - pages
+  - stations
+max_depth: 2

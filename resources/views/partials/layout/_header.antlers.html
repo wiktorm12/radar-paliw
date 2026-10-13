@@ -1,0 +1,24 @@
+<header class="border-b border-zinc-200 bg-white">
+    <div class="container flex items-center justify-between gap-6 py-4">
+        <a
+            href="/"
+            class="text-xl font-bold text-brand-600"
+        >
+            {{ site:name }}
+        </a>
+        <nav aria-label="Menu główne">
+            <ul class="flex flex-wrap gap-4 text-sm font-medium">
+                {{ nav:main }}
+                    <li>
+                        <a
+                            href="{{ url }}"
+                            class="{{ is_current || is_parent ? 'text-brand-600' : 'hover:text-brand-600' }}"
+                        >
+                            {{ title }}
+                        </a>
+                    </li>
+                {{ /nav:main }}
+            </ul>
+        </nav>
+    </div>
+</header>

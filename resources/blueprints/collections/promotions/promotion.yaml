@@ -1,0 +1,125 @@
+title: Promocja
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Tytuł
+              required: true
+              validate:
+                - required
+          -
+            handle: station
+            field:
+              type: entries
+              display: Stacja
+              collections:
+                - stations
+              max_items: 1
+              mode: select
+              width: 50
+              validate:
+                - required
+          -
+            handle: fuel_types
+            field:
+              type: terms
+              display: 'Rodzaje paliwa'
+              taxonomies:
+                - fuel_types
+              create: false
+              mode: select
+              width: 50
+          -
+            handle: discount_type
+            field:
+              type: select
+              display: 'Typ rabatu'
+              default: cents_per_liter
+              width: 33
+              options:
+                -
+                  key: cents_per_liter
+                  value: 'gr/l'
+                -
+                  key: percent
+                  value: '%'
+                -
+                  key: fixed_price
+                  value: 'Cena stała zł/l'
+                -
+                  key: points
+                  value: 'Punkty / kupon'
+          -
+            handle: discount_value
+            field:
+              type: float
+              display: 'Wartość rabatu'
+              width: 33
+          -
+            handle: requires_app
+            field:
+              type: toggle
+              display: 'Wymaga aplikacji / karty'
+              width: 33
+          -
+            handle: valid_from
+            field:
+              type: date
+              display: 'Ważna od'
+              mode: single
+              width: 50
+              validate:
+                - required
+          -
+            handle: valid_to
+            field:
+              type: date
+              display: 'Ważna do'
+              mode: single
+              width: 50
+              validate:
+                - required
+                - 'after_or_equal:valid_from'
+          -
+            handle: content
+            field:
+              type: bard
+              display: 'Warunki promocji'
+              allow_source: true
+              remove_empty_nodes: false
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - anchor
+          -
+            handle: source_url
+            field:
+              type: text
+              input_type: url
+              display: 'Źródło (URL)'
+              instructions: 'Link do oficjalnego regulaminu lub ogłoszenia.'
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'
+          -
+            handle: featured
+            field:
+              type: toggle
+              display: Wyróżniona

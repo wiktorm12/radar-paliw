@@ -1,0 +1,50 @@
+title: 'Block: Promotions List'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+  -
+    import: partial_header
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Zapytanie
+      instructions: 'Które promocje pokazać. Wygasłe promocje są pomijane automatycznie.'
+  -
+    handle: stations
+    field:
+      type: entries
+      display: Stacje
+      instructions: 'Puste = wszystkie stacje.'
+      collections:
+        - stations
+      mode: select
+  -
+    handle: fuel_type
+    field:
+      type: terms
+      display: 'Rodzaj paliwa'
+      instructions: 'Puste = wszystkie paliwa.'
+      taxonomies:
+        - fuel_types
+      max_items: 1
+      mode: select
+  -
+    handle: limit
+    field:
+      type: integer
+      display: Limit
+      default: 12
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

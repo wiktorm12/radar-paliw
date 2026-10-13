@@ -1,0 +1,10 @@
+title: 'Partial: Section ID'
+fields:
+  -
+    handle: section_id
+    field:
+      type: slug
+      display: 'ID sekcji'
+      instructions: 'Kotwica do linkowania (#id). Opcjonalne.'
+      generate: false
+      width: 33

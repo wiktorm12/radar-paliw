@@ -1,0 +1,5 @@
+title: 'Menu główne'
+collections:
+  - pages
+  - stations
+max_depth: 2

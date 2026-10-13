@@ -1,0 +1,66 @@
+title: Stacja
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: 'Nazwa sieci'
+              required: true
+              validate:
+                - required
+          -
+            handle: logo
+            field:
+              type: assets
+              display: Logo
+              container: img
+              max_files: 1
+              width: 50
+          -
+            handle: brand_color
+            field:
+              type: color
+              display: 'Kolor marki'
+              width: 50
+          -
+            handle: website
+            field:
+              type: link
+              display: 'Strona WWW'
+              width: 50
+          -
+            handle: loyalty_program
+            field:
+              type: text
+              display: 'Program lojalnościowy / aplikacja'
+              width: 50
+          -
+            handle: content
+            field:
+              type: bard
+              display: Opis
+              allow_source: true
+              remove_empty_nodes: false
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - anchor
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'

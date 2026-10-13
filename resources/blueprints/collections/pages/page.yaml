@@ -1,0 +1,38 @@
+title: Strona
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Tytuł
+              required: true
+              validate:
+                - required
+          -
+            import: master_builder
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+          -
+            handle: parent
+            field:
+              type: entries
+              display: Rodzic
+              collections:
+                - pages
+              max_items: 1
+              listable: false
+              localizable: true

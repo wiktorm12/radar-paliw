@@ -1,0 +1,31 @@
+title: 'Master: Builder'
+fields:
+  -
+    handle: content
+    field:
+      type: replicator
+      display: Treść
+      collapse: true
+      button_label: 'Dodaj blok'
+      sets:
+        new_set_group:
+          display: Bloki
+          sets:
+            block_hero:
+              display: Hero
+              icon: layout-header
+              fields:
+                -
+                  import: block_hero
+            block_text:
+              display: Tekst
+              icon: paragraph-left-align
+              fields:
+                -
+                  import: block_text
+            block_promotions_list:
+              display: 'Lista promocji'
+              icon: list-bullets
+              fields:
+                -
+                  import: block_promotions_list

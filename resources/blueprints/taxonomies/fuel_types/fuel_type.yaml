@@ -1,0 +1,20 @@
+title: 'Rodzaj paliwa'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Nazwa
+              required: true
+              validate:
+                - required
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'

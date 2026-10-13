@@ -1,0 +1,14 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ partial:section class="{{ view:bg[background_color] }}" }}
+    <div class="container">
+        <div class="prose max-w-3xl">
+            {{ text }}
+        </div>
+    </div>
+{{ /partial:section }}

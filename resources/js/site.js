@@ -1,1 +1,1 @@
-// This is all you.
+document.documentElement.classList.replace('no-js', 'js');

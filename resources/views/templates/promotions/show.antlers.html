@@ -1,0 +1,47 @@
+{{ partial:section }}
+    <div class="container">
+        <article class="max-w-3xl">
+            {{ station }}
+                <a
+                    href="{{ url }}"
+                    class="mb-4 inline-block text-sm font-semibold uppercase tracking-wide"
+                    style="color: {{ brand_color ?? 'inherit' }}"
+                >
+                    {{ title }}
+                </a>
+            {{ /station }}
+            <h1 class="mb-6 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
+            <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-4">
+                <div>
+                    <dt class="text-zinc-500">Ważna od</dt>
+                    <dd class="font-semibold">{{ valid_from format="j.m.Y" }}</dd>
+                </div>
+                <div>
+                    <dt class="text-zinc-500">Ważna do</dt>
+                    <dd class="font-semibold">{{ valid_to format="j.m.Y" }}</dd>
+                </div>
+                <div>
+                    <dt class="text-zinc-500">Paliwa</dt>
+                    <dd class="font-semibold">{{ fuel_types }}{{ title }}{{ !last ?= ', ' }}{{ /fuel_types }}</dd>
+                </div>
+                <div>
+                    <dt class="text-zinc-500">Aplikacja / karta</dt>
+                    <dd class="font-semibold">{{ requires_app ? 'Tak' : 'Nie' }}</dd>
+                </div>
+            </dl>
+            <div class="prose mb-8">
+                {{ content }}
+            </div>
+            {{ if source_url }}
+                <a
+                    href="{{ source_url }}"
+                    class="button"
+                    target="_blank"
+                    rel="noopener nofollow"
+                >
+                    Regulamin u operatora
+                </a>
+            {{ /if }}
+        </article>
+    </div>
+{{ /partial:section }}

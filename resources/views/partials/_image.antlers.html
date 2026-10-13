@@ -1,0 +1,29 @@
+<picture class="{{ wrapper_class }}">
+    {{ if w_xl }}
+        <source
+            media="(min-width: 1280px)"
+            type="image/webp"
+            srcset="{{ glide :src="id" :width="w_xl" :height="h_xl" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" }} 1x, {{ glide :src="id" :width="w_xl" :height="h_xl" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" dpr="2" }} 2x"
+        >
+    {{ /if }}
+    {{ if w_md }}
+        <source
+            media="(min-width: 768px)"
+            type="image/webp"
+            srcset="{{ glide :src="id" :width="w_md" :height="h_md" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" }} 1x, {{ glide :src="id" :width="w_md" :height="h_md" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" dpr="2" }} 2x"
+        >
+    {{ /if }}
+    <source
+        type="image/webp"
+        srcset="{{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" }} 1x, {{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" dpr="2" }} 2x"
+    >
+    <img
+        src="{{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" }}"
+        alt="{{ alt }}"
+        width="{{ w }}"
+        height="{{ h }}"
+        class="{{ class }}"
+        {{ !no_lazy ?= 'loading="lazy"' }}
+        decoding="{{ decoding ?? 'async' }}"
+    >
+</picture>

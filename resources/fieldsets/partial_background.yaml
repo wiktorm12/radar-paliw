@@ -1,0 +1,19 @@
+title: 'Partial: Background'
+fields:
+  -
+    handle: background_color
+    field:
+      type: button_group
+      display: Tło
+      width: 33
+      default: white
+      options:
+        -
+          key: white
+          value: Białe
+        -
+          key: gray
+          value: Szare
+        -
+          key: dark
+          value: Ciemne

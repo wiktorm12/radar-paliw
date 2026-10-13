@@ -1,0 +1,38 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ partial:section class="{{ view:bg[background_color] }}" }}
+    <div class="container">
+        {{ if heading }}
+            <h2 class="mb-4 text-3xl font-bold tracking-tight">{{ heading }}</h2>
+        {{ /if }}
+        {{ if intro }}
+            <p class="mb-8 max-w-2xl text-zinc-600">{{ intro }}</p>
+        {{ /if }}
+
+        {{ collection:promotions
+            query_scope="active_promotions"
+            :stations="stations"
+            :fuel_type="fuel_type"
+            sort="featured:desc|valid_to:asc"
+            :limit="limit ?? 12"
+        }}
+            {{ if first }}
+                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {{ /if }}
+                    <li>
+                        {{ partial:components/promotions/card }}
+                    </li>
+            {{ if last }}
+                </ul>
+            {{ /if }}
+            {{ if no_results }}
+                <p class="text-zinc-500">Brak aktywnych promocji.</p>
+            {{ /if }}
+        {{ /collection:promotions }}
+    </div>
+{{ /partial:section }}

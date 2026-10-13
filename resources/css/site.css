@@ -1,3 +1,34 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@import "./components/buttons.css";
+
+@plugin "@tailwindcss/typography";
+
 @source "../views";
 @source "../../content";
+
+@theme {
+    --font-sans: ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-50: oklch(0.98 0.02 75);
+    --color-brand-100: oklch(0.95 0.05 75);
+    --color-brand-500: oklch(0.72 0.17 55);
+    --color-brand-600: oklch(0.65 0.18 48);
+    --color-brand-700: oklch(0.55 0.16 45);
+}
+
+@layer components {
+    .container {
+        @apply mx-auto w-full max-w-7xl px-4 md:px-8;
+    }
+
+    .section {
+        @apply py-12 md:py-20;
+    }
+
+    .section.bg-white + .section.bg-white,
+    .section.bg-zinc-100 + .section.bg-zinc-100 {
+        @apply pt-0;
+    }
+}

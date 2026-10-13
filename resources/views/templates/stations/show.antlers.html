@@ -1,0 +1,33 @@
+{{ partial:section }}
+    <div class="container">
+        <h1 class="mb-4 text-4xl font-bold tracking-tight">{{ title }}</h1>
+        {{ if loyalty_program }}
+            <p class="mb-8 text-zinc-600">Program lojalnościowy: {{ loyalty_program }}</p>
+        {{ /if }}
+        {{ if content }}
+            <div class="prose mb-12 max-w-3xl">
+                {{ content }}
+            </div>
+        {{ /if }}
+
+        <h2 class="mb-6 text-2xl font-bold">Aktualne promocje</h2>
+        {{ collection:promotions
+            query_scope="active_promotions"
+            :stations="id"
+            sort="valid_to:asc"
+        }}
+            {{ if first }}
+                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {{ /if }}
+                    <li>
+                        {{ partial:components/promotions/card }}
+                    </li>
+            {{ if last }}
+                </ul>
+            {{ /if }}
+            {{ if no_results }}
+                <p class="text-zinc-500">Brak aktywnych promocji tej sieci.</p>
+            {{ /if }}
+        {{ /collection:promotions }}
+    </div>
+{{ /partial:section }}

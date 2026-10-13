@@ -1,0 +1,12 @@
+title: 'Partial: Header'
+fields:
+  -
+    handle: heading
+    field:
+      type: text
+      display: Nagłówek
+  -
+    handle: intro
+    field:
+      type: textarea
+      display: Wstęp

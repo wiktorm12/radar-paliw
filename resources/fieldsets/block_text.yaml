@@ -1,0 +1,34 @@
+title: 'Block: Text'
+fields:
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Treść
+  -
+    handle: text
+    field:
+      type: bard
+      display: Tekst
+      allow_source: true
+      remove_empty_nodes: false
+      buttons:
+        - h2
+        - h3
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - quote
+        - anchor
+        - table
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

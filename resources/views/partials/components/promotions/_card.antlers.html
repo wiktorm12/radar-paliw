@@ -1,0 +1,40 @@
+---
+discount_suffix:
+    'cents_per_liter': ' gr/l'
+    'percent': '%'
+    'fixed_price': ' zł/l'
+    'points': ' pkt'
+---
+
+<article class="relative flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
+    {{ station }}
+        <p
+            class="mb-3 text-sm font-semibold uppercase tracking-wide"
+            style="color: {{ brand_color ?? 'inherit' }}"
+        >
+            {{ title }}
+        </p>
+    {{ /station }}
+    <h3 class="mb-4 text-lg font-semibold">
+        <a
+            href="{{ url }}"
+            class="before:absolute before:inset-0"
+        >
+            {{ title }}
+        </a>
+    </h3>
+    {{ if discount_value }}
+        <p class="mb-4 text-3xl font-bold text-brand-600">
+            {{ discount_type:value != 'fixed_price' ?= '-' }}{{ discount_value }}{{ view:discount_suffix[discount_type:value] }}
+        </p>
+    {{ /if }}
+    <ul class="mb-4 flex flex-wrap gap-2">
+        {{ fuel_types }}
+            <li class="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium">{{ title }}</li>
+        {{ /fuel_types }}
+    </ul>
+    <p class="mt-auto text-sm text-zinc-500">
+        {{ valid_from format="j.m" }} – {{ valid_to format="j.m.Y" }}
+        {{ requires_app ?= '· wymaga aplikacji' }}
+    </p>
+</article>
