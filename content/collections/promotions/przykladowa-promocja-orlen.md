@@ -1,7 +1,7 @@
 ---
 id: promotion-example-orlen
 title: 'Przykładowa promocja: -30 gr/l z aplikacją'
-published: false
+published: true
 station: station-orlen
 fuel_types:
   - pb95
@@ -14,4 +14,4 @@ requires_app: true
 source_url: 'https://www.orlen.pl'
 featured: false
 ---
-Wpis demonstracyjny do testów szablonów — nieopublikowany.
+Wpis demonstracyjny do testów szablonów — usuń przed startem.

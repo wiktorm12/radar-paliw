@@ -12,21 +12,21 @@
 
         <h2 class="mb-6 text-2xl font-bold">Aktualne promocje</h2>
         {{ collection:promotions
+            as="promotions"
             query_scope="active_promotions"
             :stations="id"
             sort="valid_to:asc"
         }}
-            {{ if first }}
-                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {{ /if }}
-                    <li>
-                        {{ partial:components/promotions/card }}
-                    </li>
-            {{ if last }}
-                </ul>
-            {{ /if }}
             {{ if no_results }}
                 <p class="text-zinc-500">Brak aktywnych promocji tej sieci.</p>
+            {{ else }}
+                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {{ promotions }}
+                        <li>
+                            {{ partial:components/promotions/card }}
+                        </li>
+                    {{ /promotions }}
+                </ul>
             {{ /if }}
         {{ /collection:promotions }}
     </div>

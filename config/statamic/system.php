@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'display_timezone' => null,
+    'display_timezone' => 'Europe/Warsaw',
 
     /*
     |--------------------------------------------------------------------------

@@ -4,6 +4,6 @@
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <title>{{ title ? '{ title } | ' }}{{ site:name }}</title>
+    <title>{{ title ?= '{title} &middot; ' }}{{ site:name }}</title>
     {{ vite src="resources/css/site.css|resources/js/site.js" }}
 </head>

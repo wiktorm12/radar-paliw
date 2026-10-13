@@ -6,19 +6,23 @@
         >
             {{ site:name }}
         </a>
-        <nav aria-label="Menu główne">
-            <ul class="flex flex-wrap gap-4 text-sm font-medium">
-                {{ nav:main }}
-                    <li>
-                        <a
-                            href="{{ url }}"
-                            class="{{ is_current || is_parent ? 'text-brand-600' : 'hover:text-brand-600' }}"
-                        >
-                            {{ title }}
-                        </a>
-                    </li>
-                {{ /nav:main }}
-            </ul>
-        </nav>
+        {{ nav:main as="links" }}
+            {{ if links }}
+                <nav aria-label="Menu główne">
+                    <ul class="flex flex-wrap gap-4 text-sm font-medium">
+                        {{ links }}
+                            <li>
+                                <a
+                                    href="{{ url }}"
+                                    class="{{ is_current || is_parent ? 'text-brand-600' : 'hover:text-brand-600' }}"
+                                >
+                                    {{ title }}
+                                </a>
+                            </li>
+                        {{ /links }}
+                    </ul>
+                </nav>
+            {{ /if }}
+        {{ /nav:main }}
     </div>
 </header>
