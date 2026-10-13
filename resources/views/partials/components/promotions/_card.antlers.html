@@ -21,10 +21,12 @@ badge_classes:
 <article class="relative flex h-full {{ badge == 'expired' ?= 'opacity-75' }} flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
     <div class="mb-3 flex items-center justify-between gap-3">
         {{ station }}
-            <p
-                class="text-sm font-semibold uppercase tracking-wide"
-                style="color: {{ brand_color ?? 'inherit' }}"
-            >
+            <p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-700">
+                <span
+                    class="size-2.5 shrink-0 rounded-full"
+                    style="background-color: {{ brand_color ?? 'currentColor' }}"
+                    aria-hidden="true"
+                ></span>
                 {{ title }}
             </p>
         {{ /station }}

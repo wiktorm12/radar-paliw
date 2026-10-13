@@ -34,9 +34,13 @@
                 {{ station }}
                     <a
                         href="{{ url }}"
-                        class="mb-4 inline-block text-sm font-semibold uppercase tracking-wide"
-                        style="color: {{ brand_color ?? 'inherit' }}"
+                        class="mb-4 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-700 hover:text-zinc-900"
                     >
+                        <span
+                            class="size-2.5 shrink-0 rounded-full"
+                            style="background-color: {{ brand_color ?? 'currentColor' }}"
+                            aria-hidden="true"
+                        ></span>
                         {{ title }}
                     </a>
                 {{ /station }}
