@@ -53,3 +53,9 @@ fields:
               fields:
                 -
                   import: block_faq
+            block_offers:
+              display: 'Oferty partnerów'
+              icon: shopping-cart
+              fields:
+                -
+                  import: block_offers

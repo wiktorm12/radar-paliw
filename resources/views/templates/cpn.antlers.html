@@ -1,0 +1,242 @@
+---
+trend_icons:
+    'up': '▲'
+    'down': '▼'
+    'flat': '■'
+trend_classes:
+    'up': 'text-red-700'
+    'down': 'text-green-700'
+    'flat': 'text-zinc-500'
+trend_labels:
+    'up': 'wzrost'
+    'down': 'spadek'
+    'flat': 'bez zmian'
+---
+
+{{ cpn:latest type="max" }}
+    {{ section:seo_title }}{{ seo_title ?? 'Program CPN – ceny maksymalne paliw dziś ({date | format("j.m.Y")}) · {site:name}' }}{{ /section:seo_title }}
+{{ /cpn:latest }}
+
+{{ push:schema }}
+        ,{
+            "@type": "Dataset",
+            "@id": "{{ permalink }}#dataset",
+            "name": "Ceny maksymalne paliw w programie CPN (Ceny Paliwa Niżej)",
+            "description": "Dzienne ceny maksymalne benzyny 95, benzyny 98 i oleju napędowego ustalane w ramach rządowego programu CPN, wraz ze statystykami zmian.",
+            "url": "{{ permalink }}",
+            "inLanguage": "pl-PL",
+            "isAccessibleForFree": true,
+            "creator": { "@id": "{{ site:permalink }}/#organization" },
+            "temporalCoverage": "{{ cpn:stats type='max' }}{{ if first }}{{ start_date }}/{{ end_date }}{{ /if }}{{ /cpn:stats }}",
+            "spatialCoverage": { "@type": "Country", "name": "Polska" },
+            "variableMeasured": [
+                {{ cpn:columns type="max" }}
+                    { "@type": "PropertyValue", "name": {{ label | to_json }}, "unitText": "PLN/l" }{{ !last ?= ',' }}
+                {{ /cpn:columns }}
+            ]
+        }
+{{ /push:schema }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">Rządowy program „Ceny Paliwa Niżej”</p>
+        <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">{{ title }}</h1>
+        {{ cpn:latest type="max" }}
+            <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+                Ceny maksymalne obowiązujące
+                <strong class="text-zinc-900">{{ date | format("j.m.Y") }}</strong>
+                — ustalane codziennie przez Ministerstwo Energii. Poniżej wykres, statystyki i wszystkie ceny od startu programu.
+            </p>
+            <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {{ fuels }}
+                    <li class="rounded-2xl bg-white p-6 shadow-sm">
+                        <p class="mb-2 text-sm font-medium text-zinc-500">{{ label }}</p>
+                        <p class="mb-2 text-4xl font-bold tracking-tight text-zinc-900">
+                            {{ price }}
+                            <span class="text-base font-medium text-zinc-500">zł/l</span>
+                        </p>
+                        {{ if trend }}
+                            <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
+                                <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                {{ view:trend_labels[trend] }} {{ change }} ({{ change_pct }}) vs dzień wcześniej
+                            </p>
+                        {{ /if }}
+                    </li>
+                {{ /fuels }}
+            </ul>
+            {{ if source_url }}
+                <p class="mt-4 text-xs text-zinc-500">
+                    Źródło:
+                    <a
+                        href="{{ source_url }}"
+                        class="underline hover:text-brand-600"
+                        target="_blank"
+                        rel="noopener nofollow"
+                    >{{ source_name ?? 'komunikat' }}</a>
+                </p>
+            {{ /if }}
+        {{ /cpn:latest }}
+        {{ if no_results }}{{ /if }}
+    </div>
+{{ /partial:section }}
+
+{{ partial:section }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">Ceny maksymalne CPN dzień po dniu</h2>
+        <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto.</p>
+        <div
+            class="mb-12 rounded-2xl border border-zinc-200 bg-white p-4 md:p-6"
+            data-price-chart
+        >
+            <script
+                type="application/json"
+                data-price-chart-data
+            >{{ cpn:series type="max" }}</script>
+            <p class="text-sm text-zinc-500">Wykres wymaga JavaScriptu — pełne dane znajdziesz w <a href="#tabela" class="underline">tabeli poniżej</a>.</p>
+        </div>
+
+        <h2 class="mb-6 text-3xl font-bold tracking-tight">Statystyki programu CPN</h2>
+        <ul class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {{ cpn:stats type="max" }}
+                <li class="rounded-2xl border border-zinc-200 p-6">
+                    <h3 class="mb-4 text-lg font-semibold">{{ label }}</h3>
+                    <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                        <dt class="text-zinc-500">Start ({{ start_date | format("j.m") }})</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ start_price }} zł</dd>
+                        <dt class="text-zinc-500">Dziś ({{ end_date | format("j.m") }})</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ end_price }} zł</dd>
+                        <dt class="text-zinc-500">Zmiana od startu</dt>
+                        <dd class="text-right font-semibold tabular-nums {{ view:trend_classes[trend] }}">
+                            <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                            {{ change }} ({{ change_pct }})
+                        </dd>
+                        <dt class="text-zinc-500">Najniższa</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ min }} zł <span class="font-normal text-zinc-500">{{ min_date | format("j.m") }}</span></dd>
+                        <dt class="text-zinc-500">Najwyższa</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ max }} zł <span class="font-normal text-zinc-500">{{ max_date | format("j.m") }}</span></dd>
+                        <dt class="text-zinc-500">Średnia</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ avg }} zł</dd>
+                        <dt class="text-zinc-500">Bak 50 l dziś</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ tank_50 }} zł</dd>
+                    </dl>
+                    <p class="mt-4 text-xs text-zinc-500">Na podstawie {{ days }} dni obowiązywania limitu.</p>
+                </li>
+            {{ /cpn:stats }}
+        </ul>
+
+        {{ cpn:compare }}
+            {{ unless no_results }}
+                <div class="mb-12 rounded-2xl bg-brand-50 p-6 md:p-8">
+                    <h2 class="mb-2 text-2xl font-bold tracking-tight">Ile oszczędzasz dzięki CPN?</h2>
+                    <p class="mb-6 text-zinc-600">
+                        Porównanie średniej ceny na stacjach sprzed programu ({{ before_date | format("j.m.Y") }}, {{ before_source }}) z dzisiejszą ceną maksymalną.
+                    </p>
+                    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        {{ fuels }}
+                            <li class="rounded-xl bg-white p-5">
+                                <p class="mb-1 text-sm font-medium text-zinc-500">{{ label }}</p>
+                                <p class="mb-1 text-sm tabular-nums">{{ before }} zł → <strong>{{ now }} zł</strong></p>
+                                <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
+                                    <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                    {{ change }} ({{ change_pct }})
+                                </p>
+                                <p class="mt-2 text-sm text-zinc-600">Bak 50 l taniej o <strong>{{ tank_saving }} zł</strong></p>
+                            </li>
+                        {{ /fuels }}
+                    </ul>
+                    <p class="mt-4 text-xs text-zinc-500">Cena maksymalna to górny limit — na wielu stacjach realna cena może być niższa. Rabaty z aplikacji znajdziesz w <a href="/promocje" class="underline hover:text-brand-600">zestawieniu promocji</a>.</p>
+                </div>
+            {{ /unless }}
+        {{ /cpn:compare }}
+
+        <h2
+            id="tabela"
+            class="mb-6 text-3xl font-bold tracking-tight"
+        >
+            Wszystkie ceny maksymalne od startu programu
+        </h2>
+        <div class="mb-4 overflow-x-auto rounded-2xl border border-zinc-200">
+            <table class="w-full min-w-xl text-left text-sm">
+                <thead class="bg-zinc-100 text-zinc-600">
+                    <tr>
+                        <th
+                            scope="col"
+                            class="px-4 py-3 font-semibold"
+                        >
+                            Data
+                        </th>
+                        {{ cpn:columns type="max" }}
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                {{ label }}
+                            </th>
+                        {{ /cpn:columns }}
+                        <th
+                            scope="col"
+                            class="px-4 py-3 font-semibold"
+                        >
+                            Źródło
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-200">
+                    {{ cpn:table type="max" }}
+                        <tr>
+                            <th
+                                scope="row"
+                                class="px-4 py-3 font-medium whitespace-nowrap"
+                            >
+                                {{ date | format("j.m.Y") }}
+                            </th>
+                            {{ cells }}
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
+                                    {{ price ?? '—' }}
+                                    {{ if trend && trend != 'flat' }}
+                                        <span class="ml-1 text-xs {{ view:trend_classes[trend] }}">
+                                            <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                            {{ change }}
+                                        </span>
+                                    {{ /if }}
+                                </td>
+                            {{ /cells }}
+                            <td class="px-4 py-3">
+                                {{ if source_url }}
+                                    <a
+                                        href="{{ source_url }}"
+                                        class="text-brand-600 hover:underline"
+                                        target="_blank"
+                                        rel="noopener nofollow"
+                                    >{{ source_name ?? 'link' }}</a>
+                                {{ /if }}
+                            </td>
+                        </tr>
+                    {{ /cpn:table }}
+                </tbody>
+            </table>
+        </div>
+        <p class="text-xs text-zinc-500">Dane z oficjalnych komunikatów i serwisów informacyjnych — wiążące są komunikaty Ministerstwa Energii. Tabela jest aktualizowana codziennie.</p>
+    </div>
+{{ /partial:section }}
+
+<div class="container">
+    {{ partial:ads/slot position="article_bottom" }}
+</div>
+
+{{ content }}
+    {{ partial
+        src="blocks/{type}"
+        :section_index="index"
+    }}
+{{ /content }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Artykuły o programie CPN</h2>
+        {{ partial:components/articles/list
+            category="program-cpn"
+            per_page="6"
+        }}
+    </div>
+{{ /partial:section }}

@@ -1,0 +1,83 @@
+title: 'Cena dzienna'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Tytuł
+              instructions: 'Np. „Ceny maksymalne 2026-10-09”.'
+              required: true
+              validate:
+                - required
+          -
+            handle: type
+            field:
+              type: button_group
+              display: Rodzaj
+              default: max
+              options:
+                -
+                  key: max
+                  value: 'Cena maksymalna CPN'
+                -
+                  key: retail
+                  value: 'Średnia cena na stacjach'
+          -
+            handle: pb95
+            field:
+              type: float
+              display: 'Pb95 (zł/l)'
+              width: 25
+          -
+            handle: pb98
+            field:
+              type: float
+              display: 'Pb98 (zł/l)'
+              width: 25
+          -
+            handle: on
+            field:
+              type: float
+              display: 'ON (zł/l)'
+              width: 25
+          -
+            handle: lpg
+            field:
+              type: float
+              display: 'LPG (zł/l)'
+              width: 25
+          -
+            handle: source_name
+            field:
+              type: text
+              display: Źródło
+              width: 50
+          -
+            handle: source_url
+            field:
+              type: text
+              input_type: url
+              display: 'URL źródła'
+              width: 50
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+          -
+            handle: date
+            field:
+              type: date
+              display: 'Dzień'
+              required: true
+              validate:
+                - required

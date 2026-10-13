@@ -34,7 +34,7 @@ tabs:
             field:
               type: bard
               display: Treść
-              instructions: 'Dodaj set „Reklama”, aby wstawić reklamę w treści.'
+              instructions: 'Set „Reklama” wstawia reklamę w treści, „Oferta partnera” — ramkę z linkiem afiliacyjnym.'
               allow_source: true
               remove_empty_nodes: false
               buttons:
@@ -59,6 +59,21 @@ tabs:
                       fields:
                         -
                           import: partial_ad_placement
+                    offer:
+                      display: 'Oferta partnera'
+                      icon: shopping-cart
+                      fields:
+                        -
+                          handle: offer
+                          field:
+                            type: entries
+                            display: Oferta
+                            collections:
+                              - offers
+                            max_items: 1
+                            mode: select
+                            validate:
+                              - required
           -
             handle: faq
             field:

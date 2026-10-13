@@ -84,6 +84,15 @@
                         <div class="mb-8">
                             {{ partial:ads/slot :position="placement:value" }}
                         </div>
+                    {{ elseif type == 'offer' }}
+                        {{ offer }}
+                            <div class="mb-2">
+                                {{ partial:components/offers/box }}
+                            </div>
+                            <div class="mb-8">
+                                {{ partial:components/offers/disclosure }}
+                            </div>
+                        {{ /offer }}
                     {{ /if }}
                 {{ /content }}
                 {{ if stations }}

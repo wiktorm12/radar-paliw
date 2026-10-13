@@ -1,0 +1,27 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ if offers }}
+    {{ partial:section class="{{ view:bg[background_color] }}" }}
+        <div class="container">
+            {{ if heading }}
+                <h2 class="mb-4 text-3xl font-bold tracking-tight">{{ heading }}</h2>
+            {{ /if }}
+            {{ if intro }}
+                <p class="mb-8 max-w-2xl {{ background_color == 'dark' ? 'text-zinc-300' : 'text-zinc-600' }}">{{ intro }}</p>
+            {{ /if }}
+            <ul class="mb-4 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {{ offers }}
+                    <li>
+                        {{ partial:components/offers/card }}
+                    </li>
+                {{ /offers }}
+            </ul>
+            {{ partial:components/offers/disclosure }}
+        </div>
+    {{ /partial:section }}
+{{ /if }}

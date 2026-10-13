@@ -1,0 +1,94 @@
+title: Oferta
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: 'Nazwa oferty'
+              instructions: 'Widoczna na karcie, np. „Porównaj ceny OC/AC”.'
+              required: true
+              validate:
+                - required
+          -
+            handle: partner
+            field:
+              type: text
+              display: Partner
+              instructions: 'Wewnętrznie: reklamodawca i sieć afiliacyjna, np. „Rankomat / Convertiser”. Niewidoczne na stronie.'
+              width: 50
+          -
+            handle: offer_category
+            field:
+              type: select
+              display: Kategoria
+              width: 50
+              default: other
+              options:
+                -
+                  key: insurance
+                  value: 'Ubezpieczenia OC/AC'
+                -
+                  key: fuel_cards
+                  value: 'Karty paliwowe'
+                -
+                  key: financing
+                  value: 'Leasing i finansowanie'
+                -
+                  key: tyres
+                  value: 'Opony i akcesoria'
+                -
+                  key: other
+                  value: Inne
+          -
+            handle: logo
+            field:
+              type: assets
+              display: Logo
+              container: img
+              max_files: 1
+              width: 50
+          -
+            handle: benefit
+            field:
+              type: text
+              display: Wyróżnik
+              instructions: 'Krótka korzyść nad nazwą, np. „Nawet 30% taniej”.'
+              width: 50
+          -
+            handle: description
+            field:
+              type: textarea
+              display: Opis
+              character_limit: 200
+          -
+            handle: url
+            field:
+              type: text
+              input_type: url
+              display: 'Link partnerski'
+              instructions: 'Link śledzący z panelu sieci afiliacyjnej.'
+              validate:
+                - required
+                - url
+          -
+            handle: button_label
+            field:
+              type: text
+              display: 'Tekst przycisku'
+              default: 'Sprawdź ofertę'
+              width: 50
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'

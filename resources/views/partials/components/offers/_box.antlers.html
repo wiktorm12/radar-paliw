@@ -1,0 +1,32 @@
+<div class="flex flex-col gap-4 rounded-2xl border-l-4 border-brand-600 bg-zinc-100 p-6 md:flex-row md:items-center">
+    {{ logo }}
+        {{ partial:image
+            w="160"
+            h="64"
+            fit="max"
+            class="h-10 w-auto"
+            wrapper_class="shrink-0"
+        }}
+    {{ /logo }}
+    <div class="grow">
+        {{ if benefit }}
+            <p class="mb-1 text-sm font-semibold text-brand-600">{{ benefit }}</p>
+        {{ /if }}
+        <p class="mb-1 text-lg font-bold">{{ title }}</p>
+        {{ if description }}
+            <p class="text-zinc-600">{{ description }}</p>
+        {{ /if }}
+    </div>
+    <div class="flex shrink-0 flex-col items-center">
+        <a
+            href="{{ url }}"
+            class="button"
+            target="_blank"
+            rel="sponsored noopener"
+            data-offer="{{ slug }}"
+        >
+            {{ button_label ?? 'Sprawdź ofertę' }}
+        </a>
+        <p class="mt-2 text-xs text-zinc-400">Link partnerski</p>
+    </div>
+</div>

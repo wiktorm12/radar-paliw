@@ -1,0 +1,36 @@
+title: 'Block: Offers'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+      instructions: 'Karty ofert partnerskich (linki afiliacyjne).'
+  -
+    import: partial_header
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Treść
+  -
+    handle: offers
+    field:
+      type: entries
+      display: Oferty
+      instructions: 'Kolejność jak tutaj. Nieopublikowane oferty są pomijane.'
+      collections:
+        - offers
+      mode: select
+      validate:
+        - required
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

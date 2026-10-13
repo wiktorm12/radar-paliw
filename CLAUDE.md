@@ -22,6 +22,7 @@ Laravel · PHP 8.3 · Tailwind CSS 4 · Vite · Antlers. Konwencje frontendu: sk
 | Promocje | `promotions` | `/promocje/{slug}` |
 | Artykuły (blog, `date: true`) | `articles` | `/blog/{slug}` |
 | Autorzy (byline, nie konta CP) | `authors` | `/autorzy/{slug}` |
+| Oferty partnerów (afiliacja) | `offers` | — (bez URL) |
 | Rodzaje paliwa (taksonomia) | `paliwa` | `/paliwa/{slug}` |
 | Kategorie bloga (taksonomia) | `kategorie` | `/kategorie/{slug}` |
 | Ustawienia / Reklamy (globale) | `settings`, `ads` | — |
@@ -42,6 +43,21 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   wysyła formularz przy zmianie. Canonical stron z filtrami wskazuje na URL bez parametrów.
 - Archiwum: strona `/promocje/archiwum` (dziecko `/promocje` w drzewie stron).
 
+## Program CPN
+
+- Strona `/program-cpn` (wpis `pages` z `template: templates/cpn`): kafelki z dzisiejszą ceną
+  maksymalną, wykres (`modules/price-chart.js`, dane w `<script type="application/json"
+  data-price-chart-data>`), statystyki, porównanie z ceną sprzed programu, tabela, a pod spodem
+  zwykły builder (`content`) z opisem i FAQ.
+- Dane: kolekcja `cpn_prices` (dated, bez route), `type` = `max` (dzienne ceny maksymalne ME) albo
+  `retail` (średnie e-petrol). Jeden wpis na dzień obowiązywania limitu.
+- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `stats`, `table`, `columns`, `series` (JSON),
+  `compare`. Klucze w pętlach nie mogą nazywać się `first`/`last`/`count` — kolidują z
+  wbudowanymi zmiennymi pętli Antlers.
+- Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.
+- Kolory serii wykresu (paleta zwalidowana dla CVD): Pb95 `#2a78d6`, Pb98 `#eb6834`,
+  ON `#1baf7a`, LPG `#eda100`.
+
 ## RSS
 
 `/promocje/feed.xml` i `/blog/feed.xml` (`resources/views/feeds`, `content_type: rss`). W XML używaj
@@ -55,7 +71,7 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
 ## Bloki buildera
 
 `block_hero`, `block_text`, `block_promotions_list`, `block_ad`, `block_articles_list`,
-`block_stations_grid`, `block_faq`.
+`block_stations_grid`, `block_faq`, `block_offers`.
 
 ## Reklamy
 
@@ -66,6 +82,13 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
   w obu: `partial_ad_placement.yaml` i mapie `formats`.
 - Poza produkcją pusty slot pokazuje przerywany placeholder z nazwą miejsca.
 - `head_code` ładowany tylko na produkcji; `/ads.txt` serwowany z globala.
+
+## Afiliacja
+
+- Oferty: kolekcja `offers` (link partnerski, logo, wyróżnik, kategoria). Nieopublikowana = ukryta.
+- Render: `block_offers` (karty `components/offers/card`) i set Bard `offer` w artykułach
+  (`components/offers/box`). Linki zawsze `rel="sponsored noopener"`, etykieta „Link partnerski”
+  i `components/offers/disclosure` pod ofertami.
 
 ## SEO
 

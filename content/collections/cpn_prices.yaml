@@ -1,0 +1,6 @@
+title: 'Ceny CPN'
+date: true
+sort_dir: desc
+date_behavior:
+  past: public
+  future: public

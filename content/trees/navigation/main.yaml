@@ -3,6 +3,10 @@ tree:
     id: nav-main-promocje
     entry: page-promocje
   -
+    id: nav-main-cpn
+    entry: page-program-cpn
+    title: 'Program CPN'
+  -
     id: nav-main-stacje
     entry: page-stacje
   -
