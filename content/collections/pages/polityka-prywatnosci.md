@@ -152,13 +152,111 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: Zgodę możesz w każdej chwili zmienić lub wycofać w ustawieniach prywatności dostępnych w Serwisie albo w ustawieniach przeglądarki. Więcej o tym, jak Google wykorzystuje dane w reklamach, przeczytasz na stronie [policies.google.com/technologies/partner-sites].
+      text: 'Zgodę możesz w każdej chwili zmienić lub wycofać w ustawieniach prywatności dostępnych w Serwisie albo w ustawieniach przeglądarki. Szczegóły dotyczące plików cookies reklamowych opisujemy w punkcie 6.'
   - type: heading
     attrs:
       level: 2
     content:
     - type: text
-      text: 6. Okres przechowywania
+      text: 6. Reklamy Google (AdSense)
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Serwis wyświetla reklamy w ramach programu Google AdSense, którego dostawcą jest Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irlandia (dalej: „Google”).'
+  - type: bulletList
+    content:
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'Google i jego partnerzy, jako zewnętrzni dostawcy, używają plików cookies do wyświetlania reklam na podstawie Twoich wcześniejszych wizyt w Serwisie i w innych witrynach internetowych.'
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'Reklamowe pliki cookies pozwalają Google i jego partnerom wyświetlać Ci reklamy dopasowane do Twoich zainteresowań na podstawie odwiedzin w Serwisie lub w innych witrynach.'
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'Reklamy spersonalizowane wyświetlamy wyłącznie po wyrażeniu przez Ciebie zgody w oknie ustawień prywatności (zgodnie ze standardem IAB TCF). Bez tej zgody Google może wyświetlać reklamy niespersonalizowane, które nadal mogą korzystać z plików cookies lub identyfikatorów w celu ograniczania częstotliwości wyświetleń, raportowania statystyk i przeciwdziałania nadużyciom.'
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Z personalizacji reklam możesz zrezygnować:'
+  - type: bulletList
+    content:
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'w '
+        - type: text
+          text: Ustawieniach reklam Google
+          marks:
+          - type: link
+            attrs:
+              href: 'https://adssettings.google.com'
+              target: _blank
+              rel: 'noopener noreferrer'
+        - type: text
+          text: ','
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'na stronie '
+        - type: text
+          text: Your Online Choices
+          marks:
+          - type: link
+            attrs:
+              href: 'https://www.youronlinechoices.com/pl/'
+              target: _blank
+              rel: 'noopener noreferrer'
+        - type: text
+          text: ' — w odniesieniu do plików cookies innych dostawców reklam,'
+    - type: listItem
+      content:
+      - type: paragraph
+        content:
+        - type: text
+          text: 'zmieniając lub wycofując zgodę w ustawieniach prywatności Serwisu.'
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Więcej informacji: '
+    - type: text
+      text: jak Google wykorzystuje informacje z witryn korzystających z jego usług
+      marks:
+      - type: link
+        attrs:
+          href: 'https://policies.google.com/technologies/partner-sites'
+          target: _blank
+          rel: 'noopener noreferrer'
+    - type: text
+      text: ' oraz '
+    - type: text
+      text: Polityka prywatności Google
+      marks:
+      - type: link
+        attrs:
+          href: 'https://policies.google.com/privacy'
+          target: _blank
+          rel: 'noopener noreferrer'
+    - type: text
+      text: .
+  - type: heading
+    attrs:
+      level: 2
+    content:
+    - type: text
+      text: 7. Okres przechowywania
   - type: paragraph
     content:
     - type: text
@@ -168,7 +266,7 @@ content:
       level: 2
     content:
     - type: text
-      text: 7. Twoje prawa
+      text: 8. Twoje prawa
   - type: paragraph
     content:
     - type: text
@@ -178,7 +276,7 @@ content:
       level: 2
     content:
     - type: text
-      text: 8. Zmiany polityki
+      text: 9. Zmiany polityki
   - type: paragraph
     content:
     - type: text
