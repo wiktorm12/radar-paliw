@@ -1,0 +1,14 @@
+name: Wiktor
+super: true
+id: d95bff95-8b58-4d1a-9c8f-385f5c26027c
+password_hash: $2y$12$szdTXU4XaYyGQBRSz2xDAeOUc3jtHxMUWNkwkx0vsqcaG/oCP3.py
+preferences:
+  collections:
+    pages:
+      view: tree
+    stations:
+      view: list
+    promotions:
+      view: list
+    articles:
+      view: list

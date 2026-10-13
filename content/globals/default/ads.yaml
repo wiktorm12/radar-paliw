@@ -2,5 +2,6 @@ head_code:
   code: |-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
          crossorigin="anonymous"></script>
+    <meta name="convertiser-verification" content="9b6d5fbe36a614465cbfa952fe79fe010940f584" />
   mode: htmlmixed
 ads_txt: 'google.com, pub-2682211062149512, DIRECT, f08c47fec0942fa0'
