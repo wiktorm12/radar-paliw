@@ -1,1 +1,6 @@
-slots: []
+head_code:
+  code: |-
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
+         crossorigin="anonymous"></script>
+  mode: htmlmixed
+ads_txt: 'google.com, pub-2682211062149512, DIRECT, f08c47fec0942fa0'

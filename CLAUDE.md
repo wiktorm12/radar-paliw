@@ -29,9 +29,28 @@ Laravel · PHP 8.3 · Tailwind CSS 4 · Vite · Antlers. Konwencje frontendu: sk
 
 Handle taksonomii są po polsku celowo — Statamic buduje z nich URL termów.
 
-Query scopes (`app/Scopes`): `active_promotions` (`valid_to >= dziś`, parametry `stations`,
-`fuel_type`, `exclude`), `articles_filter` (`category`, `station`, `author`, `exclude`). Listy renderują
+Query scopes (`app/Scopes`): `active_promotions` (`status` active|expired względem dziś w Europe/Warsaw,
+parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articles_filter` (`category`, `station`, `author`, `exclude`). Listy renderują
 `partials/components/{promotions,articles}/_list` — używaj ich zamiast nowych pętli.
+
+## Promocje: oznaczenia, filtry, archiwum
+
+- Wartości wyliczane (`AppServiceProvider`): `badge` (`new`, `ending_today`, `ending_soon`, `upcoming`,
+  `expired`) i `discount_rank` (do sortowania, null = -1). Etykiety/kolory: front-matter `_card`.
+- `block_promotions_list`: `status` (active/expired), `paginate`, `show_filters`. Filtry to GET
+  (`stacja`, `paliwo`, `bez_aplikacji`, `sortuj`), działają bez JS; `modules/promotion-filters.js`
+  wysyła formularz przy zmianie. Canonical stron z filtrami wskazuje na URL bez parametrów.
+- Archiwum: strona `/promocje/archiwum` (dziecko `/promocje` w drzewie stron).
+
+## RSS
+
+`/promocje/feed.xml` i `/blog/feed.xml` (`resources/views/feeds`, `content_type: rss`). W XML używaj
+`| sanitize`, nie `| entities` (encje HTML psują XML).
+
+## Strony prawne
+
+`/o-nas`, `/kontakt`, `/regulamin`, `/polityka-prywatnosci` — wpisy w `pages`, w menu `footer`.
+Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
 
 ## Bloki buildera
 

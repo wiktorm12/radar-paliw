@@ -1,1 +1,13 @@
-tree: {  }
+tree:
+  -
+    id: nav-footer-o-nas
+    entry: page-o-nas
+  -
+    id: nav-footer-kontakt
+    entry: page-kontakt
+  -
+    id: nav-footer-regulamin
+    entry: page-regulamin
+  -
+    id: nav-footer-polityka-prywatnosci
+    entry: page-polityka-prywatnosci

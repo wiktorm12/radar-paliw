@@ -32,6 +32,12 @@
             ad_every="6"
             per_page="48"
         }}
+        <a
+            href="/promocje/archiwum?stacja={{ slug }}"
+            class="mt-6 inline-block text-sm font-medium text-brand-600 hover:underline"
+        >
+            Zakończone promocje {{ title }} →
+        </a>
         {{ if content }}
             <div class="prose mt-12 max-w-3xl">
                 {{ content }}

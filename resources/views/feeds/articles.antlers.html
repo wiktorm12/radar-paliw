@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss
+    version="2.0"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+>
+    <channel>
+        <title>{{ site:name }} – blog</title>
+        <link>{{ site:permalink }}/blog</link>
+        <description>Poradniki i analizy o paliwach, cenach i programach lojalnościowych stacji.</description>
+        <language>pl-pl</language>
+        <atom:link
+            href="{{ site:permalink }}/blog/feed.xml"
+            rel="self"
+            type="application/rss+xml"
+        />
+        {{ collection:articles limit="30" sort="date:desc" }}
+            <item>
+                <title>{{ title | sanitize }}</title>
+                <link>{{ permalink }}</link>
+                <guid isPermaLink="true">{{ permalink }}</guid>
+                <pubDate>{{ date format="r" }}</pubDate>
+                {{ author }}<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{ title | sanitize }}</dc:creator>{{ /author }}
+                {{ kategorie }}<category>{{ title | sanitize }}</category>{{ /kategorie }}
+                <description>{{ excerpt | sanitize }}</description>
+            </item>
+        {{ /collection:articles }}
+    </channel>
+</rss>

@@ -1,14 +1,26 @@
+---
+sorts:
+    'ending': 'featured:desc|valid_to:asc'
+    'discount': 'discount_rank:desc|valid_to:asc'
+    'newest': 'valid_from:desc'
+    'archive': 'valid_to:desc'
+---
+
 {{ collection:promotions
     as="promotions"
     query_scope="active_promotions"
+    :status="status ?? 'active'"
     :stations="stations"
+    :station_slug="station_slug"
     :fuel_type="fuel_type"
+    :no_app="no_app"
     :exclude="exclude"
-    sort="featured:desc|valid_to:asc"
+    :sort="view:sorts[sort_key] ?? view:sorts['ending']"
     :limit="per_page ?? 12"
+    :paginate="paginated ? 'true' : 'false'"
 }}
     {{ if no_results }}
-        <p class="text-zinc-500">Brak aktywnych promocji.</p>
+        <p class="text-zinc-500">{{ status == 'expired' ? 'Brak zakończonych promocji dla wybranych filtrów.' : 'Brak aktywnych promocji dla wybranych filtrów.' }}</p>
     {{ else }}
         <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {{ promotions }}
@@ -40,5 +52,8 @@
                 ]
             }
         {{ /push:schema }}
+        {{ paginate }}
+            {{ partial:components/pagination }}
+        {{ /paginate }}
     {{ /if }}
 {{ /collection:promotions }}

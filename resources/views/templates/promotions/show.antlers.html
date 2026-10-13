@@ -12,7 +12,7 @@
             "validFrom": "{{ valid_from format='Y-m-d' }}",
             "validThrough": "{{ valid_to format='Y-m-d' }}T23:59:59+01:00",
             "eligibleRegion": { "@type": "Country", "name": "PL" },
-            "availability": "https://schema.org/{{ (valid_to | is_past) && !(valid_to | is_today) ? 'Discontinued' : 'InStock' }}",{{ station }}
+            "availability": "https://schema.org/{{ badge == 'expired' ? 'Discontinued' : 'InStock' }}",{{ station }}
             "seller": {
                 "@type": "Organization",
                 "@id": "{{ permalink }}#brand",
@@ -41,8 +41,12 @@
                     </a>
                 {{ /station }}
                 <h1 class="mb-6 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
-                {{ if (valid_to | is_past) && !(valid_to | is_today) }}
-                    <p class="mt-0 mb-6 rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">Ta promocja już się zakończyła. Zobacz aktualne promocje {{ station:title }} poniżej.</p>
+                {{ if badge == 'expired' }}
+                    <p class="mb-6 rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">Ta promocja już się zakończyła. Zobacz aktualne promocje {{ station:title }} poniżej.</p>
+                {{ elseif badge == 'ending_today' }}
+                    <p class="mb-6 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-800">Ostatni dzień promocji — kończy się dziś.</p>
+                {{ elseif badge == 'upcoming' }}
+                    <p class="mb-6 rounded-xl bg-sky-50 p-4 text-sm font-medium text-sky-800">Promocja jeszcze się nie zaczęła — startuje {{ valid_from format="j.m.Y" }}.</p>
                 {{ /if }}
                 <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-4">
                     <div>

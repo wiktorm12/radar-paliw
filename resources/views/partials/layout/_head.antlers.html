@@ -70,6 +70,19 @@
         >
     {{ /if }}
 
+    <link
+        rel="alternate"
+        type="application/rss+xml"
+        title="{{ site:name }} – promocje"
+        href="/promocje/feed.xml"
+    >
+    <link
+        rel="alternate"
+        type="application/rss+xml"
+        title="{{ site:name }} – blog"
+        href="/blog/feed.xml"
+    >
+
     {{ partial:meta-tags/schema }}
 
     {{ vite src="resources/css/site.css|resources/js/site.js" }}

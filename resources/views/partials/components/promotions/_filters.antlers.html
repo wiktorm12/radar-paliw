@@ -1,0 +1,104 @@
+---
+sort_options:
+    -
+        key: ending
+        label: 'Kończące się najwcześniej'
+    -
+        key: discount
+        label: 'Największy rabat'
+    -
+        key: newest
+        label: 'Najnowsze'
+---
+
+<form
+    method="get"
+    action="{{ current_url }}"
+    class="mb-8 grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 text-zinc-800 shadow-sm sm:grid-cols-2 lg:grid-cols-5 lg:items-end"
+    data-promotion-filters
+>
+    <label class="flex flex-col gap-1 text-sm font-medium">
+        Stacja
+        <select
+            name="stacja"
+            class="rounded-lg border-zinc-300 text-sm"
+        >
+            <option value="">Wszystkie sieci</option>
+            {{ collection:stations }}
+                <option
+                    value="{{ slug }}"
+                    {{ get:stacja == slug ?= 'selected' }}
+                >
+                    {{ title }}
+                </option>
+            {{ /collection:stations }}
+        </select>
+    </label>
+    <label class="flex flex-col gap-1 text-sm font-medium">
+        Paliwo
+        <select
+            name="paliwo"
+            class="rounded-lg border-zinc-300 text-sm"
+        >
+            <option value="">Wszystkie paliwa</option>
+            {{ taxonomy:paliwa }}
+                <option
+                    value="{{ slug }}"
+                    {{ get:paliwo == slug ?= 'selected' }}
+                >
+                    {{ title }}
+                </option>
+            {{ /taxonomy:paliwa }}
+        </select>
+    </label>
+    {{ unless archive }}
+        <label class="flex flex-col gap-1 text-sm font-medium">
+            Sortuj
+            <select
+                name="sortuj"
+                class="rounded-lg border-zinc-300 text-sm"
+            >
+                {{ view:sort_options }}
+                    <option
+                        value="{{ key }}"
+                        {{ get:sortuj == key ?= 'selected' }}
+                    >
+                        {{ label }}
+                    </option>
+                {{ /view:sort_options }}
+            </select>
+        </label>
+    {{ /unless }}
+    <label class="flex items-center gap-2 text-sm font-medium lg:pb-2.5">
+        <input
+            type="checkbox"
+            name="bez_aplikacji"
+            value="1"
+            class="rounded border-zinc-300 text-brand-600"
+            {{ get:bez_aplikacji ?= 'checked' }}
+        >
+        Bez aplikacji / karty
+    </label>
+    <div class="flex flex-wrap items-center gap-4 text-sm">
+        <button
+            type="submit"
+            class="button in-[.js]:hidden"
+        >
+            Filtruj
+        </button>
+        {{ if get:stacja || get:paliwo || get:bez_aplikacji || get:sortuj }}
+            <a
+                href="{{ current_url }}"
+                class="font-medium text-zinc-500 hover:text-brand-600"
+            >
+                Wyczyść filtry
+            </a>
+        {{ /if }}
+        <a
+            href="{{ archive ? '/promocje' : '/promocje/archiwum' }}"
+            class="font-medium text-brand-600 hover:underline"
+        >
+            {{ archive ? '← Aktualne promocje' : 'Zakończone promocje →' }}
+        </a>
+    </div>
+</form>

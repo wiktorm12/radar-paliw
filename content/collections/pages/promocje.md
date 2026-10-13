@@ -15,6 +15,8 @@ content:
     id: promo02
     type: block_promotions_list
     enabled: true
-    limit: 48
+    limit: 24
+    paginate: true
+    show_filters: true
     ad_every: 6
 ---

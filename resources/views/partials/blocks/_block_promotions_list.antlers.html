@@ -13,9 +13,17 @@ bg:
         {{ if intro }}
             <p class="mb-8 max-w-2xl text-zinc-600">{{ intro }}</p>
         {{ /if }}
+        {{ if show_filters }}
+            {{ partial:components/promotions/filters :archive="status:value == 'expired'" }}
+        {{ /if }}
         {{ partial:components/promotions/list
+            :status="status:value ?? 'active'"
             :stations="stations"
-            :fuel_type="fuel_type"
+            :fuel_type="show_filters && get:paliwo ? get:paliwo : fuel_type"
+            :station_slug="show_filters ? get:stacja : null"
+            :no_app="show_filters && get:bez_aplikacji"
+            :sort_key="status:value == 'expired' ? 'archive' : (show_filters ? get:sortuj : null)"
+            :paginated="paginate"
             :per_page="limit"
         }}
     </div>

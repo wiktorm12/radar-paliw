@@ -4,17 +4,34 @@ discount_suffix:
     'percent': '%'
     'fixed_price': ' zł/l'
     'points': ' pkt'
+badge_labels:
+    'new': 'Nowa'
+    'ending_today': 'Kończy się dziś'
+    'ending_soon': 'Ostatnie dni'
+    'upcoming': 'Wkrótce'
+    'expired': 'Zakończona'
+badge_classes:
+    'new': 'bg-emerald-100 text-emerald-800'
+    'ending_today': 'bg-red-100 text-red-800'
+    'ending_soon': 'bg-amber-100 text-amber-800'
+    'upcoming': 'bg-sky-100 text-sky-800'
+    'expired': 'bg-zinc-200 text-zinc-600'
 ---
 
-<article class="relative flex h-full flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
-    {{ station }}
-        <p
-            class="mb-3 text-sm font-semibold uppercase tracking-wide"
-            style="color: {{ brand_color ?? 'inherit' }}"
-        >
-            {{ title }}
-        </p>
-    {{ /station }}
+<article class="relative flex h-full {{ badge == 'expired' ?= 'opacity-75' }} flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
+    <div class="mb-3 flex items-center justify-between gap-3">
+        {{ station }}
+            <p
+                class="text-sm font-semibold uppercase tracking-wide"
+                style="color: {{ brand_color ?? 'inherit' }}"
+            >
+                {{ title }}
+            </p>
+        {{ /station }}
+        {{ if badge }}
+            <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold {{ view:badge_classes[badge] }}">{{ view:badge_labels[badge] }}</span>
+        {{ /if }}
+    </div>
     <h3 class="mb-4 text-lg font-semibold">
         <a
             href="{{ url }}"

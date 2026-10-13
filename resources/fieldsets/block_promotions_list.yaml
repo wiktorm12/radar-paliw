@@ -33,11 +33,33 @@ fields:
       max_items: 1
       mode: select
   -
+    handle: status
+    field:
+      type: button_group
+      display: Promocje
+      default: active
+      width: 33
+      options:
+        -
+          key: active
+          value: 'Aktualne i nadchodzące'
+        -
+          key: expired
+          value: 'Zakończone (archiwum)'
+  -
     handle: limit
     field:
       type: integer
-      display: Limit
+      display: 'Limit / na stronę'
       default: 12
+      width: 33
+  -
+    handle: paginate
+    field:
+      type: toggle
+      display: Paginacja
+      default: false
+      width: 33
   -
     handle: section_settings
     field:
@@ -51,6 +73,14 @@ fields:
       display: 'Reklama co X promocji'
       instructions: '0 = bez reklam in-feed (miejsce: Lista promocji — między kartami).'
       default: 6
+      width: 33
+  -
+    handle: show_filters
+    field:
+      type: toggle
+      display: 'Pokaż filtry'
+      instructions: 'Filtry: stacja, paliwo, bez aplikacji, sortowanie (parametry w URL).'
+      default: false
       width: 33
   -
     import: partial_background
