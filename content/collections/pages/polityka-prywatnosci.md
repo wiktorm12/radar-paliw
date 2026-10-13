@@ -26,7 +26,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: 'Administratorem danych osobowych jest [nazwa firmy / imię i nazwisko], [adres], NIP [NIP] (dalej: „Administrator”). Kontakt w sprawach danych osobowych: [adres e-mail].'
+      text: 'Administratorem danych osobowych jest witryna radarpaliw.pl (dalej: „Administrator”). Kontakt w sprawach danych osobowych: kontakt@radarpaliw.pl.'
   - type: heading
     attrs:
       level: 2
@@ -84,7 +84,7 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: Statystyki odwiedzin — Twoja zgoda (art. 6 ust. 1 lit. a RODO), jeśli wymaga jej użyta technologia.
+          text: 'Statystyki odwiedzin (Cloudflare Web Analytics, bez plików cookies i bez identyfikowania użytkowników) — prawnie uzasadniony interes Administratora polegający na analizie ruchu i ulepszaniu Serwisu (art. 6 ust. 1 lit. f RODO).'
     - type: listItem
       content:
       - type: paragraph
@@ -106,7 +106,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: 'Dane mogą być przekazywane dostawcom usług, z których korzystamy: firmie hostingowej, dostawcom narzędzi analitycznych oraz partnerom reklamowym, w tym Google (Google AdSense). Niektórzy z nich mogą przetwarzać dane poza Europejskim Obszarem Gospodarczym — w takim przypadku na podstawie standardowych klauzul umownych lub innych mechanizmów przewidzianych w RODO.'
+      text: 'Dane mogą być przekazywane dostawcom usług, z których korzystamy: firmie hostingowej, dostawcom narzędzi analitycznych (Cloudflare, Inc. — Cloudflare Web Analytics) oraz partnerom reklamowym, w tym Google (Google AdSense). Niektórzy z nich mogą przetwarzać dane poza Europejskim Obszarem Gospodarczym — w takim przypadku na podstawie standardowych klauzul umownych lub innych mechanizmów przewidzianych w RODO.'
   - type: heading
     attrs:
       level: 2
@@ -260,7 +260,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: Logi serwera przechowujemy nie dłużej niż [okres, np. 12 miesięcy]. Korespondencję — przez czas potrzebny do jej obsługi i ewentualnego dochodzenia roszczeń. Dane przetwarzane na podstawie zgody — do jej wycofania.
+      text: Logi serwera przechowujemy nie dłużej niż 12 miesięcy. Korespondencję — przez czas potrzebny do jej obsługi i ewentualnego dochodzenia roszczeń. Dane przetwarzane na podstawie zgody — do jej wycofania.
   - type: heading
     attrs:
       level: 2
@@ -284,5 +284,5 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: 'Ostatnia aktualizacja: [data].'
+      text: 'Ostatnia aktualizacja: 14 października 2026.'
 ---

@@ -32,13 +32,13 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: 'Właścicielem i wydawcą Serwisu jest [nazwa firmy / imię i nazwisko], [adres], NIP [NIP] (dalej: „Wydawca”).'
+          text: 'Właścicielem i wydawcą Serwisu jest witryna radarpaliw.pl (dalej: „Wydawca”).'
     - type: listItem
       content:
       - type: paragraph
         content:
         - type: text
-          text: 'Kontakt z Wydawcą jest możliwy pod adresem e-mail: [adres e-mail].'
+          text: 'Kontakt z Wydawcą jest możliwy pod adresem e-mail: kontakt@radarpaliw.pl.'
     - type: listItem
       content:
       - type: paragraph
@@ -190,5 +190,5 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: Regulamin obowiązuje od [data].
+      text: Regulamin obowiązuje od 14 października 2026.
 ---

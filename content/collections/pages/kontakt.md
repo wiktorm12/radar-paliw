@@ -34,7 +34,13 @@ content:
           marks:
           - type: bold
         - type: text
-          text: ' [adres e-mail]'
+          text: ' '
+        - type: text
+          text: kontakt@radarpaliw.pl
+          marks:
+          - type: link
+            attrs:
+              href: 'mailto:kontakt@radarpaliw.pl'
     - type: listItem
       content:
       - type: paragraph
@@ -44,27 +50,7 @@ content:
           marks:
           - type: bold
         - type: text
-          text: ' [nazwa firmy / imię i nazwisko]'
-    - type: listItem
-      content:
-      - type: paragraph
-        content:
-        - type: text
-          text: 'Adres:'
-          marks:
-          - type: bold
-        - type: text
-          text: ' [ulica, kod pocztowy, miasto]'
-    - type: listItem
-      content:
-      - type: paragraph
-        content:
-        - type: text
-          text: 'NIP:'
-          marks:
-          - type: bold
-        - type: text
-          text: ' [NIP]'
+          text: ' witryna radarpaliw.pl'
   - type: heading
     attrs:
       level: 2
@@ -84,5 +70,5 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: W sprawie współpracy reklamowej również skontaktuj się z nami mailowo.
+      text: 'W sprawie współpracy reklamowej również skontaktuj się z nami mailowo: kontakt@radarpaliw.pl.'
 ---
