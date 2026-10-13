@@ -1,0 +1,38 @@
+{{ section:schema_page_type }}ProfilePage{{ /section:schema_page_type }}
+{{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ permalink }}#person" }{{ /section:schema_main_entity }}
+{{ section:seo_title }}{{ seo_title ?? '{title} – autor · {site:name}' }}{{ /section:seo_title }}
+{{ partial:components/authors/schema-person }}
+
+{{ partial:section }}
+    <div class="container">
+        <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-center">
+            {{ photo }}
+                {{ partial:image
+                    w="160"
+                    h="160"
+                    cover="true"
+                    no_lazy="true"
+                    class="size-40 rounded-full object-cover"
+                    wrapper_class="shrink-0"
+                }}
+            {{ /photo }}
+            <div class="max-w-2xl">
+                <h1 class="mb-2 text-4xl font-bold tracking-tight">{{ title }}</h1>
+                {{ if role }}
+                    <p class="mb-4 text-lg text-zinc-500">{{ role }}</p>
+                {{ /if }}
+                {{ if bio }}
+                    <p class="text-zinc-600">{{ bio }}</p>
+                {{ /if }}
+            </div>
+        </div>
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Artykuły autora</h2>
+        {{ partial:components/articles/list
+            :author_id="id"
+            per_page="12"
+            paginated="true"
+            ad_every="3"
+        }}
+    </div>
+{{ /partial:section }}

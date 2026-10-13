@@ -16,6 +16,10 @@ class ArticlesFilter extends Scope
             $query->whereJsonContains('stations', $station);
         }
 
+        if ($author = $values->get('author')) {
+            $query->where('author', $author);
+        }
+
         if ($exclude = $values->get('exclude')) {
             $query->where('id', '!=', $exclude);
         }

@@ -5,7 +5,7 @@ use Statamic\Facades\GlobalSet;
 
 Route::statamic('sitemap.xml', 'sitemaps/index', ['layout' => null, 'content_type' => 'xml']);
 
-foreach (['pages', 'promotions', 'stations', 'articles'] as $collection) {
+foreach (['pages', 'promotions', 'stations', 'articles', 'authors'] as $collection) {
     Route::statamic("sitemap-{$collection}.xml", 'sitemaps/collection', [
         'layout' => null,
         'content_type' => 'xml',

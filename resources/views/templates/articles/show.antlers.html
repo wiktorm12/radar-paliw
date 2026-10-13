@@ -24,13 +24,13 @@
                     { "@type": "Organization", "@id": "{{ permalink }}#brand", "name": {{ title | to_json }} }{{ !last ?= ',' }}
                 {{ /stations }}
             ],{{ /if }}
-            "author": {{ if author }}{
-                "@type": "Person",
-                "name": {{ author:name | to_json }}
-            }{{ else }}{ "@id": "{{ site:permalink }}/#organization" }{{ /if }},
+            "author": {{ author }}{ "@id": "{{ permalink }}#person" }{{ /author }}{{ unless author }}{ "@id": "{{ site:permalink }}/#organization" }{{ /unless }},
             "publisher": { "@id": "{{ site:permalink }}/#organization" }
         }
 {{ /push:schema }}
+{{ author }}
+    {{ partial:components/authors/schema-person }}
+{{ /author }}
 
 {{ partial:section }}
     <div class="container">
@@ -52,7 +52,13 @@
                 <p class="mb-6 text-sm text-zinc-500">
                     <time datetime="{{ date format='Y-m-d' }}">{{ date iso_format="D MMMM YYYY" }}</time>
                     · {{ content | bard_text | read_time }} min czytania
-                    {{ author ?= '· {author:name}' }}
+                    {{ author }}
+                        · <a
+                            href="{{ url }}"
+                            class="font-medium text-zinc-700 hover:text-brand-600"
+                            rel="author"
+                        >{{ title }}</a>
+                    {{ /author }}
                 </p>
                 <p class="mb-8 text-xl text-zinc-600">{{ excerpt }}</p>
                 {{ featured_image }}
@@ -103,6 +109,9 @@
                         {{ partial:components/faq/list }}
                     </div>
                 {{ /if }}
+                {{ author }}
+                    {{ partial:components/authors/box }}
+                {{ /author }}
                 {{ partial:ads/slot position="article_bottom" }}
             </article>
 

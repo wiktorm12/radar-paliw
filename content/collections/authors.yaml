@@ -1,0 +1,4 @@
+title: Autorzy
+template: templates/authors/show
+route: '/autorzy/{slug}'
+sort_by: title

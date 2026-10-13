@@ -21,6 +21,7 @@ Laravel · PHP 8.3 · Tailwind CSS 4 · Vite · Antlers. Konwencje frontendu: sk
 | Sieci stacji | `stations` | `/stacje/{slug}` |
 | Promocje | `promotions` | `/promocje/{slug}` |
 | Artykuły (blog, `date: true`) | `articles` | `/blog/{slug}` |
+| Autorzy (byline, nie konta CP) | `authors` | `/autorzy/{slug}` |
 | Rodzaje paliwa (taksonomia) | `paliwa` | `/paliwa/{slug}` |
 | Kategorie bloga (taksonomia) | `kategorie` | `/kategorie/{slug}` |
 | Ustawienia / Reklamy (globale) | `settings`, `ads` | — |
@@ -29,7 +30,7 @@ Laravel · PHP 8.3 · Tailwind CSS 4 · Vite · Antlers. Konwencje frontendu: sk
 Handle taksonomii są po polsku celowo — Statamic buduje z nich URL termów.
 
 Query scopes (`app/Scopes`): `active_promotions` (`valid_to >= dziś`, parametry `stations`,
-`fuel_type`, `exclude`), `articles_filter` (`category`, `station`, `exclude`). Listy renderują
+`fuel_type`, `exclude`), `articles_filter` (`category`, `station`, `author`, `exclude`). Listy renderują
 `partials/components/{promotions,articles}/_list` — używaj ich zamiast nowych pętli.
 
 ## Bloki buildera

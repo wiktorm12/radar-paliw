@@ -118,10 +118,12 @@ tabs:
           -
             handle: author
             field:
-              type: users
+              type: entries
               display: Autor
-              default: current
+              collections:
+                - authors
               max_items: 1
+              mode: select
           -
             handle: stations
             field:

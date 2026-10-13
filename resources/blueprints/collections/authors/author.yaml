@@ -1,0 +1,59 @@
+title: Autor
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: 'Imię i nazwisko'
+              required: true
+              validate:
+                - required
+          -
+            handle: role
+            field:
+              type: text
+              display: Rola
+              instructions: 'Np. „Redaktor, specjalista od programów lojalnościowych”.'
+              width: 50
+          -
+            handle: photo
+            field:
+              type: assets
+              display: Zdjęcie
+              container: img
+              max_files: 1
+              width: 50
+          -
+            handle: bio
+            field:
+              type: textarea
+              display: Bio
+              instructions: 'Kilka zdań o doświadczeniu — wzmacnia wiarygodność (E-E-A-T).'
+          -
+            handle: same_as
+            field:
+              type: list
+              display: 'Profile (LinkedIn, X…)'
+              instructions: 'Pełne URL-e — trafiają do schema Person.'
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'

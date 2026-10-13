@@ -1,0 +1,27 @@
+<aside class="mb-8 flex gap-5 rounded-2xl border border-zinc-200 p-6">
+    {{ photo }}
+        {{ partial:image
+            w="80"
+            h="80"
+            cover="true"
+            class="size-20 rounded-full object-cover"
+            wrapper_class="shrink-0"
+        }}
+    {{ /photo }}
+    <div>
+        <p class="mb-1 text-sm text-zinc-500">Autor</p>
+        <a
+            href="{{ url }}"
+            class="mb-1 block text-lg font-semibold hover:text-brand-600"
+            rel="author"
+        >
+            {{ title }}
+        </a>
+        {{ if role }}
+            <p class="mb-2 text-sm text-zinc-500">{{ role }}</p>
+        {{ /if }}
+        {{ if bio }}
+            <p class="text-sm text-zinc-600">{{ bio }}</p>
+        {{ /if }}
+    </div>
+</aside>
