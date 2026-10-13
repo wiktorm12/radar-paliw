@@ -24,6 +24,9 @@ foreach (['paliwa', 'kategorie'] as $taxonomy) {
 Route::statamic('blog/feed.xml', 'feeds/articles', ['layout' => null, 'content_type' => 'rss']);
 Route::statamic('promocje/feed.xml', 'feeds/promotions', ['layout' => null, 'content_type' => 'rss']);
 
+Route::permanentRedirect('promotions/paliwa/{slug}', '/paliwa/{slug}');
+Route::permanentRedirect('articles/kategorie/{slug}', '/kategorie/{slug}');
+
 Route::get('robots.txt', function () {
     $lines = app()->environment('production')
         ? ['User-agent: *', 'Disallow: /cp', 'Disallow: /*?*utm_', '', 'Sitemap: '.url('sitemap.xml')]
