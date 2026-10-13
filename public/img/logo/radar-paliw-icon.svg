@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+    <title>Radar Paliw</title>
+    <rect width="64" height="64" rx="14" fill="#e36400"/>
+    <path d="M32 9C32 9 17 26.5 17 39a15 15 0 0 0 30 0C47 26.5 32 9 32 9Z" fill="#fff"/>
+    <g fill="none" stroke="#e36400" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="32" cy="40" r="5"/>
+        <circle cx="32" cy="40" r="10"/>
+        <path d="M32 40l7.07-7.07"/>
+    </g>
+    <circle cx="32" cy="40" r="2" fill="#e36400"/>
+</svg>
