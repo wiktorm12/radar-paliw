@@ -111,6 +111,19 @@
     {{ vite src="resources/css/site.css|resources/js/site.js" }}
 
     {{ if environment === 'production' }}
+        {{ if settings:google_site_verification }}
+            <meta
+                name="google-site-verification"
+                content="{{ settings:google_site_verification | entities }}"
+            >
+        {{ /if }}
+        {{ if settings:cloudflare_analytics_token }}
+            <script
+                defer
+                src="https://static.cloudflareinsights.com/beacon.min.js"
+                data-cf-beacon='{"token": "{{ settings:cloudflare_analytics_token | entities }}"}'
+            ></script>
+        {{ /if }}
         {{ ads:head_code }}
     {{ /if }}
 </head>

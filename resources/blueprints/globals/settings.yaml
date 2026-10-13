@@ -36,3 +36,20 @@ tabs:
               type: list
               display: 'Profile społecznościowe (sameAs)'
               instructions: 'Pełne URL-e profili (Facebook, Instagram, LinkedIn…) — trafiają do schema Organization.'
+  integrations:
+    display: Integracje
+    sections:
+      -
+        fields:
+          -
+            handle: google_site_verification
+            field:
+              type: text
+              display: 'Google Search Console — kod weryfikacji'
+              instructions: 'Sama wartość `content` z meta tagu `google-site-verification` (metoda „Tag HTML”). Zbędne, jeśli domenę zweryfikowano przez DNS.'
+          -
+            handle: cloudflare_analytics_token
+            field:
+              type: text
+              display: 'Cloudflare Web Analytics — token'
+              instructions: 'Token z fragmentu JS (`data-cf-beacon`). Skrypt ładuje się tylko na produkcji, bez cookies.'
