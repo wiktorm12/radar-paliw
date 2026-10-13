@@ -1,0 +1,91 @@
+title: Reklamy
+tabs:
+  slots:
+    display: Kreacje
+    sections:
+      -
+        fields:
+          -
+            handle: slots
+            field:
+              type: replicator
+              display: Kreacje
+              instructions: 'Kilka kreacji w tym samym miejscu = losowa rotacja. Przełącznik przy kreacji wyłącza ją bez usuwania.'
+              collapse: true
+              button_label: 'Dodaj kreację'
+              sets:
+                new_set_group:
+                  display: Reklamy
+                  sets:
+                    ad:
+                      display: Kreacja
+                      icon: money-cash-bill
+                      fields:
+                        -
+                          handle: label
+                          field:
+                            type: text
+                            display: 'Nazwa wewnętrzna'
+                            instructions: 'Np. „AdSense — billboard” albo „Orlen — kampania listopad”.'
+                        -
+                          import: partial_ad_placement
+                        -
+                          handle: kind
+                          field:
+                            type: button_group
+                            display: Rodzaj
+                            default: code
+                            options:
+                              -
+                                key: code
+                                value: 'Kod (AdSense / GAM / sieć)'
+                              -
+                                key: image
+                                value: 'Baner graficzny'
+                        -
+                          handle: code
+                          field:
+                            type: code
+                            display: 'Kod reklamy'
+                            mode: htmlmixed
+                            if:
+                              kind: 'equals code'
+                            validate:
+                              - 'required_if:kind,code'
+                        -
+                          handle: image
+                          field:
+                            type: assets
+                            display: Baner
+                            container: img
+                            max_files: 1
+                            if:
+                              kind: 'equals image'
+                            validate:
+                              - 'required_if:kind,image'
+                        -
+                          handle: url
+                          field:
+                            type: text
+                            input_type: url
+                            display: 'Link docelowy'
+                            if:
+                              kind: 'equals image'
+  settings:
+    display: Ustawienia
+    sections:
+      -
+        fields:
+          -
+            handle: head_code
+            field:
+              type: code
+              display: 'Kod w <head>'
+              instructions: 'Skrypt sieci reklamowej (np. AdSense). Ładowany tylko na produkcji.'
+              mode: htmlmixed
+          -
+            handle: ads_txt
+            field:
+              type: textarea
+              display: 'ads.txt'
+              instructions: 'Treść serwowana pod /ads.txt.'

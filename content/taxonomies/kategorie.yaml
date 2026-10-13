@@ -1,0 +1,3 @@
+title: 'Kategorie bloga'
+template: templates/taxonomies/index
+term_template: templates/taxonomies/kategorie

@@ -1,0 +1,22 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ partial:section class="{{ view:bg[background_color] }}" }}
+    <div class="container">
+        {{ if heading }}
+            <h2 class="mb-4 text-3xl font-bold tracking-tight">{{ heading }}</h2>
+        {{ /if }}
+        {{ if intro }}
+            <p class="mb-8 max-w-2xl text-zinc-600">{{ intro }}</p>
+        {{ /if }}
+        {{ partial:components/articles/list
+            :category="category:slug"
+            :per_page="limit ?? 9"
+            :paginated="paginate"
+        }}
+    </div>
+{{ /partial:section }}

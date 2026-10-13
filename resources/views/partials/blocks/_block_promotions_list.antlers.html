@@ -13,26 +13,10 @@ bg:
         {{ if intro }}
             <p class="mb-8 max-w-2xl text-zinc-600">{{ intro }}</p>
         {{ /if }}
-
-        {{ collection:promotions
-            as="promotions"
-            query_scope="active_promotions"
+        {{ partial:components/promotions/list
             :stations="stations"
             :fuel_type="fuel_type"
-            sort="featured:desc|valid_to:asc"
-            :limit="limit ?? 12"
+            :per_page="limit"
         }}
-            {{ if no_results }}
-                <p class="text-zinc-500">Brak aktywnych promocji.</p>
-            {{ else }}
-                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {{ promotions }}
-                        <li>
-                            {{ partial:components/promotions/card }}
-                        </li>
-                    {{ /promotions }}
-                </ul>
-            {{ /if }}
-        {{ /collection:promotions }}
     </div>
 {{ /partial:section }}

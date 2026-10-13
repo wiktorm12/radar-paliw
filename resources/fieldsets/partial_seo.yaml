@@ -1,0 +1,36 @@
+title: 'Partial: SEO'
+fields:
+  -
+    handle: seo_title
+    field:
+      type: text
+      display: 'Meta title'
+      instructions: 'Puste = tytuł wpisu. Do ~60 znaków.'
+      character_limit: 70
+  -
+    handle: seo_description
+    field:
+      type: textarea
+      display: 'Meta description'
+      instructions: 'Puste = zajawka. Do ~155 znaków.'
+      character_limit: 170
+  -
+    handle: og_image
+    field:
+      type: assets
+      display: 'Obraz OG (1200×630)'
+      container: img
+      max_files: 1
+  -
+    handle: canonical_url
+    field:
+      type: text
+      input_type: url
+      display: 'Canonical URL'
+      instructions: 'Puste = adres tej strony.'
+  -
+    handle: noindex
+    field:
+      type: toggle
+      display: 'Noindex'
+      instructions: 'Ukryj przed wyszukiwarkami i usuń z sitemapy.'

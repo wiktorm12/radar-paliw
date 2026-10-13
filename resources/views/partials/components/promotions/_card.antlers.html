@@ -28,10 +28,17 @@ discount_suffix:
             {{ discount_type:value != 'fixed_price' ?= '-' }}{{ discount_value }}{{ view:discount_suffix[discount_type:value] }}
         </p>
     {{ /if }}
-    <ul class="mb-4 flex flex-wrap gap-2">
-        {{ fuel_types }}
-            <li class="rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium">{{ title }}</li>
-        {{ /fuel_types }}
+    <ul class="relative z-10 mb-4 flex flex-wrap gap-2">
+        {{ paliwa }}
+            <li>
+                <a
+                    href="{{ url }}"
+                    class="block rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium hover:bg-brand-100"
+                >
+                    {{ title }}
+                </a>
+            </li>
+        {{ /paliwa }}
     </ul>
     <p class="mt-auto text-sm text-zinc-500">
         {{ valid_from format="j.m" }} – {{ valid_to format="j.m.Y" }}

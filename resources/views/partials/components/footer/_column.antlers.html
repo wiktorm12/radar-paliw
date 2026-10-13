@@ -1,0 +1,28 @@
+<div>
+    <p class="mb-4 text-sm font-semibold uppercase tracking-wide text-white">{{ heading }}</p>
+    <ul class="flex flex-col gap-2 text-sm">
+        {{ if source == 'stations' }}
+            {{ collection:stations }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="hover:text-white"
+                    >
+                        Promocje {{ title }}
+                    </a>
+                </li>
+            {{ /collection:stations }}
+        {{ else }}
+            {{ taxonomy :from="source" }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="hover:text-white"
+                    >
+                        {{ source == 'paliwa' ? 'Promocje na {title}' : title }}
+                    </a>
+                </li>
+            {{ /taxonomy }}
+        {{ /if }}
+    </ul>
+</div>

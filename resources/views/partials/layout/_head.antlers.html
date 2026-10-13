@@ -4,6 +4,77 @@
         name="viewport"
         content="width=device-width, initial-scale=1"
     >
-    <title>{{ title ?= '{title} &middot; ' }}{{ site:name }}</title>
+    <title>{{ yield:seo_title }}{{ seo_title ? seo_title : '{title} · {site:name}' }}{{ /yield:seo_title }}{{ get:page > 1 ?= ' – strona {get:page}' }}</title>
+    <meta
+        name="description"
+        content="{{ yield:seo_description }}{{ (seo_description ?? excerpt ?? settings:seo_description) | strip_tags | entities }}{{ /yield:seo_description }}"
+    >
+    <link
+        rel="canonical"
+        href="{{ canonical_url ?? current_url }}{{ get:page > 1 ?= '?page={get:page}' }}"
+    >
+    <meta
+        name="robots"
+        content="{{ noindex || environment !== 'production' ? 'noindex, follow' : 'index, follow, max-image-preview:large' }}"
+    >
+
+    <meta
+        property="og:locale"
+        content="{{ site:locale }}"
+    >
+    <meta
+        property="og:site_name"
+        content="{{ site:name }}"
+    >
+    <meta
+        property="og:type"
+        content="{{ collection:handle == 'articles' ? 'article' : 'website' }}"
+    >
+    <meta
+        property="og:title"
+        content="{{ (seo_title ?? title) | entities }}"
+    >
+    <meta
+        property="og:description"
+        content="{{ (seo_description ?? excerpt ?? settings:seo_description) | strip_tags | entities }}"
+    >
+    <meta
+        property="og:url"
+        content="{{ current_url }}"
+    >
+    {{ if og_image }}
+        {{ og_image }}
+            {{ partial:meta-tags/og-image }}
+        {{ /og_image }}
+    {{ elseif featured_image }}
+        {{ featured_image }}
+            {{ partial:meta-tags/og-image }}
+        {{ /featured_image }}
+    {{ elseif settings:og_image }}
+        {{ settings:og_image }}
+            {{ partial:meta-tags/og-image }}
+        {{ /settings:og_image }}
+    {{ /if }}
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
+    {{ if collection:handle == 'articles' }}
+        <meta
+            property="article:published_time"
+            content="{{ date format='c' }}"
+        >
+        <meta
+            property="article:modified_time"
+            content="{{ last_modified format='c' }}"
+        >
+    {{ /if }}
+
+    {{ partial:meta-tags/schema }}
+
     {{ vite src="resources/css/site.css|resources/js/site.js" }}
+
+    {{ if environment === 'production' }}
+        {{ ads:head_code }}
+    {{ /if }}
 </head>

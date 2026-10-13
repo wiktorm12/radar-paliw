@@ -1,0 +1,12 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ partial:section class="{{ view:bg[background_color] }}" }}
+    <div class="container">
+        {{ partial:ads/slot :position="placement:value" }}
+    </div>
+{{ /partial:section }}

@@ -6,10 +6,20 @@
     {{ partial:layout/head }}
     <body class="flex min-h-dvh flex-col bg-white font-sans text-zinc-800 antialiased">
         {{ partial:layout/header }}
+        <div class="container py-4">
+            {{ partial:ads/slot position="site_top" }}
+        </div>
+        {{ unless is_homepage }}
+            {{ partial:layout/breadcrumbs }}
+        {{ /unless }}
         <main class="grow">
             {{ template_content }}
         </main>
+        <div class="container py-8">
+            {{ partial:ads/slot position="site_bottom" }}
+        </div>
         {{ partial:layout/footer }}
+        {{ partial:ads/sticky }}
         {{ stack:modals }}
         {{ stack:scripts }}
     </body>

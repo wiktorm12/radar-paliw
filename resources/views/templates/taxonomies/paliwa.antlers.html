@@ -1,0 +1,37 @@
+{{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
+{{ section:seo_title }}{{ seo_title ?? 'Promocje na {title} – aktualne rabaty na stacjach · {site:name}' }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ (seo_description ?? 'Wszystkie aktualne promocje na {title} na stacjach Orlen, BP, Shell, Circle K, MOL, Moya i Amic.') | entities }}{{ /section:seo_description }}
+
+{{ partial:section }}
+    <div class="container">
+        <h1 class="mb-8 text-4xl font-bold tracking-tight">Promocje na {{ title }}</h1>
+        {{ partial:components/promotions/list
+            :fuel_type="slug"
+            ad_every="6"
+            per_page="48"
+        }}
+        {{ if description }}
+            <div class="prose mt-12 max-w-3xl">
+                {{ description }}
+            </div>
+        {{ /if }}
+    </div>
+{{ /partial:section }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-6 text-2xl font-bold">Promocje na inne paliwa</h2>
+        <ul class="flex flex-wrap gap-3">
+            {{ taxonomy:paliwa :slug:not="slug" }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="block rounded-full bg-white px-4 py-2 text-sm font-medium shadow-sm hover:bg-brand-100"
+                    >
+                        {{ title }}
+                    </a>
+                </li>
+            {{ /taxonomy:paliwa }}
+        </ul>
+    </div>
+{{ /partial:section }}

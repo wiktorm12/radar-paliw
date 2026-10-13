@@ -1,0 +1,55 @@
+title: 'Partial: Ad Placement'
+fields:
+  -
+    handle: placement
+    field:
+      type: select
+      display: 'Miejsce reklamy'
+      validate:
+        - required
+      options:
+        -
+          key: site_top
+          value: 'Cała strona — pod nagłówkiem (billboard)'
+        -
+          key: site_bottom
+          value: 'Cała strona — nad stopką (billboard)'
+        -
+          key: mobile_sticky
+          value: 'Mobile — przyklejony pasek na dole (320×50)'
+        -
+          key: home_after_hero
+          value: 'Strona główna — pod hero (billboard)'
+        -
+          key: home_bottom
+          value: 'Strona główna — dół (billboard)'
+        -
+          key: promotions_in_feed
+          value: 'Lista promocji — między kartami (in-feed)'
+        -
+          key: blog_top
+          value: 'Blog — nad listą artykułów (billboard)'
+        -
+          key: blog_in_feed
+          value: 'Blog — między artykułami (in-feed)'
+        -
+          key: article_top
+          value: 'Artykuł — pod tytułem (leaderboard)'
+        -
+          key: article_inline
+          value: 'Artykuł — w treści (rectangle)'
+        -
+          key: article_bottom
+          value: 'Artykuł — pod treścią (billboard)'
+        -
+          key: article_sidebar_top
+          value: 'Artykuł — sidebar góra (300×250)'
+        -
+          key: article_sidebar_sticky
+          value: 'Artykuł — sidebar przyklejony (300×600)'
+        -
+          key: station_top
+          value: 'Stacja — pod nagłówkiem (leaderboard)'
+        -
+          key: promotion_sidebar
+          value: 'Promocja — obok szczegółów (300×250)'

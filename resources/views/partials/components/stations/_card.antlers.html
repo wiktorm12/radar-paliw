@@ -1,0 +1,11 @@
+<a
+    href="{{ url }}"
+    class="flex h-full flex-col rounded-2xl border-l-4 border-zinc-200 bg-white p-5 text-zinc-800 shadow-sm transition hover:shadow-md"
+    style="border-left-color: {{ brand_color ?? 'currentColor' }}"
+>
+    <span class="mb-1 text-lg font-semibold">{{ title }}</span>
+    {{ if loyalty_program }}
+        <span class="mb-3 text-sm text-zinc-500">{{ loyalty_program }}</span>
+    {{ /if }}
+    <span class="mt-auto text-sm font-medium text-brand-600">Promocje {{ title }} →</span>
+</a>

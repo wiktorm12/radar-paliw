@@ -1,0 +1,47 @@
+{{ collection:articles
+    as="articles"
+    query_scope="articles_filter"
+    :category="category"
+    :station="station"
+    :exclude="exclude"
+    :limit="per_page"
+    :paginate="paginated ? 'true' : 'false'"
+}}
+    {{ if no_results }}
+        <p class="text-zinc-500">Brak artykułów.</p>
+    {{ else }}
+        <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {{ articles }}
+                <li>
+                    {{ partial:components/articles/card }}
+                </li>
+                {{ if ad_every > 0 && !last }}
+                    {{ if count % ad_every == 0 }}
+                        <li class="col-span-full">
+                            {{ partial:ads/slot position="blog_in_feed" }}
+                        </li>
+                    {{ /if }}
+                {{ /if }}
+            {{ /articles }}
+        </ul>
+        {{ push:schema }}
+            ,{
+                "@type": "ItemList",
+                "numberOfItems": {{ articles | length }},
+                "itemListElement": [
+                    {{ articles }}
+                        {
+                            "@type": "ListItem",
+                            "position": {{ count }},
+                            "url": "{{ permalink }}",
+                            "name": {{ title | to_json }}
+                        }{{ !last ?= ',' }}
+                    {{ /articles }}
+                ]
+            }
+        {{ /push:schema }}
+        {{ paginate }}
+            {{ partial:components/pagination }}
+        {{ /paginate }}
+    {{ /if }}
+{{ /collection:articles }}

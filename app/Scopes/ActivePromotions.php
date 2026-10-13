@@ -28,7 +28,11 @@ class ActivePromotions extends Scope
         }
 
         if ($fuelType) {
-            $query->whereJsonContains('fuel_types', $fuelType);
+            $query->whereJsonContains('paliwa', $fuelType);
+        }
+
+        if ($exclude = $values->get('exclude')) {
+            $query->where('id', '!=', $exclude);
         }
     }
 

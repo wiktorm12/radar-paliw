@@ -1,0 +1,148 @@
+{{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ permalink }}#article" }{{ /section:schema_main_entity }}
+{{ push:schema }}
+        ,{
+            "@type": "BlogPosting",
+            "@id": "{{ permalink }}#article",
+            "headline": {{ title | to_json }},
+            "description": {{ (seo_description ?? excerpt) | strip_tags | to_json }},
+            "datePublished": "{{ date format='c' }}",
+            "dateModified": "{{ last_modified format='c' }}",
+            "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" },
+            "isPartOf": { "@id": "{{ site:permalink }}/#website" },
+            "inLanguage": "pl-PL",
+            "wordCount": {{ content | bard_text | word_count }},
+            "articleSection": {{ kategorie | pluck('title') | to_json }},{{ featured_image }}
+            "image": {
+                "@type": "ImageObject",
+                "url": "{{ glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true" }}",
+                "width": 1200,
+                "height": 630
+            },{{ /featured_image }}{{ if stations }}
+            "about": [
+                {{ stations }}
+                    { "@type": "Organization", "@id": "{{ permalink }}#brand", "name": {{ title | to_json }} }{{ !last ?= ',' }}
+                {{ /stations }}
+            ],{{ /if }}
+            "author": {{ if author }}{
+                "@type": "Person",
+                "name": {{ author:name | to_json }}
+            }{{ else }}{ "@id": "{{ site:permalink }}/#organization" }{{ /if }},
+            "publisher": { "@id": "{{ site:permalink }}/#organization" }
+        }
+{{ /push:schema }}
+
+{{ partial:section }}
+    <div class="container">
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <article>
+                <ul class="mb-4 flex flex-wrap gap-3 text-sm font-semibold uppercase tracking-wide text-brand-600">
+                    {{ kategorie }}
+                        <li>
+                            <a
+                                href="{{ url }}"
+                                class="hover:underline"
+                            >
+                                {{ title }}
+                            </a>
+                        </li>
+                    {{ /kategorie }}
+                </ul>
+                <h1 class="mb-4 text-4xl font-bold tracking-tight text-balance md:text-5xl">{{ title }}</h1>
+                <p class="mb-6 text-sm text-zinc-500">
+                    <time datetime="{{ date format='Y-m-d' }}">{{ date iso_format="D MMMM YYYY" }}</time>
+                    · {{ content | bard_text | read_time }} min czytania
+                    {{ author ?= '· {author:name}' }}
+                </p>
+                <p class="mb-8 text-xl text-zinc-600">{{ excerpt }}</p>
+                {{ featured_image }}
+                    {{ partial:image
+                        w="800"
+                        h="450"
+                        w_xl="1100"
+                        h_xl="620"
+                        cover="true"
+                        no_lazy="true"
+                        class="mb-8 aspect-video w-full rounded-2xl object-cover"
+                    }}
+                {{ /featured_image }}
+                <div class="mb-8">
+                    {{ partial:ads/slot position="article_top" }}
+                </div>
+                {{ content }}
+                    {{ if type == 'text' }}
+                        <div class="prose prose-lg mb-8 max-w-none prose-a:text-brand-600">
+                            {{ text }}
+                        </div>
+                    {{ elseif type == 'ad' }}
+                        <div class="mb-8">
+                            {{ partial:ads/slot :position="placement:value" }}
+                        </div>
+                    {{ /if }}
+                {{ /content }}
+                {{ if stations }}
+                    <div class="mb-8 rounded-2xl bg-zinc-100 p-6">
+                        <p class="mb-3 font-semibold">Sprawdź aktualne promocje:</p>
+                        <ul class="flex flex-wrap gap-3">
+                            {{ stations }}
+                                <li>
+                                    <a
+                                        href="{{ url }}"
+                                        class="button"
+                                    >
+                                        {{ title }}
+                                    </a>
+                                </li>
+                            {{ /stations }}
+                        </ul>
+                    </div>
+                {{ /if }}
+                {{ if faq }}
+                    <h2 class="mb-6 text-2xl font-bold">Najczęstsze pytania</h2>
+                    <div class="mb-8">
+                        {{ partial:components/faq/list }}
+                    </div>
+                {{ /if }}
+                {{ partial:ads/slot position="article_bottom" }}
+            </article>
+
+            <aside class="flex flex-col gap-8">
+                {{ partial:ads/slot position="article_sidebar_top" }}
+                <div>
+                    <p class="mb-4 text-lg font-bold">Najnowsze promocje</p>
+                    <ul class="flex flex-col gap-3">
+                        {{ collection:promotions
+                            query_scope="active_promotions"
+                            sort="featured:desc|valid_to:asc"
+                            limit="5"
+                        }}
+                            <li>
+                                <a
+                                    href="{{ url }}"
+                                    class="block rounded-xl border border-zinc-200 p-4 text-sm hover:border-brand-500"
+                                >
+                                    <span class="mb-1 block text-xs font-semibold uppercase text-zinc-500">{{ station:title }}</span>
+                                    <span class="font-medium">{{ title }}</span>
+                                </a>
+                            </li>
+                        {{ /collection:promotions }}
+                    </ul>
+                </div>
+                <div class="lg:sticky lg:top-8">
+                    {{ partial:ads/slot position="article_sidebar_sticky" }}
+                </div>
+            </aside>
+        </div>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Przeczytaj także</h2>
+        {{ partial:components/articles/list
+            :category="kategorie:0:slug"
+            :exclude="id"
+            per_page="3"
+        }}
+    </div>
+{{ /partial:section }}

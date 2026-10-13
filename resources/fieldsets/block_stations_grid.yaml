@@ -1,0 +1,20 @@
+title: 'Block: Stations Grid'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+      instructions: 'Siatka linków do wszystkich sieci stacji.'
+  -
+    import: partial_header
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

@@ -1,4 +1,4 @@
-title: 'Rodzaj paliwa'
+title: Kategoria
 tabs:
   main:
     display: Main
@@ -13,6 +13,23 @@ tabs:
               required: true
               validate:
                 - required
+          -
+            handle: description
+            field:
+              type: textarea
+              display: Opis
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
           -
             handle: slug
             field:

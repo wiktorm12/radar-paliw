@@ -1,0 +1,132 @@
+title: Artykuł
+tabs:
+  main:
+    display: Treść
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Tytuł (H1)
+              required: true
+              validate:
+                - required
+          -
+            handle: excerpt
+            field:
+              type: textarea
+              display: Zajawka
+              instructions: 'Lead pod tytułem, na liście artykułów i fallback meta description.'
+              character_limit: 300
+              validate:
+                - required
+          -
+            handle: featured_image
+            field:
+              type: assets
+              display: 'Zdjęcie główne'
+              container: img
+              max_files: 1
+          -
+            handle: content
+            field:
+              type: bard
+              display: Treść
+              instructions: 'Dodaj set „Reklama”, aby wstawić reklamę w treści.'
+              allow_source: true
+              remove_empty_nodes: false
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - quote
+                - anchor
+                - table
+                - image
+              container: img
+              sets:
+                new_set_group:
+                  display: Wstawki
+                  sets:
+                    ad:
+                      display: Reklama
+                      icon: money-cash-bill
+                      fields:
+                        -
+                          import: partial_ad_placement
+          -
+            handle: faq
+            field:
+              type: grid
+              display: 'FAQ'
+              instructions: 'Pytania i odpowiedzi pod artykułem — generują schema FAQPage.'
+              mode: stacked
+              add_row: 'Dodaj pytanie'
+              fields:
+                -
+                  handle: question
+                  field:
+                    type: text
+                    display: Pytanie
+                    validate:
+                      - required
+                -
+                  handle: answer
+                  field:
+                    type: textarea
+                    display: Odpowiedź
+                    validate:
+                      - required
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'
+          -
+            handle: date
+            field:
+              type: date
+              display: 'Data publikacji'
+              required: true
+              validate:
+                - required
+          -
+            handle: kategorie
+            field:
+              type: terms
+              display: Kategorie
+              taxonomies:
+                - kategorie
+              mode: select
+          -
+            handle: author
+            field:
+              type: users
+              display: Autor
+              default: current
+              max_items: 1
+          -
+            handle: stations
+            field:
+              type: entries
+              display: 'Powiązane stacje'
+              collections:
+                - stations
+              mode: select

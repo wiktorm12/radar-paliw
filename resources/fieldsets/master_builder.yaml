@@ -29,3 +29,27 @@ fields:
               fields:
                 -
                   import: block_promotions_list
+            block_ad:
+              display: Reklama
+              icon: money-cash-bill
+              fields:
+                -
+                  import: block_ad
+            block_articles_list:
+              display: 'Lista artykułów'
+              icon: content-writing
+              fields:
+                -
+                  import: block_articles_list
+            block_stations_grid:
+              display: 'Siatka stacji'
+              icon: grid
+              fields:
+                -
+                  import: block_stations_grid
+            block_faq:
+              display: FAQ
+              icon: help
+              fields:
+                -
+                  import: block_faq

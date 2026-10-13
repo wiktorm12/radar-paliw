@@ -29,7 +29,7 @@ fields:
       display: 'Rodzaj paliwa'
       instructions: 'Puste = wszystkie paliwa.'
       taxonomies:
-        - fuel_types
+        - paliwa
       max_items: 1
       mode: select
   -
@@ -44,6 +44,14 @@ fields:
       type: section
       display: Ustawienia
       instructions: 'Wygląd i układ bloku.'
+  -
+    handle: ad_every
+    field:
+      type: integer
+      display: 'Reklama co X promocji'
+      instructions: '0 = bez reklam in-feed (miejsce: Lista promocji — między kartami).'
+      default: 6
+      width: 33
   -
     import: partial_background
   -

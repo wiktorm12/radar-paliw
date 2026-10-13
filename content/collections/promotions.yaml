@@ -4,4 +4,4 @@ route: '/promocje/{slug}'
 sort_by: valid_to
 sort_dir: asc
 taxonomies:
-  - fuel_types
+  - paliwa

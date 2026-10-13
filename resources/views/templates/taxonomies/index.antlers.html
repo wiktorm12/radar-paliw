@@ -1,0 +1,18 @@
+{{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
+{{ partial:section }}
+    <div class="container">
+        <h1 class="mb-8 text-4xl font-bold tracking-tight">{{ title }}</h1>
+        <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {{ taxonomy :from="handle" }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="block rounded-2xl border border-zinc-200 p-5 font-semibold hover:border-brand-500"
+                    >
+                        {{ title }}
+                    </a>
+                </li>
+            {{ /taxonomy }}
+        </ul>
+    </div>
+{{ /partial:section }}

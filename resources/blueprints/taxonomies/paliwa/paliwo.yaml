@@ -1,0 +1,47 @@
+title: 'Rodzaj paliwa'
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              display: Nazwa
+              required: true
+              validate:
+                - required
+          -
+            handle: description
+            field:
+              type: bard
+              display: 'Opis (SEO)'
+              instructions: 'Tekst pod listą promocji na stronie paliwa.'
+              allow_source: true
+              remove_empty_nodes: false
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - anchor
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              validate: 'max:200'

@@ -1,0 +1,24 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+---
+
+{{ partial:section class="{{ view:bg[background_color] }}" }}
+    <div class="container">
+        {{ if heading }}
+            <h2 class="mb-4 text-3xl font-bold tracking-tight">{{ heading }}</h2>
+        {{ /if }}
+        {{ if intro }}
+            <p class="mb-8 max-w-2xl text-zinc-600">{{ intro }}</p>
+        {{ /if }}
+        <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {{ collection:stations }}
+                <li>
+                    {{ partial:components/stations/card }}
+                </li>
+            {{ /collection:stations }}
+        </ul>
+    </div>
+{{ /partial:section }}

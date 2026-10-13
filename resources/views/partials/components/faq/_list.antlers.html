@@ -1,0 +1,26 @@
+<div class="flex flex-col gap-3">
+    {{ faq }}
+        <details class="group rounded-2xl border border-zinc-200 bg-white p-5 text-zinc-800">
+            <summary class="cursor-pointer list-none font-semibold group-open:mb-3">{{ question }}</summary>
+            <p class="text-zinc-600">{{ answer }}</p>
+        </details>
+    {{ /faq }}
+</div>
+{{ push:schema }}
+        ,{
+            "@type": "FAQPage",
+            "@id": "{{ current_url }}#faq",
+            "mainEntity": [
+                {{ faq }}
+                    {
+                        "@type": "Question",
+                        "name": {{ question | to_json }},
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": {{ answer | to_json }}
+                        }
+                    }{{ !last ?= ',' }}
+                {{ /faq }}
+            ]
+        }
+{{ /push:schema }}

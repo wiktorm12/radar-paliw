@@ -1,0 +1,53 @@
+---
+formats:
+    'site_top': 'min-h-28 md:min-h-64'
+    'site_bottom': 'min-h-28 md:min-h-64'
+    'home_after_hero': 'min-h-28 md:min-h-64'
+    'home_bottom': 'min-h-28 md:min-h-64'
+    'blog_top': 'min-h-28 md:min-h-64'
+    'article_bottom': 'min-h-28 md:min-h-64'
+    'article_top': 'min-h-28 md:min-h-24'
+    'station_top': 'min-h-28 md:min-h-24'
+    'promotions_in_feed': 'min-h-64'
+    'blog_in_feed': 'min-h-64'
+    'article_inline': 'min-h-64 max-w-sm'
+    'article_sidebar_top': 'min-h-64 max-w-sm'
+    'promotion_sidebar': 'min-h-64 max-w-sm'
+    'article_sidebar_sticky': 'min-h-152 max-w-xs'
+    'mobile_sticky': 'min-h-14'
+---
+
+{{ ad_slot :placement="position" }}
+    {{ if no_results }}
+        {{ if environment !== 'production' }}
+            <div class="mx-auto flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-400 {{ view:formats[position] }}">
+                Reklama · {{ position }}
+            </div>
+        {{ /if }}
+    {{ else }}
+        <aside
+            class="mx-auto flex w-full flex-col items-center justify-center {{ view:formats[position] }}"
+            aria-label="Reklama"
+            data-ad-placement="{{ position }}"
+        >
+            <p class="mb-1 text-xs uppercase tracking-wide text-zinc-400">Reklama</p>
+            {{ if kind:value == 'image' }}
+                <a
+                    href="{{ url }}"
+                    target="_blank"
+                    rel="sponsored noopener"
+                >
+                    {{ image }}
+                        {{ partial:image
+                            w="970"
+                            fit="max"
+                            class="h-auto max-w-full"
+                        }}
+                    {{ /image }}
+                </a>
+            {{ else }}
+                {{ code }}
+            {{ /if }}
+        </aside>
+    {{ /if }}
+{{ /ad_slot }}

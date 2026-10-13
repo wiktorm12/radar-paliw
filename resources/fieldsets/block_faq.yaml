@@ -1,0 +1,47 @@
+title: 'Block: FAQ'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+  -
+    import: partial_header
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Pytania
+      instructions: 'Generują schema FAQPage. Jeden blok FAQ na stronę.'
+  -
+    handle: faq
+    field:
+      type: grid
+      display: FAQ
+      mode: stacked
+      add_row: 'Dodaj pytanie'
+      fields:
+        -
+          handle: question
+          field:
+            type: text
+            display: Pytanie
+            validate:
+              - required
+        -
+          handle: answer
+          field:
+            type: textarea
+            display: Odpowiedź
+            validate:
+              - required
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

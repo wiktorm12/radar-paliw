@@ -1,47 +1,116 @@
+{{ section:seo_title }}{{ seo_title ?? '{title} – {station:title} · {site:name}' }}{{ /section:seo_title }}
+{{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ permalink }}#offer" }{{ /section:schema_main_entity }}
+{{ push:schema }}
+        ,{
+            "@type": "Offer",
+            "@id": "{{ permalink }}#offer",
+            "name": {{ title | to_json }},
+            "description": {{ (seo_description ?? (content | bard_text | truncate(300)) ?? title) | strip_tags | to_json }},
+            "url": "{{ permalink }}",
+            "category": "Paliwo",
+            "validFrom": "{{ valid_from format='Y-m-d' }}",
+            "validThrough": "{{ valid_to format='Y-m-d' }}T23:59:59+01:00",
+            "eligibleRegion": { "@type": "Country", "name": "PL" },
+            "availability": "https://schema.org/{{ (valid_to | is_past) && !(valid_to | is_today) ? 'Discontinued' : 'InStock' }}",{{ station }}
+            "seller": {
+                "@type": "Organization",
+                "@id": "{{ permalink }}#brand",
+                "name": {{ title | to_json }},
+                "url": "{{ permalink }}"
+            },{{ /station }}
+            "itemOffered": [
+                {{ paliwa }}
+                    { "@type": "Product", "name": {{ title | to_json }}, "category": "Paliwo", "url": "{{ permalink }}" }{{ !last ?= ',' }}
+                {{ /paliwa }}
+            ]
+        }
+{{ /push:schema }}
+
 {{ partial:section }}
     <div class="container">
-        <article class="max-w-3xl">
-            {{ station }}
-                <a
-                    href="{{ url }}"
-                    class="mb-4 inline-block text-sm font-semibold uppercase tracking-wide"
-                    style="color: {{ brand_color ?? 'inherit' }}"
-                >
-                    {{ title }}
-                </a>
-            {{ /station }}
-            <h1 class="mb-6 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
-            <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-4">
-                <div>
-                    <dt class="text-zinc-500">Ważna od</dt>
-                    <dd class="font-semibold">{{ valid_from format="j.m.Y" }}</dd>
+        <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <article>
+                {{ station }}
+                    <a
+                        href="{{ url }}"
+                        class="mb-4 inline-block text-sm font-semibold uppercase tracking-wide"
+                        style="color: {{ brand_color ?? 'inherit' }}"
+                    >
+                        {{ title }}
+                    </a>
+                {{ /station }}
+                <h1 class="mb-6 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
+                {{ if (valid_to | is_past) && !(valid_to | is_today) }}
+                    <p class="mt-0 mb-6 rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">Ta promocja już się zakończyła. Zobacz aktualne promocje {{ station:title }} poniżej.</p>
+                {{ /if }}
+                <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-4">
+                    <div>
+                        <dt class="text-zinc-500">Ważna od</dt>
+                        <dd class="font-semibold">{{ valid_from format="j.m.Y" }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-zinc-500">Ważna do</dt>
+                        <dd class="font-semibold">{{ valid_to format="j.m.Y" }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-zinc-500">Paliwa</dt>
+                        <dd class="font-semibold">
+                            {{ paliwa }}
+                                <a
+                                    href="{{ url }}"
+                                    class="hover:text-brand-600"
+                                >{{ title }}</a>{{ !last ?= ', ' }}
+                            {{ /paliwa }}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt class="text-zinc-500">Aplikacja / karta</dt>
+                        <dd class="font-semibold">{{ requires_app ? 'Tak' : 'Nie' }}</dd>
+                    </div>
+                </dl>
+                <div class="prose mb-8">
+                    {{ content }}
                 </div>
+                {{ if source_url }}
+                    <a
+                        href="{{ source_url }}"
+                        class="button"
+                        target="_blank"
+                        rel="noopener nofollow"
+                    >
+                        Regulamin u operatora
+                    </a>
+                {{ /if }}
+            </article>
+            <aside class="flex flex-col gap-8">
+                {{ partial:ads/slot position="promotion_sidebar" }}
                 <div>
-                    <dt class="text-zinc-500">Ważna do</dt>
-                    <dd class="font-semibold">{{ valid_to format="j.m.Y" }}</dd>
+                    <p class="mb-4 text-lg font-bold">Inne sieci</p>
+                    <ul class="flex flex-wrap gap-2">
+                        {{ collection:stations :id:not="station:id" }}
+                            <li>
+                                <a
+                                    href="{{ url }}"
+                                    class="block rounded-full bg-zinc-100 px-3 py-1.5 text-sm font-medium hover:bg-brand-100"
+                                >
+                                    {{ title }}
+                                </a>
+                            </li>
+                        {{ /collection:stations }}
+                    </ul>
                 </div>
-                <div>
-                    <dt class="text-zinc-500">Paliwa</dt>
-                    <dd class="font-semibold">{{ fuel_types }}{{ title }}{{ !last ?= ', ' }}{{ /fuel_types }}</dd>
-                </div>
-                <div>
-                    <dt class="text-zinc-500">Aplikacja / karta</dt>
-                    <dd class="font-semibold">{{ requires_app ? 'Tak' : 'Nie' }}</dd>
-                </div>
-            </dl>
-            <div class="prose mb-8">
-                {{ content }}
-            </div>
-            {{ if source_url }}
-                <a
-                    href="{{ source_url }}"
-                    class="button"
-                    target="_blank"
-                    rel="noopener nofollow"
-                >
-                    Regulamin u operatora
-                </a>
-            {{ /if }}
-        </article>
+            </aside>
+        </div>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Więcej promocji {{ station:title }}</h2>
+        {{ partial:components/promotions/list
+            :stations="station:id"
+            :exclude="id"
+        }}
     </div>
 {{ /partial:section }}

@@ -54,6 +54,13 @@ tabs:
                 - unorderedlist
                 - orderedlist
                 - anchor
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
   sidebar:
     display: Sidebar
     sections:

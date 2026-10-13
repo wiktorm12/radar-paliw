@@ -1,0 +1,26 @@
+{{ if total_pages > 1 }}
+    <nav
+        class="mt-12 flex items-center justify-center gap-4 text-sm font-medium"
+        aria-label="Paginacja"
+    >
+        {{ if prev_page }}
+            <a
+                href="{{ prev_page }}"
+                class="button"
+                rel="prev"
+            >
+                ← Nowsze
+            </a>
+        {{ /if }}
+        <span class="text-zinc-500">Strona {{ current_page }} z {{ total_pages }}</span>
+        {{ if next_page }}
+            <a
+                href="{{ next_page }}"
+                class="button"
+                rel="next"
+            >
+                Starsze →
+            </a>
+        {{ /if }}
+    </nav>
+{{ /if }}

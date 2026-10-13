@@ -1,22 +1,10 @@
 tree:
   -
-    id: nav-main-orlen
-    entry: station-orlen
+    id: nav-main-promocje
+    entry: page-promocje
   -
-    id: nav-main-bp
-    entry: station-bp
+    id: nav-main-stacje
+    entry: page-stacje
   -
-    id: nav-main-shell
-    entry: station-shell
-  -
-    id: nav-main-circle-k
-    entry: station-circle-k
-  -
-    id: nav-main-mol
-    entry: station-mol
-  -
-    id: nav-main-moya
-    entry: station-moya
-  -
-    id: nav-main-amic
-    entry: station-amic
+    id: nav-main-blog
+    entry: page-blog

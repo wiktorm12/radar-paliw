@@ -1,0 +1,10 @@
+title: Blog
+template: templates/articles/show
+route: '/blog/{slug}'
+date: true
+sort_dir: desc
+date_behavior:
+  past: public
+  future: private
+taxonomies:
+  - kategorie

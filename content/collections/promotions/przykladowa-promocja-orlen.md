@@ -1,11 +1,11 @@
 ---
 id: promotion-example-orlen
+blueprint: promotion
 title: 'Przykładowa promocja: -30 gr/l z aplikacją'
-published: true
 station: station-orlen
-fuel_types:
+paliwa:
   - pb95
-  - on
+  - 'on'
 discount_type: cents_per_liter
 discount_value: 30
 valid_from: '2026-10-01'

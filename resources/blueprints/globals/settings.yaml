@@ -17,3 +17,22 @@ tabs:
             field:
               type: textarea
               display: 'Tekst w stopce'
+          -
+            handle: og_image
+            field:
+              type: assets
+              display: 'Domyślny obraz OG (1200×630)'
+              container: img
+              max_files: 1
+          -
+            handle: seo_description
+            field:
+              type: textarea
+              display: 'Domyślny meta description'
+              character_limit: 170
+          -
+            handle: same_as
+            field:
+              type: list
+              display: 'Profile społecznościowe (sameAs)'
+              instructions: 'Pełne URL-e profili (Facebook, Instagram, LinkedIn…) — trafiają do schema Organization.'

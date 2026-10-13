@@ -26,12 +26,12 @@ tabs:
               validate:
                 - required
           -
-            handle: fuel_types
+            handle: paliwa
             field:
               type: terms
               display: 'Rodzaje paliwa'
               taxonomies:
-                - fuel_types
+                - paliwa
               create: false
               mode: select
               width: 50
@@ -108,6 +108,13 @@ tabs:
               input_type: url
               display: 'Źródło (URL)'
               instructions: 'Link do oficjalnego regulaminu lub ogłoszenia.'
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
   sidebar:
     display: Sidebar
     sections:

@@ -1,0 +1,39 @@
+<article class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white text-zinc-800 shadow-sm transition hover:shadow-md">
+    {{ featured_image }}
+        {{ partial:image
+            w="640"
+            h="360"
+            cover="true"
+            class="aspect-video w-full object-cover"
+        }}
+    {{ /featured_image }}
+    <div class="flex grow flex-col p-6">
+        <ul class="relative z-10 mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-brand-600">
+            {{ kategorie }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="hover:underline"
+                    >
+                        {{ title }}
+                    </a>
+                </li>
+            {{ /kategorie }}
+        </ul>
+        <h3 class="mb-3 text-lg font-semibold">
+            <a
+                href="{{ url }}"
+                class="before:absolute before:inset-0"
+            >
+                {{ title }}
+            </a>
+        </h3>
+        <p class="mb-4 text-sm text-zinc-600">{{ excerpt | truncate(160, '…') }}</p>
+        <time
+            class="mt-auto text-sm text-zinc-500"
+            datetime="{{ date format='Y-m-d' }}"
+        >
+            {{ date iso_format="D MMMM YYYY" }}
+        </time>
+    </div>
+</article>

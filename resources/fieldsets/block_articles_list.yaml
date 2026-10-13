@@ -1,0 +1,56 @@
+title: 'Block: Articles List'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+  -
+    import: partial_header
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Zapytanie
+  -
+    handle: category
+    field:
+      type: terms
+      display: Kategoria
+      instructions: 'Puste = wszystkie artykuły.'
+      taxonomies:
+        - kategorie
+      max_items: 1
+      mode: select
+  -
+    handle: limit
+    field:
+      type: integer
+      display: 'Liczba artykułów'
+      default: 9
+      width: 50
+  -
+    handle: paginate
+    field:
+      type: toggle
+      display: Paginacja
+      default: true
+      width: 50
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    handle: ad_every
+    field:
+      type: integer
+      display: 'Reklama co X artykułów'
+      instructions: '0 = bez reklam in-feed (miejsce: Blog — między artykułami).'
+      default: 3
+      width: 33
+  -
+    import: partial_background
+  -
+    import: partial_section_id

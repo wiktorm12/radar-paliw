@@ -1,0 +1,43 @@
+{{ nav:breadcrumbs as="crumbs" }}
+    {{ if crumbs | length > 1 }}
+        <nav
+            class="container pt-6"
+            aria-label="Okruszki"
+        >
+            <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-500">
+                {{ crumbs }}
+                    <li class="flex items-center gap-2">
+                        {{ if !last }}
+                            <a
+                                href="{{ url }}"
+                                class="hover:text-brand-600"
+                            >
+                                {{ title }}
+                            </a>
+                            <span aria-hidden="true">/</span>
+                        {{ else }}
+                            <span aria-current="page">{{ title }}</span>
+                        {{ /if }}
+                    </li>
+                {{ /crumbs }}
+            </ol>
+        </nav>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "@id": "{{ current_url }}#breadcrumb",
+            "itemListElement": [
+                {{ crumbs }}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ count }},
+                        "name": {{ title | to_json }},
+                        "item": "{{ permalink ?? url }}"
+                    }{{ !last ?= ',' }}
+                {{ /crumbs }}
+            ]
+        }
+        </script>
+    {{ /if }}
+{{ /nav:breadcrumbs }}

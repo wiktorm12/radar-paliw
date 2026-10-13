@@ -1,33 +1,64 @@
+{{ section:seo_title }}{{ seo_title ?? 'Promocje {title} – aktualne rabaty na paliwo · {site:name}' }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ (seo_description ?? 'Aktualne promocje na paliwo na stacjach {title}: rabaty, kupony i akcje w programie {loyalty_program}.') | entities }}{{ /section:seo_description }}
+
+{{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
+{{ section:schema_main_entity }},
+            "about": { "@id": "{{ permalink }}#brand" }{{ /section:schema_main_entity }}
+{{ push:schema }}
+        ,{
+            "@type": "Organization",
+            "@id": "{{ permalink }}#brand",
+            "name": {{ title | to_json }},
+            "url": "{{ permalink }}"{{ logo }},
+            "logo": "{{ permalink }}"{{ /logo }}{{ if website }},
+            "sameAs": [{{ website | to_json }}]{{ /if }}{{ if loyalty_program }},
+            "brand": { "@type": "Brand", "name": {{ title | to_json }} },
+            "knowsAbout": {{ loyalty_program | to_json }}{{ /if }}
+        }
+{{ /push:schema }}
+
 {{ partial:section }}
     <div class="container">
-        <h1 class="mb-4 text-4xl font-bold tracking-tight">{{ title }}</h1>
+        <h1 class="mb-4 text-4xl font-bold tracking-tight">Promocje na paliwo {{ title }}</h1>
         {{ if loyalty_program }}
             <p class="mb-8 text-zinc-600">Program lojalnościowy: {{ loyalty_program }}</p>
         {{ /if }}
+        <div class="mb-12">
+            {{ partial:ads/slot position="station_top" }}
+        </div>
+        <h2 class="mb-6 text-2xl font-bold">Aktualne promocje {{ title }}</h2>
+        {{ partial:components/promotions/list
+            :stations="id"
+            ad_every="6"
+            per_page="48"
+        }}
         {{ if content }}
-            <div class="prose mb-12 max-w-3xl">
+            <div class="prose mt-12 max-w-3xl">
                 {{ content }}
             </div>
         {{ /if }}
+    </div>
+{{ /partial:section }}
 
-        <h2 class="mb-6 text-2xl font-bold">Aktualne promocje</h2>
-        {{ collection:promotions
-            as="promotions"
-            query_scope="active_promotions"
-            :stations="id"
-            sort="valid_to:asc"
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Artykuły o {{ title }}</h2>
+        {{ partial:components/articles/list
+            :station="id"
+            per_page="3"
         }}
-            {{ if no_results }}
-                <p class="text-zinc-500">Brak aktywnych promocji tej sieci.</p>
-            {{ else }}
-                <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {{ promotions }}
-                        <li>
-                            {{ partial:components/promotions/card }}
-                        </li>
-                    {{ /promotions }}
-                </ul>
-            {{ /if }}
-        {{ /collection:promotions }}
+    </div>
+{{ /partial:section }}
+
+{{ partial:section }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Promocje innych sieci</h2>
+        <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {{ collection:stations :id:not="id" }}
+                <li>
+                    {{ partial:components/stations/card }}
+                </li>
+            {{ /collection:stations }}
+        </ul>
     </div>
 {{ /partial:section }}

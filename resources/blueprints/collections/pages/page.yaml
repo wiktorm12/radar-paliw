@@ -15,6 +15,32 @@ tabs:
                 - required
           -
             import: master_builder
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: partial_seo
+          -
+            handle: schema_type
+            field:
+              type: select
+              display: 'Typ strony (schema.org)'
+              default: WebPage
+              options:
+                -
+                  key: WebPage
+                  value: 'WebPage — zwykła strona'
+                -
+                  key: CollectionPage
+                  value: 'CollectionPage — lista / archiwum'
+                -
+                  key: AboutPage
+                  value: 'AboutPage — o nas'
+                -
+                  key: ContactPage
+                  value: 'ContactPage — kontakt'
   sidebar:
     display: Sidebar
     sections:
