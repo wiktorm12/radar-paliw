@@ -13,3 +13,7 @@ tree:
     entry: station-moya
   -
     entry: station-amic
+  -
+    entry: station-auchan
+  -
+    entry: station-carrefour

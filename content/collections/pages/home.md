@@ -3,7 +3,7 @@ id: 049ed0c0-9796-43f7-b158-4f6129328c12
 title: 'Strona główna'
 blueprint: page
 seo_title: 'Radar Paliw — promocje na paliwo na stacjach w Polsce'
-seo_description: 'Wszystkie aktualne promocje na paliwo: Orlen, BP, Shell, Circle K, MOL, Moya i Amic. Rabaty, kupony i akcje w aplikacjach — codziennie aktualizowane.'
+seo_description: 'Wszystkie aktualne promocje na paliwo: Orlen, BP, Shell, Circle K, MOL, Moya, Amic, Auchan i Carrefour. Rabaty, kupony i akcje w aplikacjach — codziennie aktualizowane.'
 content:
   -
     id: hero01

@@ -3,7 +3,7 @@ id: page-promocje
 title: 'Promocje na paliwo'
 blueprint: page
 schema_type: CollectionPage
-seo_description: 'Aktualne promocje na paliwo na stacjach Orlen, BP, Shell, Circle K, MOL, Moya i Amic — rabaty, kupony i akcje w aplikacjach.'
+seo_description: 'Aktualne promocje na paliwo na stacjach Orlen, BP, Shell, Circle K, MOL, Moya, Amic, Auchan i Carrefour — rabaty, kupony i akcje w aplikacjach.'
 content:
   -
     id: promo01
