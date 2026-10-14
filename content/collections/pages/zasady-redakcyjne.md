@@ -4,7 +4,7 @@ title: Zasady redakcyjne
 blueprint: page
 schema_type: AboutPage
 seo_title: Zasady redakcyjne Radar Paliw — jak weryfikujemy dane
-seo_description: Jak Radar Paliw zbiera i weryfikuje promocje na paliwo i ceny maksymalne CPN, jak poprawiamy błędy oraz jak oddzielamy reklamy i linki partnerskie.
+seo_description: Jak Radar Paliw weryfikuje promocje na paliwo i ceny CPN, jak korzystamy z AI przy pisaniu artykułów, jak poprawiamy błędy i oznaczamy reklamy.
 content:
 - id: zasady01
   type: block_hero
@@ -117,9 +117,13 @@ content:
       level: 2
     content:
     - type: text
-      text: Wykorzystanie narzędzi automatyzujących
+      text: Artykuły tworzone przez sztuczną inteligencję
   - type: paragraph
     content:
     - type: text
-      text: Przy wyszukiwaniu i porządkowaniu informacji korzystamy z narzędzi automatyzujących. Takie narzędzia mogą popełniać błędy, dlatego podajemy źródła, a dane i opisy poddajemy sprawdzeniu pod kątem zgodności ze źródłem. Artykuły mają charakter informacyjny i nie stanowią porady technicznej ani finansowej.
+      text: 'Artykuły na blogu Radar Paliw są pisane przez sztuczną inteligencję (AI). Podpisani pod nimi autorzy – Agata, Krzysztof, Maciek, Natalia, Patryk i Wiktor – to wirtualne persony redakcyjne, a nie prawdziwe osoby; ich imiona porządkują teksty według tematów. Z AI korzystamy też przy wyszukiwaniu i opisywaniu promocji.'
+  - type: paragraph
+    content:
+    - type: text
+      text: 'AI może popełniać błędy, dlatego przy tekstach podajemy źródła, a dane – zwłaszcza ceny maksymalne CPN, terminy i warunki promocji – sprawdzamy przed publikacją z oficjalnymi komunikatami. Artykuły mają charakter informacyjny i nie stanowią porady technicznej ani finansowej. Jeśli znajdziesz błąd, napisz do nas – adres podajemy wyżej.'
 ---

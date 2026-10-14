@@ -9,7 +9,8 @@
             "@id": "{{ permalink }}#person",
             "name": {{ title | to_json }},
             "url": "{{ permalink }}",
-            "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" }{{ if job_title }},
+            "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" }{{ if email }},
+            "email": {{ email | to_json }}{{ /if }}{{ if job_title }},
             "jobTitle": {{ job_title | to_json }}{{ /if }}{{ if bio }},
             "description": {{ bio | to_json }}{{ /if }}{{ photo }},
             "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if same_as }},
@@ -41,6 +42,17 @@
                     <p class="mb-4 text-zinc-600">{{ bio | nl2br }}</p>
                 {{ else }}
                     <p class="mb-4 text-zinc-600">{{ title }} pisze w Radar Paliw o promocjach na paliwo, cenach paliw i programach lojalnościowych stacji.</p>
+                {{ /if }}
+                {{ if email }}
+                    <p class="mb-4 text-sm text-zinc-600">
+                        Kontakt:
+                        <a
+                            href="mailto:{{ email }}"
+                            class="font-medium text-brand-600 hover:underline"
+                        >
+                            {{ email }}
+                        </a>
+                    </p>
                 {{ /if }}
                 {{ if knows_about }}
                     <p class="mb-2 text-sm text-zinc-500">Specjalizacje:</p>

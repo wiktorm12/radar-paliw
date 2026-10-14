@@ -21,7 +21,18 @@
             <p class="mb-2 text-sm text-zinc-500">{{ job_title }}</p>
         {{ /if }}
         {{ if bio }}
-            <p class="text-sm text-zinc-600">{{ bio }}</p>
+            <p class="mb-2 text-sm text-zinc-600">{{ bio }}</p>
+        {{ /if }}
+        {{ if email }}
+            <p class="text-sm text-zinc-600">
+                Kontakt:
+                <a
+                    href="mailto:{{ email }}"
+                    class="font-medium text-brand-600 hover:underline"
+                >
+                    {{ email }}
+                </a>
+            </p>
         {{ /if }}
     </div>
 </aside>

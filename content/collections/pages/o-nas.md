@@ -26,7 +26,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: Promocje wyszukujemy codziennie na oficjalnych stronach i w aplikacjach sieci stacji oraz w serwisach branżowych. W tym procesie korzystamy z narzędzi automatyzujących wyszukiwanie i porządkowanie informacji. Przy każdej promocji podajemy źródło, a jej szczegóły streszczamy własnymi słowami.
+      text: Promocje wyszukujemy codziennie na oficjalnych stronach i w aplikacjach sieci stacji oraz w serwisach branżowych. W tym procesie korzystamy ze sztucznej inteligencji, która pisze też artykuły na blogu – podpisani pod nimi autorzy to wirtualne persony redakcyjne. Przy każdej promocji podajemy źródło, a jej szczegóły streszczamy własnymi słowami.
   - type: paragraph
     content:
     - type: text

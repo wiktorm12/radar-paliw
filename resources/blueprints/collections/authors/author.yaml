@@ -29,6 +29,13 @@ tabs:
               max_files: 1
               width: 50
           -
+            handle: email
+            field:
+              type: text
+              input_type: email
+              display: 'E-mail'
+              instructions: 'Adres kontaktowy autora — pokazywany na stronie autora i w schema Person.'
+          -
             handle: bio
             field:
               type: textarea
