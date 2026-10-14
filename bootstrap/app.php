@@ -7,6 +7,12 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
+// Warming the Stache with ~275 articles peaks around 150 MB; the default 128 MB limit made the
+// first request after a cache clear (e.g. every deploy) die with an unlogged fatal 500.
+if (($limit = ini_get('memory_limit')) !== '-1' && ini_parse_quantity($limit) < 256 * 1024 * 1024) {
+    ini_set('memory_limit', '256M');
+}
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',

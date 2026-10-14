@@ -123,9 +123,11 @@ return [
     |
     */
 
-    'ignore_query_strings' => true,
+    // Must stay false: when true, Statamic strips the whole query string before the
+    // allowed list below is applied, so /blog?page=N was served the cached page 1.
+    'ignore_query_strings' => false,
 
-    // Pagination and promotion filters render different content per query.
+    // Only these parameters create separate cache entries; anything else is dropped from the key.
     'allowed_query_strings' => [
         'page', 'stacja', 'paliwo', 'bez_aplikacji', 'sortuj',
     ],
