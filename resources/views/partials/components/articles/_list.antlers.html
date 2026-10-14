@@ -9,12 +9,18 @@
     :paginate="paginated ? 'true' : 'false'"
 }}
     {{ if no_results }}
+        {{ if paginated && get:page > 1 }}
+            {{ 404 }}
+        {{ /if }}
         <p class="text-zinc-500">Brak artykułów.</p>
     {{ else }}
         <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {{ articles }}
                 <li>
-                    {{ partial:components/articles/card }}
+                    {{ partial:components/articles/card
+                        :heading_level="heading_level"
+                        :no_lazy="count <= eager_count"
+                    }}
                 </li>
                 {{ if ad_every > 0 && !last }}
                     {{ if count % ad_every == 0 }}
@@ -25,22 +31,26 @@
                 {{ /if }}
             {{ /articles }}
         </ul>
-        {{ push:schema }}
-            ,{
-                "@type": "ItemList",
-                "numberOfItems": {{ articles | length }},
-                "itemListElement": [
-                    {{ articles }}
-                        {
-                            "@type": "ListItem",
-                            "position": {{ count }},
-                            "url": "{{ permalink }}",
-                            "name": {{ title | to_json }}
-                        }{{ !last ?= ',' }}
-                    {{ /articles }}
-                ]
-            }
-        {{ /push:schema }}
+        {{ if schema }}
+            {{ push:schema }}
+                ,{
+                    "@type": "ItemList",
+                    "@id": "{{ current_url }}#itemlist",
+                    "itemListOrder": "https://schema.org/ItemListOrderAscending",
+                    "numberOfItems": {{ articles | length }},
+                    "itemListElement": [
+                        {{ articles }}
+                            {
+                                "@type": "ListItem",
+                                "position": {{ count }},
+                                "url": "{{ permalink }}",
+                                "name": {{ title | to_json }}
+                            }{{ !last ?= ',' }}
+                        {{ /articles }}
+                    ]
+                }
+            {{ /push:schema }}
+        {{ /if }}
         {{ paginate }}
             {{ partial:components/pagination }}
         {{ /paginate }}

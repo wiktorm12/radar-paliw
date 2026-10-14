@@ -36,6 +36,25 @@ tabs:
               type: list
               display: 'Profile społecznościowe (sameAs)'
               instructions: 'Pełne URL-e profili (Facebook, Instagram, LinkedIn…) — trafiają do schema Organization.'
+          -
+            handle: legal_name
+            field:
+              type: text
+              display: 'Pełna nazwa wydawcy (legalName)'
+              instructions: 'Nazwa firmy z rejestru — trafia do schema Organization. Puste = pominięte.'
+          -
+            handle: contact_email
+            field:
+              type: text
+              input_type: email
+              display: 'E-mail kontaktowy'
+              instructions: 'Trafia do schema Organization (email, contactPoint).'
+          -
+            handle: publishing_principles_url
+            field:
+              type: text
+              display: 'Zasady redakcyjne — URL'
+              instructions: 'Ścieżka strony z zasadami redakcyjnymi (schema publishingPrinciples), np. /zasady-redakcyjne.'
   integrations:
     display: Integracje
     sections:

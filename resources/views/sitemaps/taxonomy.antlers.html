@@ -4,9 +4,12 @@
         <loc>{{ site:permalink }}/{{ sitemap_taxonomy }}</loc>
     </url>
     {{ taxonomy :from="sitemap_taxonomy" }}
-        {{ unless noindex }}
+        {{ unless noindex || canonical_url || entries_count == 0 }}
             <url>
                 <loc>{{ permalink }}</loc>
+                {{ entries limit="1" sort="updated_at:desc" }}
+                    <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+                {{ /entries }}
             </url>
         {{ /unless }}
     {{ /taxonomy }}

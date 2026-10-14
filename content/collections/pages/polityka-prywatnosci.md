@@ -3,7 +3,7 @@ id: page-polityka-prywatnosci
 title: Polityka prywatności
 blueprint: page
 schema_type: WebPage
-seo_description: 'Polityka prywatności i plików cookies serwisu Radar Paliw: jakie dane przetwarzamy, w jakim celu i jakie masz prawa.'
+seo_description: 'Polityka prywatności i cookies serwisu Radar Paliw: jakie dane przetwarzamy, w jakim celu, jak działają reklamy i jakie prawa przysługują użytkownikom.'
 content:
 - id: polity01
   type: block_hero
@@ -84,7 +84,7 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: 'Statystyki odwiedzin (Cloudflare Web Analytics, bez plików cookies i bez identyfikowania użytkowników) — prawnie uzasadniony interes Administratora polegający na analizie ruchu i ulepszaniu Serwisu (art. 6 ust. 1 lit. f RODO).'
+          text: Statystyki odwiedzin (Cloudflare Web Analytics, bez plików cookies i bez identyfikowania użytkowników) — prawnie uzasadniony interes Administratora polegający na analizie ruchu i ulepszaniu Serwisu (art. 6 ust. 1 lit. f RODO).
     - type: listItem
       content:
       - type: paragraph
@@ -152,7 +152,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: 'Zgodę możesz w każdej chwili zmienić lub wycofać w ustawieniach prywatności dostępnych w Serwisie albo w ustawieniach przeglądarki. Szczegóły dotyczące plików cookies reklamowych opisujemy w punkcie 6.'
+      text: Zgodę możesz w każdej chwili zmienić lub wycofać w ustawieniach prywatności dostępnych w Serwisie albo w ustawieniach przeglądarki. Szczegóły dotyczące plików cookies reklamowych opisujemy w punkcie 6.
   - type: heading
     attrs:
       level: 2
@@ -170,19 +170,19 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: 'Google i jego partnerzy, jako zewnętrzni dostawcy, używają plików cookies do wyświetlania reklam na podstawie Twoich wcześniejszych wizyt w Serwisie i w innych witrynach internetowych.'
+          text: Google i jego partnerzy, jako zewnętrzni dostawcy, używają plików cookies do wyświetlania reklam na podstawie Twoich wcześniejszych wizyt w Serwisie i w innych witrynach internetowych.
     - type: listItem
       content:
       - type: paragraph
         content:
         - type: text
-          text: 'Reklamowe pliki cookies pozwalają Google i jego partnerom wyświetlać Ci reklamy dopasowane do Twoich zainteresowań na podstawie odwiedzin w Serwisie lub w innych witrynach.'
+          text: Reklamowe pliki cookies pozwalają Google i jego partnerom wyświetlać Ci reklamy dopasowane do Twoich zainteresowań na podstawie odwiedzin w Serwisie lub w innych witrynach.
     - type: listItem
       content:
       - type: paragraph
         content:
         - type: text
-          text: 'Reklamy spersonalizowane wyświetlamy wyłącznie po wyrażeniu przez Ciebie zgody w oknie ustawień prywatności (zgodnie ze standardem IAB TCF). Bez tej zgody Google może wyświetlać reklamy niespersonalizowane, które nadal mogą korzystać z plików cookies lub identyfikatorów w celu ograniczania częstotliwości wyświetleń, raportowania statystyk i przeciwdziałania nadużyciom.'
+          text: Reklamy spersonalizowane wyświetlamy wyłącznie po wyrażeniu przez Ciebie zgody w oknie ustawień prywatności (zgodnie ze standardem IAB TCF). Bez tej zgody Google może wyświetlać reklamy niespersonalizowane, które nadal mogą korzystać z plików cookies lub identyfikatorów w celu ograniczania częstotliwości wyświetleń, raportowania statystyk i przeciwdziałania nadużyciom.
   - type: paragraph
     content:
     - type: text
@@ -200,9 +200,9 @@ content:
           marks:
           - type: link
             attrs:
-              href: 'https://adssettings.google.com'
+              href: https://adssettings.google.com
               target: _blank
-              rel: 'noopener noreferrer'
+              rel: noopener noreferrer
         - type: text
           text: ','
     - type: listItem
@@ -216,9 +216,9 @@ content:
           marks:
           - type: link
             attrs:
-              href: 'https://www.youronlinechoices.com/pl/'
+              href: https://www.youronlinechoices.com/pl/
               target: _blank
-              rel: 'noopener noreferrer'
+              rel: noopener noreferrer
         - type: text
           text: ' — w odniesieniu do plików cookies innych dostawców reklam,'
     - type: listItem
@@ -226,7 +226,7 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: 'zmieniając lub wycofując zgodę w ustawieniach prywatności Serwisu.'
+          text: zmieniając lub wycofując zgodę w ustawieniach prywatności Serwisu.
   - type: paragraph
     content:
     - type: text
@@ -236,9 +236,9 @@ content:
       marks:
       - type: link
         attrs:
-          href: 'https://policies.google.com/technologies/partner-sites'
+          href: https://policies.google.com/technologies/partner-sites
           target: _blank
-          rel: 'noopener noreferrer'
+          rel: noopener noreferrer
     - type: text
       text: ' oraz '
     - type: text
@@ -246,9 +246,9 @@ content:
       marks:
       - type: link
         attrs:
-          href: 'https://policies.google.com/privacy'
+          href: https://policies.google.com/privacy
           target: _blank
-          rel: 'noopener noreferrer'
+          rel: noopener noreferrer
     - type: text
       text: .
   - type: heading
@@ -285,4 +285,5 @@ content:
     content:
     - type: text
       text: 'Ostatnia aktualizacja: 14 października 2026.'
+seo_title: Polityka prywatności i plików cookies — Radar Paliw
 ---

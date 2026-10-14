@@ -3,7 +3,7 @@
         <div class="lg:col-span-2">
             <a
                 href="/"
-                class="mb-4 inline-block"
+                class="mb-4 inline-block py-1"
             >
                 <img
                     src="/img/logo/radar-paliw-logo-white.svg"
@@ -26,21 +26,21 @@
                 © {{ now format="Y" }} {{ site:name }} ·
                 <a
                     href="/promocje/feed.xml"
-                    class="hover:text-white"
+                    class="inline-block py-1.5 hover:text-white hover:underline"
                 >RSS promocji</a> ·
                 <a
                     href="/blog/feed.xml"
-                    class="hover:text-white"
+                    class="inline-block py-1.5 hover:text-white hover:underline"
                 >RSS bloga</a>
             </p>
             {{ nav:footer as="links" }}
                 {{ if links }}
-                    <ul class="flex flex-wrap gap-4">
+                    <ul class="flex flex-wrap gap-x-4">
                         {{ links }}
                             <li>
                                 <a
                                     href="{{ url }}"
-                                    class="hover:text-white"
+                                    class="inline-block py-1.5 hover:text-white hover:underline"
                                 >
                                     {{ title }}
                                 </a>

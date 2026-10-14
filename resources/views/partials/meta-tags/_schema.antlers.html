@@ -5,12 +5,27 @@
         {
             "@type": "Organization",
             "@id": "{{ site:permalink }}/#organization",
-            "name": {{ site:name | to_json }},
-            "url": "{{ site:permalink }}/"{{ settings:logo }},
+            "name": {{ site:name | to_json }},{{ if settings:legal_name }}
+            "legalName": {{ settings:legal_name | to_json }},{{ /if }}
+            "url": "{{ site:permalink }}/",
             "logo": {
                 "@type": "ImageObject",
-                "url": "{{ permalink }}"
-            }{{ /settings:logo }}{{ if settings:same_as }},
+                "@id": "{{ site:permalink }}/#logo",
+                "url": "{{ site:permalink }}/img/logo/icon-512.png",
+                "contentUrl": "{{ site:permalink }}/img/logo/icon-512.png",
+                "width": 512,
+                "height": 512,
+                "caption": {{ site:name | to_json }}
+            },
+            "image": { "@id": "{{ site:permalink }}/#logo" }{{ if settings:contact_email }},
+            "email": {{ settings:contact_email | to_json }},
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "email": {{ settings:contact_email | to_json }},
+                "availableLanguage": "pl-PL"
+            }{{ /if }}{{ if settings:publishing_principles_url }},
+            "publishingPrinciples": "{{ site:permalink }}{{ settings:publishing_principles_url }}"{{ /if }}{{ if settings:same_as }},
             "sameAs": {{ settings:same_as | to_json }}{{ /if }}
         },
         {
@@ -23,18 +38,21 @@
         },
         {
             "@type": "{{ yield:schema_page_type }}{{ schema_type:value ?? 'WebPage' }}{{ /yield:schema_page_type }}",
-            "@id": "{{ current_url }}#webpage",
-            "url": "{{ current_url }}",
-            "name": {{ (seo_title ?? title) | strip_tags | to_json }},
-            "description": {{ (seo_description ?? excerpt ?? settings:seo_description) | strip_tags | to_json }},
+            "@id": "{{ meta_canonical }}#webpage",
+            "url": "{{ meta_canonical }}",
+            "name": {{ (meta_og_title ?? site:name) | to_json }},{{ if meta_description }}
+            "description": {{ meta_description | to_json }},{{ /if }}
             "inLanguage": "pl-PL",
-            "isPartOf": { "@id": "{{ site:permalink }}/#website" }{{ if last_modified }},
-            "dateModified": "{{ last_modified format='c' }}"{{ /if }}{{ unless is_homepage }},
+            "isPartOf": { "@id": "{{ site:permalink }}/#website" },
+            "publisher": { "@id": "{{ site:permalink }}/#organization" }{{ if meta_published }},
+            "datePublished": "{{ meta_published }}"{{ /if }}{{ if meta_modified }},
+            "dateModified": "{{ meta_modified }}"{{ /if }}{{ unless is_homepage }},
             "breadcrumb": { "@id": "{{ current_url }}#breadcrumb" }{{ /unless }}{{ featured_image }},
             "primaryImageOfPage": {
                 "@type": "ImageObject",
                 "url": "{{ glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true" }}"
-            }{{ /featured_image }}{{ yield:schema_main_entity }}
+            }{{ /featured_image }}{{ yield:schema_main_entity }}{{ if meta_has_itemlist }},
+            "mainEntity": { "@id": "{{ current_url }}#itemlist" }{{ /if }}{{ /yield:schema_main_entity }}
         }{{ stack:schema }}
     ]
 }

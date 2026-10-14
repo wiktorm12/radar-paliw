@@ -117,6 +117,27 @@ class Cpn extends Tags
         ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
     }
 
+    public function meta()
+    {
+        $rows = $this->rows($this->params->get('type', 'max'));
+
+        if ($rows->isEmpty()) {
+            return $this->parseNoResults();
+        }
+
+        return [
+            'start_date' => $rows->first()['date'],
+            'end_date' => $rows->last()['date'],
+            'days' => $rows->count(),
+            'sources' => $rows->filter(fn ($row) => $row['source_url'])
+                ->reverse()
+                ->unique('source_name')
+                ->map(fn ($row) => ['name' => $row['source_name'], 'url' => $row['source_url']])
+                ->values()
+                ->all(),
+        ];
+    }
+
     public function compare()
     {
         $max = $this->rows('max')->last();

@@ -1,1 +1,18 @@
-title: 'Porady dla kierowców'
+title: Porady dla kierowców
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: 'Porady dla kierowców to praktyczne artykuły o tym, jak tankować taniej i rozsądniej: kiedy opłaca się korzystać z kuponów, jak porównywać oferty i na co zwrócić uwagę przy wyborze paliwa.'
+- type: paragraph
+  content:
+  - type: text
+    text: 'Teksty mają charakter informacyjny i nie zastępują zaleceń producenta pojazdu. Gdy szukasz konkretnych rabatów, przejdź do zestawienia '
+  - type: text
+    text: promocji na paliwo
+    marks:
+    - type: link
+      attrs:
+        href: /promocje
+  - type: text
+    text: ', gdzie każda akcja ma datę ważności i link do regulaminu operatora.'

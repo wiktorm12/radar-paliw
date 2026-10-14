@@ -3,6 +3,9 @@ tree:
     id: nav-footer-o-nas
     entry: page-o-nas
   -
+    id: nav-footer-zasady-redakcyjne
+    entry: page-zasady-redakcyjne
+  -
     id: nav-footer-kontakt
     entry: page-kontakt
   -

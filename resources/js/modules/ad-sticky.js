@@ -6,8 +6,13 @@ class AdSticky {
         this.initEvents();
     }
 
+    close() {
+        document.querySelector('[data-ad-sticky-spacer]')?.remove();
+        this.element.remove();
+    }
+
     initEvents() {
-        this.closeButton?.addEventListener('click', () => this.element.remove());
+        this.closeButton?.addEventListener('click', () => this.close());
     }
 }
 

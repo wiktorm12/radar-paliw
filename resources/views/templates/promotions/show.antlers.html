@@ -1,4 +1,28 @@
-{{ section:seo_title }}{{ seo_title ?? '{title} – {station:title} · {site:name}' }}{{ /section:seo_title }}
+---
+discount_suffix:
+    'cents_per_liter': ' gr/l'
+    'percent': '%'
+    'fixed_price': ' zł/l'
+    'points': ' pkt'
+discount_prefix:
+    'cents_per_liter': 'rabat '
+    'percent': 'rabat '
+    'fixed_price': 'stałą cenę '
+    'points': ''
+discount_fallback:
+    'cents_per_liter': 'rabat'
+    'percent': 'rabat'
+    'fixed_price': 'specjalną cenę'
+    'points': 'kupony rabatowe'
+---
+{{ section:promo_discount }}{{ if discount_value }}{{ discount_value | replace('.', ',') }}{{ view:discount_suffix[discount_type:value] }}{{ /if }}{{ /section:promo_discount }}
+{{ section:promo_fuels }}{{ paliwa }}{{ title_accusative ?? (title | lower) }}{{ if count < total_results - 1 }}, {{ elseif !last }} i {{ /if }}{{ /paliwa }}{{ /section:promo_fuels }}
+{{ section:promo_app }}{{ if requires_app }}{{ station:loyalty_program ? 'aplikacja {station:loyalty_program}' : 'aplikacja lub karta lojalnościowa' }}{{ /if }}{{ /section:promo_app }}
+
+{{ section:seo_title }}{{ if seo_title }}{{ seo_title }}{{ elseif discount_value && paliwa }}{{ station:title }}: {{ discount_type:value != 'fixed_price' ?= '-' }}{{ yield:promo_discount }} na {{ if (paliwa | length) > 2 }}paliwo{{ else }}{{ yield:promo_fuels }}{{ /if }} do {{ valid_to format="j.m.Y" }}{{ elseif (title | length) > 45 }}{{ title }}{{ else }}{{ title }} – {{ station:title }}{{ /if }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ else }}{{ station:title }} – {{ title }}. {{ if discount_value }}Rabat {{ discount_value | replace('.', ',') }}{{ view:discount_suffix[discount_type:value] }}, ważne{{ else }}Ważne{{ /if }} do {{ valid_to format="j.m.Y" }}{{ if requires_app }}{{ station:loyalty_program ? ', wymaga aplikacji {station:loyalty_program}' : ', wymaga aplikacji lub karty' }}{{ /if }}. Sprawdź warunki.{{ /if }}{{ /section:seo_description }}
+
+{{ section:schema_page_type }}ItemPage{{ /section:schema_page_type }}
 {{ section:schema_main_entity }},
             "mainEntity": { "@id": "{{ permalink }}#offer" }{{ /section:schema_main_entity }}
 {{ push:schema }}
@@ -6,25 +30,43 @@
             "@type": "Offer",
             "@id": "{{ permalink }}#offer",
             "name": {{ title | to_json }},
-            "description": {{ (seo_description ?? (content | bard_text | truncate(300)) ?? title) | strip_tags | to_json }},
+            "description": {{ if content }}{{ content | bard_html | replace('</p>', ' </p>') | replace('</li>', ' </li>') | strip_tags | decode | collapse_whitespace | trim | safe_truncate(300, '…') | to_json }}{{ else }}{{ title | to_json }}{{ /if }},
             "url": "{{ permalink }}",
             "category": "Paliwo",
-            "validFrom": "{{ valid_from format='Y-m-d' }}",
-            "validThrough": "{{ valid_to format='Y-m-d' }}T23:59:59+01:00",
+            "validFrom": "{{ valid_from format='Y-m-d' }}T00:00:00{{ valid_from | timezone('Europe/Warsaw') | format('P') }}",
+            "validThrough": "{{ valid_to format='Y-m-d' }}T23:59:59{{ valid_to | timezone('Europe/Warsaw') | format('P') }}",
             "eligibleRegion": { "@type": "Country", "name": "PL" },
-            "availability": "https://schema.org/{{ badge == 'expired' ? 'Discontinued' : 'InStock' }}",{{ station }}
-            "seller": {
-                "@type": "Organization",
-                "@id": "{{ permalink }}#brand",
-                "name": {{ title | to_json }},
-                "url": "{{ permalink }}"
-            },{{ /station }}
+            "availability": "https://schema.org/{{ badge == 'expired' ? 'Discontinued' : (badge == 'upcoming' ? 'PreOrder' : 'InStock') }}",{{ if discount_value && discount_type:value == 'cents_per_liter' }}
+            "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "name": "Rabat {{ yield:promo_discount }}",
+                "price": {{ 0 - discount_value / 100 }},
+                "priceCurrency": "PLN",
+                "unitCode": "LTR",
+                "referenceQuantity": { "@type": "QuantitativeValue", "value": 1, "unitCode": "LTR" }
+            },{{ elseif discount_value && discount_type:value == 'fixed_price' }}
+            "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": {{ discount_value }},
+                "priceCurrency": "PLN",
+                "unitCode": "LTR",
+                "referenceQuantity": { "@type": "QuantitativeValue", "value": 1, "unitCode": "LTR" }
+            },{{ /if }}{{ if source_url }}
+            "isBasedOn": {{ source_url | to_json }},{{ /if }}{{ station }}
+            "offeredBy": { "@id": "{{ permalink }}#brand" },
+            "seller": { "@id": "{{ permalink }}#brand" },{{ /station }}
             "itemOffered": [
                 {{ paliwa }}
-                    { "@type": "Product", "name": {{ title | to_json }}, "category": "Paliwo", "url": "{{ permalink }}" }{{ !last ?= ',' }}
+                    { "@type": "Product", "name": {{ title | to_json }}, "category": "Paliwo", "url": "{{ site:permalink }}/paliwa/{{ slug }}" }{{ !last ?= ',' }}
                 {{ /paliwa }}
             ]
-        }
+        }{{ station }},
+        {
+            "@type": "Organization",
+            "@id": "{{ permalink }}#brand",
+            "name": {{ title | to_json }},
+            "url": "{{ website ?? permalink }}"
+        }{{ /station }}
 {{ /push:schema }}
 
 {{ partial:section }}
@@ -44,22 +86,40 @@
                         {{ title }}
                     </a>
                 {{ /station }}
-                <h1 class="mb-6 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
+                <h1 class="mb-4 text-4xl font-bold tracking-tight text-balance">{{ title }}</h1>
+                <p class="mb-6 text-lg text-zinc-700">
+                    {{ if badge == 'expired' }}Sieć {{ station:title }} oferowała{{ else }}{{ station:title }} oferuje{{ /if }}
+                    <strong>{{ if discount_value }}{{ view:discount_prefix[discount_type:value] }}{{ yield:promo_discount }}{{ else }}{{ view:discount_fallback[discount_type:value] ?? 'promocję' }}{{ /if }}</strong>{{ if paliwa }} na {{ yield:promo_fuels }}{{ /if }}
+                    od <time datetime="{{ valid_from format='Y-m-d' }}">{{ valid_from format="j.m.Y" }}</time>
+                    do <time datetime="{{ valid_to format='Y-m-d' }}">{{ valid_to format="j.m.Y" }}</time>{{ if requires_app }} — warunek: {{ yield:promo_app }}{{ /if }}.
+                </p>
                 {{ if badge == 'expired' }}
-                    <p class="mb-6 rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">Ta promocja już się zakończyła. Zobacz aktualne promocje {{ station:title }} poniżej.</p>
+                    <p class="mb-6 rounded-xl bg-amber-50 p-4 text-sm font-medium text-amber-800">
+                        Promocja zakończyła się <time datetime="{{ valid_to format='Y-m-d' }}">{{ valid_to format="j.m.Y" }}</time>.
+                        <a
+                            href="{{ station:url }}"
+                            class="underline"
+                        >Zobacz aktualne promocje {{ station:title }}</a>.
+                    </p>
                 {{ elseif badge == 'ending_today' }}
                     <p class="mb-6 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-800">Ostatni dzień promocji — kończy się dziś.</p>
                 {{ elseif badge == 'upcoming' }}
-                    <p class="mb-6 rounded-xl bg-sky-50 p-4 text-sm font-medium text-sky-800">Promocja jeszcze się nie zaczęła — startuje {{ valid_from format="j.m.Y" }}.</p>
+                    <p class="mb-6 rounded-xl bg-sky-50 p-4 text-sm font-medium text-sky-800">Promocja jeszcze się nie zaczęła — startuje <time datetime="{{ valid_from format='Y-m-d' }}">{{ valid_from format="j.m.Y" }}</time>.</p>
                 {{ /if }}
-                <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-4">
+                <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-3">
+                    {{ if discount_value }}
+                        <div>
+                            <dt class="text-zinc-500">Rabat</dt>
+                            <dd class="font-semibold text-brand-600">{{ discount_type:value != 'fixed_price' ?= '-' }}{{ yield:promo_discount }}</dd>
+                        </div>
+                    {{ /if }}
                     <div>
                         <dt class="text-zinc-500">Ważna od</dt>
-                        <dd class="font-semibold">{{ valid_from format="j.m.Y" }}</dd>
+                        <dd class="font-semibold"><time datetime="{{ valid_from format='Y-m-d' }}">{{ valid_from format="j.m.Y" }}</time></dd>
                     </div>
                     <div>
                         <dt class="text-zinc-500">Ważna do</dt>
-                        <dd class="font-semibold">{{ valid_to format="j.m.Y" }}</dd>
+                        <dd class="font-semibold"><time datetime="{{ valid_to format='Y-m-d' }}">{{ valid_to format="j.m.Y" }}</time></dd>
                     </div>
                     <div>
                         <dt class="text-zinc-500">Paliwa</dt>
@@ -74,22 +134,62 @@
                     </div>
                     <div>
                         <dt class="text-zinc-500">Aplikacja / karta</dt>
-                        <dd class="font-semibold">{{ requires_app ? 'Tak' : 'Nie' }}</dd>
+                        <dd class="font-semibold">{{ requires_app ? (station:loyalty_program ?? 'Tak') : 'Nie' }}</dd>
                     </div>
+                    {{ station }}
+                        <div>
+                            <dt class="text-zinc-500">Sieć</dt>
+                            <dd class="font-semibold">
+                                <a
+                                    href="{{ url }}"
+                                    class="hover:text-brand-600"
+                                >{{ title }}</a>
+                            </dd>
+                        </div>
+                    {{ /station }}
                 </dl>
-                <div class="prose mb-8">
-                    {{ content }}
-                </div>
-                {{ if source_url }}
-                    <a
-                        href="{{ source_url }}"
-                        class="button"
-                        target="_blank"
-                        rel="noopener nofollow"
-                    >
-                        Regulamin u operatora
-                    </a>
+                {{ if content }}
+                    <h2 class="mb-4 text-2xl font-bold">Warunki promocji</h2>
+                    <div class="prose mb-8">
+                        {{ content }}
+                    </div>
                 {{ /if }}
+                {{ if terms_url || source_url }}
+                    <div class="mb-8 flex flex-wrap items-center gap-4">
+                        {{ if terms_url }}
+                            <a
+                                href="{{ terms_url }}"
+                                class="button"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                Regulamin promocji
+                            </a>
+                        {{ /if }}
+                        {{ if source_url }}
+                            <a
+                                href="{{ source_url }}"
+                                class="text-sm font-medium text-brand-600 hover:underline"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                Źródło informacji
+                            </a>
+                        {{ /if }}
+                    </div>
+                {{ /if }}
+                <p class="rounded-2xl border border-zinc-200 p-6 text-sm text-zinc-600">
+                    Rabat liczy się od ceny na dystrybutorze.
+                    <a
+                        href="/program-cpn"
+                        class="font-medium text-brand-600 hover:underline"
+                    >Sprawdź dzisiejsze ceny maksymalne paliw w programie CPN</a>
+                    albo
+                    <a
+                        href="/promocje"
+                        class="font-medium text-brand-600 hover:underline"
+                    >wszystkie aktualne promocje na paliwo</a>.
+                </p>
             </article>
             <aside class="flex flex-col gap-8">
                 {{ partial:ads/slot position="promotion_sidebar" }}
@@ -113,12 +213,41 @@
     </div>
 {{ /partial:section }}
 
-{{ partial:section class="bg-zinc-100" }}
-    <div class="container">
-        <h2 class="mb-8 text-3xl font-bold tracking-tight">Więcej promocji {{ station:title }}</h2>
-        {{ partial:components/promotions/list
-            :stations="station:id"
-            :exclude="id"
-        }}
-    </div>
-{{ /partial:section }}
+{{ collection:promotions
+    as="more_promotions"
+    query_scope="active_promotions"
+    :stations="station:id"
+    :exclude="id"
+    limit="1"
+}}
+    {{ unless no_results }}
+        {{ partial:section class="bg-zinc-100" }}
+            <div class="container">
+                <h2 class="mb-8 text-3xl font-bold tracking-tight">Więcej promocji {{ station:title }}</h2>
+                {{ partial:components/promotions/list
+                    :stations="station:id"
+                    :exclude="id"
+                }}
+            </div>
+        {{ /partial:section }}
+    {{ /unless }}
+{{ /collection:promotions }}
+
+{{ collection:articles
+    as="related_articles"
+    query_scope="articles_filter"
+    :station="station:id"
+    limit="1"
+}}
+    {{ unless no_results }}
+        {{ partial:section }}
+            <div class="container">
+                <h2 class="mb-8 text-3xl font-bold tracking-tight">Poradniki o sieci {{ station:title }}</h2>
+                {{ partial:components/articles/list
+                    :station="station:id"
+                    per_page="3"
+                }}
+            </div>
+        {{ /partial:section }}
+    {{ /unless }}
+{{ /collection:articles }}

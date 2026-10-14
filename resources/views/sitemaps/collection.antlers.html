@@ -4,10 +4,10 @@
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
 >
     {{ collection :from="sitemap_collection" }}
-        {{ unless noindex }}
+        {{ unless noindex || canonical_url }}
             <url>
-                <loc>{{ permalink }}</loc>
-                <lastmod>{{ last_modified format="c" }}</lastmod>
+                <loc>{{ url == '/' ? '{site:permalink}/' : permalink }}</loc>
+                <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
                 {{ featured_image }}
                     <image:image>
                         <image:loc>{{ permalink }}</image:loc>

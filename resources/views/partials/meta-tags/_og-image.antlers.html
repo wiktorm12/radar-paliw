@@ -1,6 +1,13 @@
+{{ if image_url }}
+    {{ og_image_url = image_url }}
+{{ elseif width == 1200 && height == 630 }}
+    {{ og_image_url = permalink }}
+{{ else }}
+    {{ og_image_url = {glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true"} }}
+{{ /if }}
 <meta
     property="og:image"
-    content="{{ glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true" }}"
+    content="{{ og_image_url }}"
 >
 <meta
     property="og:image:width"
@@ -9,4 +16,12 @@
 <meta
     property="og:image:height"
     content="630"
+>
+<meta
+    property="og:image:alt"
+    content="{{ (alt ?? meta_og_title) | sanitize }}"
+>
+<meta
+    name="twitter:image"
+    content="{{ og_image_url }}"
 >

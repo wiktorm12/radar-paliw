@@ -6,24 +6,25 @@
             "@id": "{{ permalink }}#article",
             "headline": {{ title | to_json }},
             "description": {{ (seo_description ?? excerpt) | strip_tags | to_json }},
-            "datePublished": "{{ date format='c' }}",
-            "dateModified": "{{ last_modified format='c' }}",
+            "datePublished": "{{ date | timezone('Europe/Warsaw') | format('c') }}",
+            "dateModified": "{{ (last_modified ?? date) | timezone('Europe/Warsaw') | format('c') }}",
             "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" },
             "isPartOf": { "@id": "{{ site:permalink }}/#website" },
             "inLanguage": "pl-PL",
             "wordCount": {{ content | bard_text | word_count }},
-            "articleSection": {{ kategorie | pluck('title') | to_json }},{{ featured_image }}
-            "image": {
-                "@type": "ImageObject",
-                "url": "{{ glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true" }}",
-                "width": 1200,
-                "height": 630
-            },{{ /featured_image }}{{ if stations }}
+            "articleSection": {{ kategorie | pluck('title') | to_json }},{{ if featured_image }}{{ featured_image }}
+            "image": [
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="675" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 675 },
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="900" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 900 },
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="1200" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 1200 }
+            ],{{ /featured_image }}{{ else }}
+            "image": { "@type": "ImageObject", "url": "{{ site:permalink }}/img/og/default.png", "width": 1200, "height": 630 },{{ /if }}{{ if stations }}
             "about": [
                 {{ stations }}
-                    { "@type": "Organization", "@id": "{{ permalink }}#brand", "name": {{ title | to_json }} }{{ !last ?= ',' }}
+                    { "@type": "Organization", "@id": "{{ permalink }}#brand", "name": {{ title | to_json }}, "url": "{{ permalink }}" }{{ !last ?= ',' }}
                 {{ /stations }}
-            ],{{ /if }}
+            ],{{ /if }}{{ if kategorie }}
+            "keywords": {{ kategorie | pluck('title') | join(', ') | to_json }},{{ /if }}
             "author": {{ author }}{ "@id": "{{ permalink }}#person" }{{ /author }}{{ unless author }}{ "@id": "{{ site:permalink }}/#organization" }{{ /unless }},
             "publisher": { "@id": "{{ site:permalink }}/#organization" }
         }
@@ -50,7 +51,10 @@
                 </ul>
                 <h1 class="mb-4 text-4xl font-bold tracking-tight text-balance md:text-5xl">{{ title }}</h1>
                 <p class="mb-6 text-sm text-zinc-500">
-                    <time datetime="{{ date format='Y-m-d' }}">{{ date iso_format="D MMMM YYYY" }}</time>
+                    <time datetime="{{ date | timezone('Europe/Warsaw') | format('Y-m-d') }}">{{ date iso_format="D MMMM YYYY" }}</time>
+                    {{ if last_modified && (last_modified | timezone('Europe/Warsaw') | format('Y-m-d')) > (date | timezone('Europe/Warsaw') | format('Y-m-d')) }}
+                        · Zaktualizowano: <time datetime="{{ last_modified | timezone('Europe/Warsaw') | format('c') }}">{{ last_modified | timezone('Europe/Warsaw') | iso_format('D MMMM YYYY') }}</time>
+                    {{ /if }}
                     · {{ content | bard_text | read_time }} min czytania
                     {{ author }}
                         · <a
@@ -68,7 +72,7 @@
                         w_xl="1100"
                         h_xl="620"
                         cover="true"
-                        no_lazy="true"
+                        priority="true"
                         class="mb-8 aspect-video w-full rounded-2xl object-cover"
                     }}
                 {{ /featured_image }}

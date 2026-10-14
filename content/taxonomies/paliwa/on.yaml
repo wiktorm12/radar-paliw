@@ -1,1 +1,19 @@
-title: 'Olej napędowy'
+title: Olej napędowy
+title_accusative: olej napędowy
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Olej napędowy (ON), potocznie diesel, to paliwo do samochodów z silnikiem wysokoprężnym, używane także w transporcie i maszynach. Na stacjach dostępny jest w wersji standardowej oraz w odmianach premium, którym poświęcamy osobną stronę.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Olej napędowy jest objęty dzienną ceną maksymalną i obniżonym VAT w programie '
+  - type: text
+    text: CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: '. Poniżej znajdziesz aktualne promocje na olej napędowy: rabaty w groszach na litr, kupony w aplikacjach stacji i akcje czasowe. Przy każdej promocji widać sieć, datę ważności i warunki, a link prowadzi do źródła u operatora.'

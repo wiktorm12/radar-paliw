@@ -4,7 +4,7 @@ title: Program CPN — ceny maksymalne paliw dziś
 blueprint: page
 template: templates/cpn
 schema_type: WebPage
-seo_description: 'Program CPN (Ceny Paliwa Niżej): dzisiejsze ceny maksymalne benzyny i diesla, wykres, statystyki i wszystkie ceny od 3 października. Aktualizowane codziennie.'
+seo_description: 'Program CPN (Ceny Paliwa Niżej): dzisiejsze ceny maksymalne benzyny i diesla, wykres, statystyki i historia cen od 3 października. Aktualizacja codziennie.'
 content:
 - id: cpntxt01
   type: block_text
@@ -330,4 +330,5 @@ content:
   - id: q5
     question: Jaki VAT i akcyza obowiązują na paliwo w CPN?
     answer: W trzeciej edycji VAT na benzynę i olej napędowy wynosi 8% zamiast 23%. Akcyza spadła z 1529 do 1239 zł/1000 l dla benzyny i z 1160 do 880 zł/1000 l dla oleju napędowego.
+seo_title: 'Program CPN: ceny maksymalne paliw dziś — Radar Paliw'
 ---

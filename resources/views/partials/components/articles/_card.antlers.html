@@ -1,36 +1,40 @@
-<article class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white text-zinc-800 shadow-sm transition hover:shadow-md">
+<article class="relative flex h-full focus-within:ring-2 focus-within:ring-brand-600 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white text-zinc-800 shadow-sm transition hover:shadow-md">
+    {{ card_title = title }}
     {{ featured_image }}
         {{ partial:image
             w="640"
             h="360"
             cover="true"
+            sizes="(min-width: 1024px) 384px, (min-width: 640px) 50vw, 100vw"
+            :no_lazy="no_lazy"
+            :alt_fallback="card_title"
             class="aspect-video w-full object-cover"
         }}
     {{ /featured_image }}
     <div class="flex grow flex-col p-6">
-        <ul class="relative z-10 mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-brand-600">
+        <ul class="relative z-10 mb-3 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-brand-700">
             {{ kategorie }}
                 <li>
                     <a
                         href="/kategorie/{{ slug }}"
-                        class="hover:underline"
+                        class="inline-block py-1 hover:underline"
                     >
                         {{ title }}
                     </a>
                 </li>
             {{ /kategorie }}
         </ul>
-        <h3 class="mb-3 text-lg font-semibold">
+        <h{{ heading_level ?? 3 }} class="mb-3 text-lg font-semibold">
             <a
                 href="{{ url }}"
                 class="before:absolute before:inset-0"
             >
                 {{ title }}
             </a>
-        </h3>
+        </h{{ heading_level ?? 3 }}>
         <p class="mb-4 text-sm text-zinc-600">{{ excerpt | truncate(160, '…') }}</p>
         <time
-            class="mt-auto text-sm text-zinc-500"
+            class="mt-auto text-sm text-zinc-600"
             datetime="{{ date format='Y-m-d' }}"
         >
             {{ date iso_format="D MMMM YYYY" }}

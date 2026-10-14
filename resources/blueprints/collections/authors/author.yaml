@@ -14,10 +14,10 @@ tabs:
               validate:
                 - required
           -
-            handle: role
+            handle: job_title
             field:
               type: text
-              display: Rola
+              display: Stanowisko
               instructions: 'Np. „Redaktor, specjalista od programów lojalnościowych”.'
               width: 50
           -
@@ -40,6 +40,12 @@ tabs:
               type: list
               display: 'Profile (LinkedIn, X…)'
               instructions: 'Pełne URL-e — trafiają do schema Person.'
+          -
+            handle: knows_about
+            field:
+              type: list
+              display: 'Specjalizacje (knowsAbout)'
+              instructions: 'Tematy, na których autor się zna, np. „programy lojalnościowe stacji paliw”.'
   seo:
     display: SEO
     sections:

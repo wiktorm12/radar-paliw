@@ -3,7 +3,7 @@ id: page-o-nas
 title: O nas
 blueprint: page
 schema_type: AboutPage
-seo_description: Kim jesteśmy, skąd bierzemy promocje na paliwo i jak utrzymuje się serwis Radar Paliw.
+seo_description: Kim jesteśmy, skąd bierzemy promocje na paliwo, jak je weryfikujemy i z czego utrzymuje się niezależny serwis Radar Paliw.
 content:
 - id: o-nas01
   type: block_hero
@@ -46,6 +46,24 @@ content:
       level: 2
     content:
     - type: text
+      text: Redakcja
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Treści serwisu przygotowuje redakcja Radar Paliw. Sposób zbierania i weryfikacji danych, politykę poprawek oraz zasady oddzielania reklam od treści opisujemy na stronie '
+    - type: text
+      text: Zasady redakcyjne
+      marks:
+      - type: link
+        attrs:
+          href: /zasady-redakcyjne
+    - type: text
+      text: .
+  - type: heading
+    attrs:
+      level: 2
+    content:
+    - type: text
       text: Blog
   - type: paragraph
     content:
@@ -73,4 +91,5 @@ content:
       text: kontakt
     - type: text
       text: .
+seo_title: O nas — Radar Paliw, niezależny agregator promocji na paliwo
 ---

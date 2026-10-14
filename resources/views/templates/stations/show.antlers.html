@@ -1,27 +1,98 @@
-{{ section:seo_title }}{{ seo_title ?? 'Promocje {title} – aktualne rabaty na paliwo · {site:name}' }}{{ /section:seo_title }}
-{{ section:seo_description }}{{ (seo_description ?? 'Aktualne promocje na paliwo na stacjach {title}: rabaty, kupony i akcje w programie {loyalty_program}.') | entities }}{{ /section:seo_description }}
+---
+months:
+    1: 'styczeń'
+    2: 'luty'
+    3: 'marzec'
+    4: 'kwiecień'
+    5: 'maj'
+    6: 'czerwiec'
+    7: 'lipiec'
+    8: 'sierpień'
+    9: 'wrzesień'
+    10: 'październik'
+    11: 'listopad'
+    12: 'grudzień'
+---
+{{ promo_count = 0 }}
+{{ collection:promotions
+    as="station_promotions"
+    query_scope="active_promotions"
+    :stations="id"
+}}
+    {{ promo_count = station_promotions | length }}
+{{ /collection:promotions }}
+{{ station_id = id }}
+{{ promo_label = promo_count == 0 ? 'brak aktywnych promocji' : (promo_count == 1 ? '1 aktywna promocja' : (promo_count <= 4 ? '{promo_count} aktywne promocje' : '{promo_count} aktywnych promocji')) }}
+{{ today = now | timezone('Europe/Warsaw') }}
+{{ month_number = today | format('n') }}
+
+{{ section:seo_title }}{{ if seo_title }}{{ seo_title }}{{ else }}{{ title }} – promocje na paliwo {{ view:months[month_number] }} {{ today | format('Y') }}{{ /if }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ else }}Na stacjach {{ title }}: {{ promo_label }} na paliwo (stan na {{ today | format('j.m.Y') }}){{ if loyalty_program }}. Rabaty i kupony w programie {{ loyalty_program }}{{ /if }}. Sprawdź warunki.{{ /if }}{{ /section:seo_description }}
 
 {{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
 {{ section:schema_main_entity }},
-            "about": { "@id": "{{ permalink }}#brand" }{{ /section:schema_main_entity }}
+            "about": { "@id": "{{ permalink }}#brand" }{{ if promo_count > 0 }},
+            "mainEntity": { "@id": "{{ current_url }}#itemlist" }{{ /if }}{{ /section:schema_main_entity }}
 {{ push:schema }}
         ,{
             "@type": "Organization",
             "@id": "{{ permalink }}#brand",
             "name": {{ title | to_json }},
-            "url": "{{ permalink }}"{{ logo }},
-            "logo": "{{ permalink }}"{{ /logo }}{{ if website }},
-            "sameAs": [{{ website | to_json }}]{{ /if }}{{ if loyalty_program }},
-            "brand": { "@type": "Brand", "name": {{ title | to_json }} },
-            "knowsAbout": {{ loyalty_program | to_json }}{{ /if }}
+            "url": "{{ website ?? permalink }}"{{ logo }},
+            "logo": "{{ permalink }}"{{ /logo }}{{ if website || same_as }},
+            "sameAs": [{{ if website }}"{{ website }}"{{ /if }}{{ same_as }}{{ website || !first ?= ',' }}{{ value | to_json }}{{ /same_as }}]{{ /if }},
+            "brand": { "@type": "Brand", "name": {{ title | to_json }} },{{ if loyalty_program }}
+            "description": {{ '{title} – sieć stacji paliw w Polsce. Program lojalnościowy: {loyalty_program}.' | to_json }},{{ /if }}
+            "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" },
+            "subjectOf": { "@id": "{{ current_url }}#webpage" }
         }
 {{ /push:schema }}
 
 {{ partial:section }}
     <div class="container">
         <h1 class="mb-4 text-4xl font-bold tracking-tight">Promocje na paliwo {{ title }}</h1>
-        {{ if loyalty_program }}
-            <p class="mb-8 text-zinc-600">Program lojalnościowy: {{ loyalty_program }}</p>
+        <p class="mb-4 max-w-3xl text-lg text-zinc-600">
+            Aktualnie na stacjach {{ title }}: {{ promo_label }} na paliwo — stan na <time datetime="{{ today | format('Y-m-d') }}">{{ today | format('j.m.Y') }}</time>.
+            {{ if loyalty_program }}
+                Rabaty działają zwykle w programie lojalnościowym {{ loyalty_program }}.
+            {{ /if }}
+        </p>
+        {{ if promo_count > 0 }}
+            <ul class="mb-4 flex flex-wrap items-center gap-2 text-sm">
+                <li class="text-zinc-600">Paliwa w promocjach:</li>
+                {{ taxonomy:paliwa }}
+                    {{ collection:promotions
+                        as="fuel_promotions"
+                        query_scope="active_promotions"
+                        :stations="station_id"
+                        :fuel_type="slug"
+                        limit="1"
+                    }}
+                        {{ unless no_results }}
+                            <li>
+                                <a
+                                    href="{{ url }}"
+                                    class="block rounded-full bg-zinc-100 px-3 py-1 font-medium hover:bg-brand-100"
+                                >
+                                    {{ title }}
+                                </a>
+                            </li>
+                        {{ /unless }}
+                    {{ /collection:promotions }}
+                {{ /taxonomy:paliwa }}
+            </ul>
+        {{ /if }}
+        {{ if website }}
+            <p class="mb-8 text-sm">
+                <a
+                    href="{{ website }}"
+                    class="font-medium text-brand-600 hover:underline"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Oficjalna strona {{ title }}
+                </a>
+            </p>
         {{ /if }}
         <div class="mb-12">
             {{ partial:ads/slot position="station_top" }}
@@ -31,6 +102,7 @@
             :stations="id"
             ad_every="6"
             per_page="48"
+            schema="true"
         }}
         <a
             href="/promocje/archiwum?stacja={{ slug }}"
@@ -42,19 +114,40 @@
             <div class="prose mt-12 max-w-3xl">
                 {{ content }}
             </div>
+        {{ else }}
+            <div class="prose mt-12 max-w-3xl">
+                <h2>O sieci {{ title }}</h2>
+                <p>
+                    {{ title }} to jedna z sieci stacji paliw, których promocje śledzimy w Radar Paliw.
+                    {{ if loyalty_program }}
+                        Rabaty na paliwo są zwykle dostępne w programie {{ loyalty_program }} — po aktywowaniu kuponu albo zeskanowaniu kodu z aplikacji przy kasie.
+                    {{ /if }}
+                    Przy każdej promocji podajemy daty obowiązywania, objęte paliwa i źródło informacji. Ceny maksymalne paliw sprawdzisz na stronie
+                    <a href="/program-cpn">programu CPN</a>, a promocje wszystkich sieci w <a href="/promocje">zestawieniu promocji</a>.
+                </p>
+            </div>
         {{ /if }}
     </div>
 {{ /partial:section }}
 
-{{ partial:section class="bg-zinc-100" }}
-    <div class="container">
-        <h2 class="mb-8 text-3xl font-bold tracking-tight">Artykuły o {{ title }}</h2>
-        {{ partial:components/articles/list
-            :station="id"
-            per_page="3"
-        }}
-    </div>
-{{ /partial:section }}
+{{ collection:articles
+    as="station_articles"
+    query_scope="articles_filter"
+    :station="id"
+    limit="1"
+}}
+    {{ unless no_results }}
+        {{ partial:section class="bg-zinc-100" }}
+            <div class="container">
+                <h2 class="mb-8 text-3xl font-bold tracking-tight">Artykuły o sieci {{ title }}</h2>
+                {{ partial:components/articles/list
+                    :station="id"
+                    per_page="3"
+                }}
+            </div>
+        {{ /partial:section }}
+    {{ /unless }}
+{{ /collection:articles }}
 
 {{ partial:section }}
     <div class="container">

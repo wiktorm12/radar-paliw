@@ -20,12 +20,17 @@ sorts:
     :paginate="paginated ? 'true' : 'false'"
 }}
     {{ if no_results }}
+        {{ if paginated && get:page > 1 }}
+            {{ 404 }}
+        {{ /if }}
         <p class="text-zinc-500">{{ status == 'expired' ? 'Brak zakończonych promocji dla wybranych filtrów.' : 'Brak aktywnych promocji dla wybranych filtrów.' }}</p>
     {{ else }}
         <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {{ promotions }}
                 <li>
-                    {{ partial:components/promotions/card }}
+                    {{ partial:components/promotions/card
+                        :heading_level="heading_level"
+                    }}
                 </li>
                 {{ if ad_every > 0 && !last }}
                     {{ if count % ad_every == 0 }}
@@ -36,22 +41,26 @@ sorts:
                 {{ /if }}
             {{ /promotions }}
         </ul>
-        {{ push:schema }}
-            ,{
-                "@type": "ItemList",
-                "numberOfItems": {{ promotions | length }},
-                "itemListElement": [
-                    {{ promotions }}
-                        {
-                            "@type": "ListItem",
-                            "position": {{ count }},
-                            "url": "{{ permalink }}",
-                            "name": {{ title | to_json }}
-                        }{{ !last ?= ',' }}
-                    {{ /promotions }}
-                ]
-            }
-        {{ /push:schema }}
+        {{ if schema }}
+            {{ push:schema }}
+                ,{
+                    "@type": "ItemList",
+                    "@id": "{{ current_url }}#itemlist",
+                    "itemListOrder": "https://schema.org/ItemListOrderAscending",
+                    "numberOfItems": {{ promotions | length }},
+                    "itemListElement": [
+                        {{ promotions }}
+                            {
+                                "@type": "ListItem",
+                                "position": {{ count }},
+                                "url": "{{ permalink }}",
+                                "name": {{ title | to_json }}
+                            }{{ !last ?= ',' }}
+                        {{ /promotions }}
+                    ]
+                }
+            {{ /push:schema }}
+        {{ /if }}
         {{ paginate }}
             {{ partial:components/pagination }}
         {{ /paginate }}

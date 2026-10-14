@@ -107,7 +107,14 @@ tabs:
               type: text
               input_type: url
               display: 'Źródło (URL)'
-              instructions: 'Link do oficjalnego regulaminu lub ogłoszenia.'
+              instructions: 'Skąd pochodzi informacja o promocji (ogłoszenie, artykuł, strona operatora).'
+          -
+            handle: terms_url
+            field:
+              type: text
+              input_type: url
+              display: 'Regulamin (URL)'
+              instructions: 'Link do oficjalnego regulaminu promocji u operatora. Puste = przycisk „Regulamin promocji” się nie pokazuje.'
   seo:
     display: SEO
     sections:

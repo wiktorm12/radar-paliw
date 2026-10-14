@@ -14,6 +14,12 @@ tabs:
               validate:
                 - required
           -
+            handle: title_accusative
+            field:
+              type: text
+              display: 'Nazwa w bierniku'
+              instructions: 'Do zdań „Promocje na …”, np. „benzynę 95”, „olej napędowy”, „LPG”. Puste = nazwa małymi literami.'
+          -
             handle: description
             field:
               type: bard

@@ -1,1 +1,18 @@
-title: 'Programy lojalnościowe'
+title: Programy lojalnościowe
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Programy lojalnościowe stacji paliw, takie jak Orlen Vitay, BPme Rewards, Shell ClubSmart czy Circle K Extra, oferują rabaty, punkty i kupony w zamian za korzystanie z aplikacji lub karty. W tej kategorii opisujemy zasady poszczególnych programów i porównujemy ich mechanikę.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Znajdziesz tu rankingi, poradniki do konkretnych programów oraz wskazówki, kiedy rejestracja ma sens. Warunki programów ustalają operatorzy i mogą się zmieniać, dlatego aktualne akcje sprawdzaj w zestawieniu '
+  - type: text
+    text: promocji na paliwo
+    marks:
+    - type: link
+      attrs:
+        href: /promocje
+  - type: text
+    text: .

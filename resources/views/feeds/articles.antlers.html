@@ -18,7 +18,7 @@
                 <title>{{ title | sanitize }}</title>
                 <link>{{ permalink }}</link>
                 <guid isPermaLink="true">{{ permalink }}</guid>
-                <pubDate>{{ date format="r" }}</pubDate>
+                <pubDate>{{ date | timezone('Europe/Warsaw') | format('r') }}</pubDate>
                 {{ author }}<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{ title | sanitize }}</dc:creator>{{ /author }}
                 {{ kategorie }}<category>{{ title | sanitize }}</category>{{ /kategorie }}
                 <description>{{ excerpt | sanitize }}</description>

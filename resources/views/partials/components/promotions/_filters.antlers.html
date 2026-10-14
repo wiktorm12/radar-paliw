@@ -13,6 +13,8 @@ sort_options:
 
 <form
     method="get"
+    role="search"
+    aria-label="Filtruj promocje"
     action="{{ current_url }}"
     class="mb-8 grid grid-cols-1 gap-4 rounded-2xl bg-white p-5 text-zinc-800 shadow-sm sm:grid-cols-2 lg:grid-cols-5 lg:items-end"
     data-promotion-filters
@@ -21,7 +23,7 @@ sort_options:
         Stacja
         <select
             name="stacja"
-            class="rounded-lg border-zinc-300 text-sm"
+            class="rounded-lg border-zinc-500 text-sm"
         >
             <option value="">Wszystkie sieci</option>
             {{ collection:stations }}
@@ -38,7 +40,7 @@ sort_options:
         Paliwo
         <select
             name="paliwo"
-            class="rounded-lg border-zinc-300 text-sm"
+            class="rounded-lg border-zinc-500 text-sm"
         >
             <option value="">Wszystkie paliwa</option>
             {{ taxonomy:paliwa }}
@@ -56,7 +58,7 @@ sort_options:
             Sortuj
             <select
                 name="sortuj"
-                class="rounded-lg border-zinc-300 text-sm"
+                class="rounded-lg border-zinc-500 text-sm"
             >
                 {{ view:sort_options }}
                     <option
@@ -69,12 +71,12 @@ sort_options:
             </select>
         </label>
     {{ /unless }}
-    <label class="flex items-center gap-2 text-sm font-medium lg:pb-2.5">
+    <label class="flex min-h-11 items-center gap-2 text-sm font-medium">
         <input
             type="checkbox"
             name="bez_aplikacji"
             value="1"
-            class="rounded border-zinc-300 text-brand-600"
+            class="size-5 rounded border-zinc-500 text-brand-600"
             {{ get:bez_aplikacji ?= 'checked' }}
         >
         Bez aplikacji / karty
@@ -82,23 +84,27 @@ sort_options:
     <div class="flex flex-wrap items-center gap-4 text-sm">
         <button
             type="submit"
-            class="button in-[.js]:hidden"
+            class="button"
         >
             Filtruj
         </button>
         {{ if get:stacja || get:paliwo || get:bez_aplikacji || get:sortuj }}
             <a
                 href="{{ current_url }}"
-                class="font-medium text-zinc-500 hover:text-brand-600"
+                class="inline-block py-2 font-medium text-zinc-600 underline hover:text-brand-700"
             >
                 Wyczyść filtry
             </a>
         {{ /if }}
         <a
             href="{{ archive ? '/promocje' : '/promocje/archiwum' }}"
-            class="font-medium text-brand-600 hover:underline"
+            class="inline-block py-2 font-medium text-brand-700 underline hover:text-brand-800"
         >
-            {{ archive ? '← Aktualne promocje' : 'Zakończone promocje →' }}
+            {{ if archive }}
+                <span aria-hidden="true">←</span> Aktualne promocje
+            {{ else }}
+                Zakończone promocje <span aria-hidden="true">→</span>
+            {{ /if }}
         </a>
     </div>
 </form>

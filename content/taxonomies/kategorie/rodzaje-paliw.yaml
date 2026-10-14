@@ -1,1 +1,34 @@
-title: 'Rodzaje paliw'
+title: Rodzaje paliw
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: 'W tej kategorii wyjaśniamy różnice między paliwami dostępnymi na stacjach: benzyną 95 i 98, olejem napędowym, dieslem premium, LPG i AdBlue. Opisujemy, do jakich silników są przeznaczone i co oznaczają symbole na dystrybutorach.'
+- type: paragraph
+  content:
+  - type: text
+    text: 'Artykuły mają charakter informacyjny i nie zastępują instrukcji obsługi pojazdu, w której producent określa zalecane paliwo. Promocje na poszczególne rodzaje paliw znajdziesz na stronach '
+  - type: text
+    text: Pb95
+    marks:
+    - type: link
+      attrs:
+        href: /paliwa/pb95
+  - type: text
+    text: ', '
+  - type: text
+    text: olej napędowy
+    marks:
+    - type: link
+      attrs:
+        href: /paliwa/on
+  - type: text
+    text: ' i '
+  - type: text
+    text: LPG
+    marks:
+    - type: link
+      attrs:
+        href: /paliwa/lpg
+  - type: text
+    text: .

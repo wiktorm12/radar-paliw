@@ -1,8 +1,23 @@
 {{ section:schema_page_type }}ProfilePage{{ /section:schema_page_type }}
 {{ section:schema_main_entity }},
             "mainEntity": { "@id": "{{ permalink }}#person" }{{ /section:schema_main_entity }}
-{{ section:seo_title }}{{ seo_title ?? '{title} – autor · {site:name}' }}{{ /section:seo_title }}
-{{ partial:components/authors/schema-person }}
+{{ section:seo_title }}{{ seo_title ?? '{title} – autor' }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ else }}Artykuły i poradniki: {{ title }}{{ if job_title }} – {{ job_title }}{{ /if }}. {{ bio ? (bio | safe_truncate(100, '…')) : 'Teksty o promocjach na paliwo, cenach i programach lojalnościowych stacji w Radar Paliw.' }}{{ /if }}{{ /section:seo_description }}
+{{ push:schema }}
+        ,{
+            "@type": "Person",
+            "@id": "{{ permalink }}#person",
+            "name": {{ title | to_json }},
+            "url": "{{ permalink }}",
+            "mainEntityOfPage": { "@id": "{{ current_url }}#webpage" }{{ if job_title }},
+            "jobTitle": {{ job_title | to_json }}{{ /if }}{{ if bio }},
+            "description": {{ bio | to_json }}{{ /if }}{{ photo }},
+            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if same_as }},
+            "sameAs": [{{ same_as }}{{ value | to_json }}{{ !last ?= ',' }}{{ /same_as }}]{{ /if }}{{ if knows_about }},
+            "knowsAbout": [{{ knows_about }}{{ value | to_json }}{{ !last ?= ',' }}{{ /knows_about }}]{{ /if }},
+            "worksFor": { "@id": "{{ site:permalink }}/#organization" }
+        }
+{{ /push:schema }}
 
 {{ partial:section }}
     <div class="container">
@@ -19,11 +34,37 @@
             {{ /photo }}
             <div class="max-w-2xl">
                 <h1 class="mb-2 text-4xl font-bold tracking-tight">{{ title }}</h1>
-                {{ if role }}
-                    <p class="mb-4 text-lg text-zinc-500">{{ role }}</p>
+                {{ if job_title }}
+                    <p class="mb-4 text-lg text-zinc-500">{{ job_title }}</p>
                 {{ /if }}
                 {{ if bio }}
-                    <p class="text-zinc-600">{{ bio }}</p>
+                    <p class="mb-4 text-zinc-600">{{ bio | nl2br }}</p>
+                {{ else }}
+                    <p class="mb-4 text-zinc-600">{{ title }} pisze w Radar Paliw o promocjach na paliwo, cenach paliw i programach lojalnościowych stacji.</p>
+                {{ /if }}
+                {{ if knows_about }}
+                    <p class="mb-2 text-sm text-zinc-500">Specjalizacje:</p>
+                    <ul class="mb-4 flex flex-wrap gap-2 text-sm">
+                        {{ knows_about }}
+                            <li class="rounded-full bg-zinc-100 px-3 py-1">{{ value }}</li>
+                        {{ /knows_about }}
+                    </ul>
+                {{ /if }}
+                {{ if same_as }}
+                    <ul class="flex flex-wrap gap-4 text-sm">
+                        {{ same_as }}
+                            <li>
+                                <a
+                                    href="{{ value }}"
+                                    class="font-medium text-brand-600 hover:underline"
+                                    target="_blank"
+                                    rel="noopener me"
+                                >
+                                    {{ value | replace('https://', '') | replace('www.', '') }}
+                                </a>
+                            </li>
+                        {{ /same_as }}
+                    </ul>
                 {{ /if }}
             </div>
         </div>

@@ -3,7 +3,7 @@ id: page-kontakt
 title: Kontakt
 blueprint: page
 schema_type: ContactPage
-seo_description: Skontaktuj się z redakcją Radar Paliw — zgłoś promocję na paliwo, błąd w opisie lub zapytanie o współpracę.
+seo_description: 'Skontaktuj się z redakcją Radar Paliw: zgłoś brakującą promocję na paliwo, błąd w opisie lub zapytanie o współpracę reklamową. Odpowiadamy mailowo.'
 content:
 - id: kontak01
   type: block_hero
@@ -40,7 +40,7 @@ content:
           marks:
           - type: link
             attrs:
-              href: 'mailto:kontakt@radarpaliw.pl'
+              href: mailto:kontakt@radarpaliw.pl
     - type: listItem
       content:
       - type: paragraph
@@ -71,4 +71,5 @@ content:
     content:
     - type: text
       text: 'W sprawie współpracy reklamowej również skontaktuj się z nami mailowo: kontakt@radarpaliw.pl.'
+seo_title: Kontakt z redakcją Radar Paliw — zgłoś promocję lub błąd
 ---

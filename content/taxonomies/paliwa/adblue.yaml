@@ -1,1 +1,19 @@
-title: 'AdBlue'
+title: AdBlue
+title_accusative: AdBlue
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: 'AdBlue to wodny roztwór mocznika stosowany w nowoczesnych dieslach wyposażonych w układ SCR, który zmniejsza emisję tlenków azotu. Nie jest paliwem: uzupełnia się go w osobnym zbiorniku, a zużycie zależy od modelu auta i sposobu jazdy.'
+- type: paragraph
+  content:
+  - type: text
+    text: 'Na części stacji AdBlue jest dostępny z osobnego dystrybutora, a promocje bywają związane z zakupem większej ilości lub z płatnością w aplikacji. Na tej stronie zebraliśmy aktualne oferty na AdBlue, jeśli sieci je publikują, razem z datą ważności i linkiem do regulaminu. Promocje na zwykły diesel znajdziesz na stronie '
+  - type: text
+    text: oleju napędowego
+    marks:
+    - type: link
+      attrs:
+        href: /paliwa/on
+  - type: text
+    text: .

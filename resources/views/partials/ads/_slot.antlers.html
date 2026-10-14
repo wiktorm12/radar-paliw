@@ -20,7 +20,7 @@ formats:
 {{ ad_slot :placement="position" }}
     {{ if no_results }}
         {{ if environment !== 'production' }}
-            <div class="mx-auto flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-400 {{ view:formats[position] }}">
+            <div class="mx-auto flex w-full items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600 {{ view:formats[position] }}">
                 Reklama · {{ position }}
             </div>
         {{ /if }}
@@ -30,7 +30,7 @@ formats:
             aria-label="Reklama"
             data-ad-placement="{{ position }}"
         >
-            <p class="mb-1 text-xs uppercase tracking-wide text-zinc-400">Reklama</p>
+            <p class="mb-1 text-xs uppercase tracking-wide text-zinc-600">Reklama</p>
             {{ if kind:value == 'image' }}
                 <a
                     href="{{ url }}"

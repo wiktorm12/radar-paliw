@@ -1,1 +1,18 @@
-title: 'Aplikacje stacji'
+title: Aplikacje stacji
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Aplikacje stacji paliw to główne narzędzie, przez które sieci udostępniają rabaty, kupony i programy lojalnościowe. W tej kategorii opisujemy, jak działają aplikacje największych operatorów, czym różnią się ich oferty i na co zwrócić uwagę przy rejestracji.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Znajdziesz tu poradniki do konkretnych aplikacji, wyjaśnienia, jak aktywować kupon przed tankowaniem, oraz porównania. Artykuły mają charakter informacyjny, a aktualne warunki ofert zawsze sprawdzaj u operatora. Bieżące rabaty zebraliśmy na stronie '
+  - type: text
+    text: promocji na paliwo
+    marks:
+    - type: link
+      attrs:
+        href: /promocje
+  - type: text
+    text: .

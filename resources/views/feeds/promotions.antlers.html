@@ -22,7 +22,7 @@
                 <title>{{ station:title | sanitize }}: {{ title | sanitize }}</title>
                 <link>{{ permalink }}</link>
                 <guid isPermaLink="true">{{ permalink }}</guid>
-                <pubDate>{{ valid_from format="r" }}</pubDate>
+                <pubDate>{{ valid_from | timezone('Europe/Warsaw') | format('r') }}</pubDate>
                 <category>{{ station:title | sanitize }}</category>
                 <description>{{ (content | bard_text) | sanitize }} Ważna od {{ valid_from format="j.m.Y" }} do {{ valid_to format="j.m.Y" }}.</description>
             </item>

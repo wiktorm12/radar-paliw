@@ -3,7 +3,7 @@ id: page-regulamin
 title: Regulamin
 blueprint: page
 schema_type: WebPage
-seo_description: Regulamin korzystania z serwisu Radar Paliw — zestawienia promocji na paliwo na stacjach w Polsce.
+seo_description: 'Regulamin korzystania z serwisu Radar Paliw: zasady użytkowania zestawień promocji na paliwo, odpowiedzialność, reklamy i linki partnerskie.'
 content:
 - id: regula01
   type: block_hero
@@ -191,4 +191,5 @@ content:
     content:
     - type: text
       text: Regulamin obowiązuje od 14 października 2026.
+seo_title: Regulamin serwisu Radar Paliw — zasady korzystania
 ---

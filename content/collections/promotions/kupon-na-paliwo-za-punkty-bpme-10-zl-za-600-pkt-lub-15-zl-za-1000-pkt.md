@@ -1,6 +1,7 @@
 ---
 id: promo-kupon-na-paliwo-za-punkty-bpme-10-zl-za-
 blueprint: promotion
+seo_title: 'Kupon BPme: 10 zł za 600 pkt, 15 zł za 1000 pkt'
 title: 'Kupon na paliwo za punkty BPme: 10 zł za 600 pkt lub 15 zł za 1000 pkt'
 station: station-bp
 paliwa:

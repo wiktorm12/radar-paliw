@@ -1,0 +1,43 @@
+# Radar Paliw
+
+> Radar Paliw to polski agregator promocji na paliwo największych sieci stacji (Orlen, BP, Shell, Circle K, Moya i inne), z aktualnymi cenami maksymalnymi z programu CPN i poradnikami dla kierowców. Dane są aktualizowane codziennie.
+
+Aktualizacja: {{ now timezone="Europe/Warsaw" format="Y-m-d" }}
+
+## Najważniejsze strony
+
+- [Aktualne promocje na paliwo]({{ site:permalink }}/promocje): lista trwających promocji z filtrami według stacji i rodzaju paliwa
+- [Program CPN]({{ site:permalink }}/program-cpn): dzienne ceny maksymalne paliw, wykres i statystyki
+- [Sieci stacji]({{ site:permalink }}/stacje): przegląd sieci stacji paliw i ich promocji
+- [Blog i poradniki]({{ site:permalink }}/blog): poradniki o tankowaniu, programach lojalnościowych i cenach paliw
+- [Archiwum promocji]({{ site:permalink }}/promocje/archiwum): zakończone promocje
+- [O nas]({{ site:permalink }}/o-nas)
+- [Kontakt]({{ site:permalink }}/kontakt)
+
+## Aktywne promocje
+
+{{ collection:promotions query_scope="active_promotions" sort="valid_to:asc" limit="100" }}
+- [{{ station:title }}: {{ title }}]({{ permalink }}): {{ if discount_value && discount_type == 'cents_per_liter' }}rabat {{ discount_value }} gr/l, {{ elseif discount_value && discount_type == 'percent' }}rabat {{ discount_value }}%, {{ /if }}ważna {{ valid_from format="Y-m-d" }} – {{ valid_to format="Y-m-d" }}, {{ if requires_app }}wymaga aplikacji{{ else }}bez aplikacji{{ /if }}{{ if paliwa }}, paliwa: {{ paliwa }}{{ title }}{{ last ? '' : ', ' }}{{ /paliwa }}{{ /if }}
+{{ /collection:promotions }}
+
+## Sieci stacji
+
+{{ collection:stations sort="title:asc" }}
+- [{{ title }}]({{ permalink }})
+{{ /collection:stations }}
+
+## Program CPN
+
+- [Program CPN – ceny maksymalne paliw]({{ site:permalink }}/program-cpn)
+{{ cpn:latest }}
+Ceny maksymalne na dzień {{ date format="Y-m-d" }}:
+{{ fuels }}
+- {{ label }}: {{ price }} zł/l
+{{ /fuels }}
+{{ /cpn:latest }}
+
+## Poradniki
+
+{{ collection:articles sort="date:desc" limit="20" }}
+- [{{ title }}]({{ permalink }})
+{{ /collection:articles }}

@@ -1,18 +1,45 @@
 {{ if total_pages > 1 }}
+    {{ section:paginated }}1{{ /section:paginated }}
     <nav
-        class="mt-12 flex items-center justify-center gap-4 text-sm font-medium"
+        class="mt-12 flex flex-wrap items-center justify-center gap-2 text-sm font-medium"
         aria-label="Paginacja"
     >
         {{ if prev_page }}
             <a
-                href="{{ prev_page }}"
+                href="{{ current_page == 2 ? (prev_page | remove_query_param('page')) : prev_page }}"
                 class="button"
                 rel="prev"
             >
                 ← Poprzednia
             </a>
         {{ /if }}
-        <span class="text-zinc-500">Strona {{ current_page }} z {{ total_pages }}</span>
+        <ol class="flex flex-wrap items-center gap-1">
+            {{ links:segments:first }}
+                {{ partial:components/pagination/link }}
+            {{ /links:segments:first }}
+            {{ if links:segments:slider }}
+                <li
+                    class="px-2 text-zinc-600"
+                    aria-hidden="true"
+                >
+                    …
+                </li>
+                {{ links:segments:slider }}
+                    {{ partial:components/pagination/link }}
+                {{ /links:segments:slider }}
+            {{ /if }}
+            {{ if links:segments:last }}
+                <li
+                    class="px-2 text-zinc-600"
+                    aria-hidden="true"
+                >
+                    …
+                </li>
+                {{ links:segments:last }}
+                    {{ partial:components/pagination/link }}
+                {{ /links:segments:last }}
+            {{ /if }}
+        </ol>
         {{ if next_page }}
             <a
                 href="{{ next_page }}"

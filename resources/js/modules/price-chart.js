@@ -7,6 +7,15 @@ const SERIES_COLORS = {
     lpg: '#eda100',
 };
 
+const SERIES_STYLES = {
+    pb95: { dash: null, marker: 'circle' },
+    pb98: { dash: '7 4', marker: 'square' },
+    on: { dash: '2 3', marker: 'triangle' },
+    lpg: { dash: '10 3 2 3', marker: 'diamond' },
+};
+
+const seriesStyle = (key) => SERIES_STYLES[key] ?? SERIES_STYLES.pb95;
+
 const INK = {
     primary: '#0b0b0b',
     secondary: '#52514e',
@@ -32,6 +41,42 @@ const createSvgElement = (name, attributes = {}) => {
     Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
 
     return element;
+};
+
+const createMarker = (key, x, y, radius, strokeWidth = 1.5) => {
+    const attributes = { fill: SERIES_COLORS[key], stroke: INK.surface, 'stroke-width': strokeWidth };
+    const marker = seriesStyle(key).marker;
+
+    if (marker === 'square') {
+        return createSvgElement('rect', { ...attributes, x: x - radius, y: y - radius, width: radius * 2, height: radius * 2 });
+    }
+
+    if (marker === 'triangle') {
+        const size = radius * 1.25;
+
+        return createSvgElement('polygon', { ...attributes, points: `${x},${y - size} ${x + size},${y + size * 0.8} ${x - size},${y + size * 0.8}` });
+    }
+
+    if (marker === 'diamond') {
+        const size = radius * 1.3;
+
+        return createSvgElement('polygon', { ...attributes, points: `${x},${y - size} ${x + size},${y} ${x},${y + size} ${x - size},${y}` });
+    }
+
+    return createSvgElement('circle', { ...attributes, cx: x, cy: y, r: radius });
+};
+
+const createKey = (key) => {
+    const keyElement = createSvgElement('svg', { width: 28, height: 12, viewBox: '0 0 28 12', 'aria-hidden': 'true', class: 'shrink-0' });
+    const lineAttributes = { x1: 1, x2: 27, y1: 6, y2: 6, stroke: SERIES_COLORS[key], 'stroke-width': 2, 'stroke-linecap': 'round' };
+
+    if (seriesStyle(key).dash) {
+        lineAttributes['stroke-dasharray'] = seriesStyle(key).dash;
+    }
+
+    keyElement.append(createSvgElement('line', lineAttributes), createMarker(key, 14, 6, 3.5, 1));
+
+    return keyElement;
 };
 
 class PriceChart {
@@ -76,12 +121,8 @@ class PriceChart {
 
         this.data.series.forEach((series) => {
             const itemElement = document.createElement('li');
-            const swatchElement = document.createElement('span');
-
             itemElement.className = 'flex items-center gap-2';
-            swatchElement.className = 'inline-block h-0.5 w-4 rounded-full';
-            swatchElement.style.backgroundColor = SERIES_COLORS[series.key];
-            itemElement.append(swatchElement, series.label);
+            itemElement.append(createKey(series.key), series.label);
             legendElement.append(itemElement);
         });
 
@@ -211,31 +252,28 @@ class PriceChart {
             .map((value, index) => (value === null ? null : [this.x(index), this.y(value)]))
             .filter(Boolean);
 
-        groupElement.append(
-            createSvgElement('polyline', {
-                points: points.map((point) => point.join(',')).join(' '),
-                fill: 'none',
-                stroke: SERIES_COLORS[series.key],
-                'stroke-width': 2,
-                'stroke-linejoin': 'round',
-                'stroke-linecap': 'round',
-            }),
-        );
+        const lineAttributes = {
+            points: points.map((point) => point.join(',')).join(' '),
+            fill: 'none',
+            stroke: SERIES_COLORS[series.key],
+            'stroke-width': 2,
+            'stroke-linejoin': 'round',
+            'stroke-linecap': 'round',
+        };
 
-        if (points.length <= 31) {
-            points.forEach(([x, y]) => {
-                groupElement.append(
-                    createSvgElement('circle', {
-                        cx: x,
-                        cy: y,
-                        r: 3,
-                        fill: SERIES_COLORS[series.key],
-                        stroke: INK.surface,
-                        'stroke-width': 1.5,
-                    }),
-                );
-            });
+        if (seriesStyle(series.key).dash) {
+            lineAttributes['stroke-dasharray'] = seriesStyle(series.key).dash;
         }
+
+        groupElement.append(createSvgElement('polyline', lineAttributes));
+
+        const every = Math.max(1, Math.ceil(points.length / 31));
+
+        points.forEach(([x, y], index) => {
+            if (index % every === 0 || index === points.length - 1) {
+                groupElement.append(createMarker(series.key, x, y, 3.5));
+            }
+        });
 
         return groupElement;
     }
@@ -306,16 +344,7 @@ class PriceChart {
             .sort((a, b) => b.value - a.value);
 
         rows.forEach(({ series, value }) => {
-            this.hoverGroupElement.append(
-                createSvgElement('circle', {
-                    cx: x,
-                    cy: this.y(value),
-                    r: 5,
-                    fill: SERIES_COLORS[series.key],
-                    stroke: INK.surface,
-                    'stroke-width': 2,
-                }),
-            );
+            this.hoverGroupElement.append(createMarker(series.key, x, this.y(value), 5, 2));
         });
 
         this.tooltipElement.replaceChildren();
@@ -328,15 +357,12 @@ class PriceChart {
 
         rows.forEach(({ series, value }) => {
             const rowElement = document.createElement('p');
-            const swatchElement = document.createElement('span');
             const valueElement = document.createElement('span');
 
             rowElement.className = 'flex items-center gap-2 text-zinc-700';
-            swatchElement.className = 'inline-block size-2 rounded-full';
-            swatchElement.style.backgroundColor = SERIES_COLORS[series.key];
             valueElement.className = 'ml-auto pl-4 font-semibold text-zinc-900 tabular-nums';
             valueElement.textContent = `${formatPrice(value)} zł`;
-            rowElement.append(swatchElement, series.label, valueElement);
+            rowElement.append(createKey(series.key), series.label, valueElement);
             this.tooltipElement.append(rowElement);
         });
 

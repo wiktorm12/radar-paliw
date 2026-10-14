@@ -1,1 +1,19 @@
-title: 'Diesel premium'
+title: Diesel premium
+title_accusative: olej napędowy premium
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Diesel premium to olej napędowy sprzedawany pod markami własnymi sieci, na przykład jako odmiana z pakietem dodatków. Producenci opisują go jako paliwo o lepszych właściwościach użytkowych niż wersja standardowa, a jego cena na stacji jest zwykle wyższa. Czy to się opłaca, zależy od auta i stylu jazdy.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Na tej stronie zebraliśmy promocje na diesla premium: rabaty w groszach na litr, kupony w aplikacjach stacji i akcje czasowe. Przy każdej promocji podajemy sieć, datę ważności i warunki, a także link do regulaminu operatora. Zwykły olej napędowy omawiamy na stronie '
+  - type: text
+    text: promocji na olej napędowy
+    marks:
+    - type: link
+      attrs:
+        href: /paliwa/on
+  - type: text
+    text: .

@@ -4,19 +4,22 @@
             class="container pt-6"
             aria-label="Okruszki"
         >
-            <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-500">
+            <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-600">
                 {{ crumbs }}
                     <li class="flex items-center gap-2">
                         {{ if !last }}
                             <a
                                 href="{{ url }}"
-                                class="hover:text-brand-600"
+                                class="inline-block py-2 hover:text-brand-700 hover:underline"
                             >
                                 {{ title }}
                             </a>
                             <span aria-hidden="true">/</span>
                         {{ else }}
-                            <span aria-current="page">{{ title }}</span>
+                            <span
+                                aria-current="page"
+                                class="py-2"
+                            >{{ title }}</span>
                         {{ /if }}
                     </li>
                 {{ /crumbs }}

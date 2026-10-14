@@ -34,6 +34,13 @@ tabs:
               display: 'Strona WWW'
               width: 50
           -
+            handle: same_as
+            field:
+              type: list
+              display: 'Profile zewnętrzne (sameAs)'
+              instructions: 'Pełne URL-e: Wikipedia, Wikidata, profile społecznościowe. Trafiają do schema Organization obok strony WWW.'
+              width: 50
+          -
             handle: loyalty_program
             field:
               type: text

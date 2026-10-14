@@ -5,19 +5,37 @@
 >
     {{ partial:layout/head }}
     <body class="flex min-h-dvh flex-col bg-white font-sans text-zinc-800 antialiased">
+        <a
+            href="#main"
+            class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-zinc-900 focus:shadow-lg focus:outline-2 focus:outline-brand-600"
+        >
+            Przejdź do treści
+        </a>
         {{ partial:layout/header }}
-        <div class="container py-4">
-            {{ partial:ads/slot position="site_top" }}
-        </div>
+        {{ ad_slot placement="site_top" }}
+            {{ if !no_results || environment !== 'production' }}
+                <div class="container py-4">
+                    {{ partial:ads/slot position="site_top" }}
+                </div>
+            {{ /if }}
+        {{ /ad_slot }}
         {{ unless is_homepage }}
             {{ partial:layout/breadcrumbs }}
         {{ /unless }}
-        <main class="grow">
+        <main
+            id="main"
+            tabindex="-1"
+            class="grow focus:outline-none"
+        >
             {{ template_content }}
         </main>
-        <div class="container py-8">
-            {{ partial:ads/slot position="site_bottom" }}
-        </div>
+        {{ ad_slot placement="site_bottom" }}
+            {{ if !no_results || environment !== 'production' }}
+                <div class="container py-8">
+                    {{ partial:ads/slot position="site_bottom" }}
+                </div>
+            {{ /if }}
+        {{ /ad_slot }}
         {{ partial:layout/footer }}
         {{ partial:ads/sticky }}
         {{ stack:modals }}

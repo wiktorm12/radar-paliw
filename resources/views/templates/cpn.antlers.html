@@ -17,25 +17,40 @@ trend_labels:
     {{ section:seo_title }}{{ seo_title ?? 'Program CPN – ceny maksymalne paliw dziś ({date | format("j.m.Y")}) · {site:name}' }}{{ /section:seo_title }}
 {{ /cpn:latest }}
 
-{{ push:schema }}
+{{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ permalink }}#dataset" }{{ /section:schema_main_entity }}
+{{ cpn:meta type="max" }}
+    {{ push:schema }}
         ,{
             "@type": "Dataset",
             "@id": "{{ permalink }}#dataset",
             "name": "Ceny maksymalne paliw w programie CPN (Ceny Paliwa Niżej)",
-            "description": "Dzienne ceny maksymalne benzyny 95, benzyny 98 i oleju napędowego ustalane w ramach rządowego programu CPN, wraz ze statystykami zmian.",
+            "description": "Dzienne ceny maksymalne benzyny 95, benzyny 98 i oleju napędowego ustalane w obwieszczeniach Ministra Energii w ramach rządowego programu CPN, wraz ze statystykami zmian i porównaniem ze średnimi cenami detalicznymi sprzed programu.",
             "url": "{{ permalink }}",
             "inLanguage": "pl-PL",
             "isAccessibleForFree": true,
             "creator": { "@id": "{{ site:permalink }}/#organization" },
-            "temporalCoverage": "{{ cpn:stats type='max' }}{{ if first }}{{ start_date }}/{{ end_date }}{{ /if }}{{ /cpn:stats }}",
+            "publisher": { "@id": "{{ site:permalink }}/#organization" },
+            "keywords": ["program CPN", "Ceny Paliwa Niżej", "cena maksymalna paliwa", "benzyna 95", "benzyna 98", "olej napędowy", "ceny paliw"],
+            "measurementTechnique": "Ceny maksymalne przepisywane codziennie z obwieszczeń Ministra Energii publikowanych na gov.pl; średnie ceny detaliczne sprzed programu według notowań e-petrol.pl.",
+            "citation": "Obwieszczenia Ministra Energii w sprawie maksymalnej ceny detalicznej paliw ciekłych (gov.pl/web/energia)",
+            "isBasedOn": [
+                {{ sources }}
+                    { "@type": "CreativeWork", "name": {{ name | to_json }}, "url": {{ url | to_json }} },
+                {{ /sources }}
+                { "@type": "WebPage", "name": "e-petrol.pl – ceny na stacjach paliw", "url": "https://www.e-petrol.pl/notowania/rynek-krajowy/ceny-stacje-paliw" }
+            ],
+            "dateModified": "{{ end_date }}",
+            "temporalCoverage": "{{ start_date }}/{{ end_date }}",
             "spatialCoverage": { "@type": "Country", "name": "Polska" },
             "variableMeasured": [
                 {{ cpn:columns type="max" }}
-                    { "@type": "PropertyValue", "name": {{ label | to_json }}, "unitText": "PLN/l" }{{ !last ?= ',' }}
+                    { "@type": "PropertyValue", "name": {{ ('Cena maksymalna – ' + label) | to_json }}, "unitText": "PLN/l" }{{ !last ?= ',' }}
                 {{ /cpn:columns }}
             ]
         }
-{{ /push:schema }}
+    {{ /push:schema }}
+{{ /cpn:meta }}
 
 {{ partial:section class="bg-zinc-100" }}
     <div class="container">
@@ -44,7 +59,7 @@ trend_labels:
         {{ cpn:latest type="max" }}
             <p class="mb-8 max-w-3xl text-lg text-zinc-600">
                 Ceny maksymalne obowiązujące
-                <strong class="text-zinc-900">{{ date | format("j.m.Y") }}</strong>
+                <strong class="text-zinc-900"><time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time></strong>
                 — ustalane codziennie przez Ministerstwo Energii. Poniżej wykres, statystyki i wszystkie ceny od startu programu.
             </p>
             <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -64,17 +79,19 @@ trend_labels:
                     </li>
                 {{ /fuels }}
             </ul>
-            {{ if source_url }}
-                <p class="mt-4 text-xs text-zinc-500">
+            <p class="mt-4 text-xs text-zinc-500">
+                Aktualizacja: <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>.
+                {{ if source_url }}
                     Źródło:
                     <a
                         href="{{ source_url }}"
                         class="underline hover:text-brand-600"
                         target="_blank"
-                        rel="noopener nofollow"
-                    >{{ source_name ?? 'komunikat' }}</a>
-                </p>
-            {{ /if }}
+                        rel="noopener"
+                    >{{ source_name ?? 'komunikat' }}</a>.
+                {{ /if }}
+                Dane zestawia Radar Paliw.
+            </p>
         {{ /cpn:latest }}
         {{ if no_results }}{{ /if }}
     </div>
@@ -83,16 +100,24 @@ trend_labels:
 {{ partial:section }}
     <div class="container">
         <h2 class="mb-2 text-3xl font-bold tracking-tight">Ceny maksymalne CPN dzień po dniu</h2>
-        <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto.</p>
+        <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto. Te same dane w formie tekstowej są w <a href="#tabela" class="underline hover:text-brand-600">tabeli</a>.</p>
         <div
-            class="mb-12 rounded-2xl border border-zinc-200 bg-white p-4 md:p-6"
+            class="mb-12 min-h-90 rounded-2xl border border-zinc-200 bg-white p-4 md:min-h-108 md:p-6"
             data-price-chart
         >
             <script
                 type="application/json"
                 data-price-chart-data
             >{{ cpn:series type="max" }}</script>
-            <p class="text-sm text-zinc-500">Wykres wymaga JavaScriptu — pełne dane znajdziesz w <a href="#tabela" class="underline">tabeli poniżej</a>.</p>
+            <noscript>
+                <p class="text-sm text-zinc-500">
+                    Wykres wymaga JavaScriptu — pełne dane znajdziesz w
+                    <a
+                        href="#tabela"
+                        class="underline"
+                    >tabeli poniżej</a>.
+                </p>
+            </noscript>
         </div>
 
         <h2 class="mb-6 text-3xl font-bold tracking-tight">Statystyki programu CPN</h2>
@@ -157,6 +182,7 @@ trend_labels:
         </h2>
         <div class="mb-4 overflow-x-auto rounded-2xl border border-zinc-200">
             <table class="w-full min-w-xl text-left text-sm">
+                <caption class="sr-only">Ceny maksymalne paliw w programie CPN w zł/l brutto, od najnowszych; zmiana względem poprzedniego dnia</caption>
                 <thead class="bg-zinc-100 text-zinc-600">
                     <tr>
                         <th
@@ -188,7 +214,7 @@ trend_labels:
                                 scope="row"
                                 class="px-4 py-3 font-medium whitespace-nowrap"
                             >
-                                {{ date | format("j.m.Y") }}
+                                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
                             </th>
                             {{ cells }}
                                 <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
@@ -207,7 +233,7 @@ trend_labels:
                                         href="{{ source_url }}"
                                         class="text-brand-600 hover:underline"
                                         target="_blank"
-                                        rel="noopener nofollow"
+                                        rel="noopener"
                                     >{{ source_name ?? 'link' }}</a>
                                 {{ /if }}
                             </td>
@@ -216,7 +242,19 @@ trend_labels:
                 </tbody>
             </table>
         </div>
-        <p class="text-xs text-zinc-500">Dane z oficjalnych komunikatów i serwisów informacyjnych — wiążące są komunikaty Ministerstwa Energii. Tabela jest aktualizowana codziennie.</p>
+        <p class="text-xs text-zinc-500">
+            Źródła: obwieszczenia Ministra Energii publikowane na
+            <a
+                href="https://www.gov.pl/web/energia"
+                class="underline hover:text-brand-600"
+                target="_blank"
+                rel="noopener"
+            >gov.pl/web/energia</a>
+            (w pierwszych dniach programu także serwisy informacyjne cytujące komunikaty), średnie ceny sprzed programu: e-petrol.pl. Wiążące są komunikaty Ministerstwa Energii.
+            {{ cpn:meta type="max" }}
+                Tabela jest aktualizowana codziennie — ostatnio <time datetime="{{ end_date }}">{{ end_date | format("j.m.Y") }}</time>.
+            {{ /cpn:meta }}
+        </p>
     </div>
 {{ /partial:section }}
 

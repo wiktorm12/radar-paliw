@@ -1,7 +1,35 @@
+---
+links:
+    -
+        url: '/promocje'
+        label: 'Aktualne promocje na paliwo'
+    -
+        url: '/program-cpn'
+        label: 'Program CPN – ceny maksymalne'
+    -
+        url: '/stacje'
+        label: 'Sieci stacji'
+    -
+        url: '/blog'
+        label: 'Blog i poradniki'
+---
+{{ section:seo_title }}Nie znaleziono strony (404){{ /section:seo_title }}
 {{ partial:section }}
     <div class="container">
-        <h1 class="mb-4 text-4xl font-bold">404</h1>
-        <p class="mb-8 text-zinc-600">Nie znaleźliśmy tej strony.</p>
+        <h1 class="mb-4 text-4xl font-bold">Nie znaleziono strony</h1>
+        <p class="mb-8 text-zinc-600">Strona, której szukasz, nie istnieje albo została przeniesiona. Może przyda się któraś z tych:</p>
+        <ul class="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            {{ view:links }}
+                <li>
+                    <a
+                        href="{{ url }}"
+                        class="font-semibold text-brand-700 underline hover:text-brand-800"
+                    >
+                        {{ label }}
+                    </a>
+                </li>
+            {{ /view:links }}
+        </ul>
         <a
             href="/"
             class="button"

@@ -30,7 +30,8 @@ return [
 
         'half' => [
             'driver' => 'application',
-            'expiry' => null,
+            // Badges (new/ending soon/expired) and CPN prices depend on today's date.
+            'expiry' => 60,
         ],
 
         'full' => [
@@ -61,7 +62,8 @@ return [
         'class' => null,
 
         'urls' => [
-            //
+            '/cp*',
+            '/!/*',
         ],
 
     ],
@@ -84,7 +86,20 @@ return [
         'class' => null,
 
         'rules' => [
-            //
+            'collections' => [
+                'promotions' => [
+                    'urls' => ['/', '/promocje', '/promocje/archiwum', '/stacje', '/stacje/*', '/paliwa/*'],
+                ],
+                'articles' => [
+                    'urls' => ['/', '/blog', '/blog/*', '/kategorie/*'],
+                ],
+                'cpn_prices' => [
+                    'urls' => ['/', '/program-cpn'],
+                ],
+                'stations' => [
+                    'urls' => ['/', '/stacje', '/promocje'],
+                ],
+            ],
         ],
 
     ],
@@ -102,8 +117,9 @@ return [
 
     'ignore_query_strings' => true,
 
+    // Pagination and promotion filters render different content per query.
     'allowed_query_strings' => [
-        //
+        'page', 'stacja', 'paliwo', 'bez_aplikacji', 'sortuj',
     ],
 
     'disallowed_query_strings' => [

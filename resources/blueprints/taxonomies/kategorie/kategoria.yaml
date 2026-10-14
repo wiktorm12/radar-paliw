@@ -16,8 +16,18 @@ tabs:
           -
             handle: description
             field:
-              type: textarea
+              type: bard
               display: Opis
+              instructions: 'Wstęp nad listą artykułów kategorii.'
+              allow_source: true
+              remove_empty_nodes: false
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - anchor
   seo:
     display: SEO
     sections:

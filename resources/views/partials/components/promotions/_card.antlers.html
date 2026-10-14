@@ -18,7 +18,7 @@ badge_classes:
     'expired': 'bg-zinc-200 text-zinc-600'
 ---
 
-<article class="relative flex h-full {{ badge == 'expired' ?= 'opacity-75' }} flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
+<article class="relative flex h-full focus-within:ring-2 focus-within:ring-brand-600 {{ badge == 'expired' ?= 'opacity-75' }} flex-col rounded-2xl border border-zinc-200 bg-white p-6 text-zinc-800 shadow-sm transition hover:shadow-md">
     <div class="mb-3 flex items-center justify-between gap-3">
         {{ station }}
             <p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-700">
@@ -34,14 +34,14 @@ badge_classes:
             <span class="shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold {{ view:badge_classes[badge] }}">{{ view:badge_labels[badge] }}</span>
         {{ /if }}
     </div>
-    <h3 class="mb-4 text-lg font-semibold">
+    <h{{ heading_level ?? 3 }} class="mb-4 text-lg font-semibold">
         <a
             href="{{ url }}"
             class="before:absolute before:inset-0"
         >
             {{ title }}
         </a>
-    </h3>
+    </h{{ heading_level ?? 3 }}>
     {{ if discount_value }}
         <p class="mb-4 text-3xl font-bold text-brand-600">
             {{ discount_type:value != 'fixed_price' ?= '-' }}{{ discount_value }}{{ view:discount_suffix[discount_type:value] }}
@@ -52,15 +52,16 @@ badge_classes:
             <li>
                 <a
                     href="/paliwa/{{ slug }}"
-                    class="block rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium hover:bg-brand-100"
+                    class="block rounded-full bg-zinc-100 px-3 py-2 text-xs font-medium hover:bg-brand-100"
                 >
                     {{ title }}
                 </a>
             </li>
         {{ /paliwa }}
     </ul>
-    <p class="mt-auto text-sm text-zinc-500">
-        {{ valid_from format="j.m" }} – {{ valid_to format="j.m.Y" }}
+    <p class="mt-auto text-sm text-zinc-600">
+        <time datetime="{{ valid_from format="Y-m-d" }}">{{ valid_from format="j.m" }}</time> –
+        <time datetime="{{ valid_to format="Y-m-d" }}">{{ valid_to format="j.m.Y" }}</time>
         {{ requires_app ?= '· wymaga aplikacji' }}
     </p>
 </article>

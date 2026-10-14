@@ -1,1 +1,18 @@
-title: 'Program CPN'
+title: Program CPN
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: 'Program CPN („Ceny Paliwa Niżej”) to rządowy pakiet obniżający ceny benzyny i oleju napędowego: niższy VAT, niższa akcyza i dzienne ceny maksymalne ogłaszane przez Ministra Energii. W tej kategorii zebraliśmy artykuły wyjaśniające zasady programu, jego edycje, podstawy prawne i skutki dla kierowców.'
+- type: paragraph
+  content:
+  - type: text
+    text: 'Najświeższe ceny maksymalne, wykres i statystyki znajdziesz na stronie '
+  - type: text
+    text: Program CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: . Artykuły opierają się na komunikatach Ministerstwa Energii, Dzienniku Ustaw i danych e-petrol.pl, ale wiążące są zawsze oficjalne obwieszczenia.

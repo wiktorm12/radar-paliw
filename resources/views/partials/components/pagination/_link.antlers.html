@@ -1,0 +1,17 @@
+<li>
+    {{ if page == current_page }}
+        <span
+            class="flex size-10 items-center justify-center rounded-full bg-brand-700 text-white"
+            aria-current="page"
+        >
+            <span class="sr-only">Strona</span> {{ page }}
+        </span>
+    {{ else }}
+        <a
+            href="{{ page == 1 ? (url | remove_query_param('page')) : url }}"
+            class="flex size-10 items-center justify-center rounded-full text-zinc-700 hover:bg-zinc-100"
+        >
+            <span class="sr-only">Strona</span> {{ page }}
+        </a>
+    {{ /if }}
+</li>

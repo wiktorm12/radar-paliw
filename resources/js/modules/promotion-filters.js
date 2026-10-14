@@ -6,7 +6,10 @@ class PromotionFilters {
     }
 
     initEvents() {
-        this.formElement.addEventListener('change', () => this.submit());
+        this.formElement.addEventListener('submit', (event) => {
+            event.preventDefault();
+            this.submit();
+        });
     }
 
     submit() {

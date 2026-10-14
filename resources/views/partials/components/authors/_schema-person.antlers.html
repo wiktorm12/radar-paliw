@@ -3,10 +3,11 @@
             "@type": "Person",
             "@id": "{{ permalink }}#person",
             "name": {{ title | to_json }},
-            "url": "{{ permalink }}"{{ if role }},
-            "jobTitle": {{ role | to_json }}{{ /if }}{{ if bio }},
+            "url": "{{ permalink }}"{{ if job_title }},
+            "jobTitle": {{ job_title | to_json }}{{ /if }}{{ if bio }},
             "description": {{ bio | to_json }}{{ /if }}{{ photo }},
-            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if same_as }},
+            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if knows_about }},
+            "knowsAbout": {{ knows_about | to_json }}{{ /if }}{{ if same_as }},
             "sameAs": {{ same_as | to_json }}{{ /if }},
             "worksFor": { "@id": "{{ site:permalink }}/#organization" }
         }

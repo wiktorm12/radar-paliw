@@ -1,20 +1,79 @@
+---
+months:
+    1: 'styczeń'
+    2: 'luty'
+    3: 'marzec'
+    4: 'kwiecień'
+    5: 'maj'
+    6: 'czerwiec'
+    7: 'lipiec'
+    8: 'sierpień'
+    9: 'wrzesień'
+    10: 'październik'
+    11: 'listopad'
+    12: 'grudzień'
+---
+{{ fuel_name = title_accusative ?? (title | lower) }}
+{{ promo_count = 0 }}
+{{ collection:promotions
+    as="fuel_promotions"
+    query_scope="active_promotions"
+    :fuel_type="slug"
+}}
+    {{ promo_count = fuel_promotions | length }}
+{{ /collection:promotions }}
+{{ promo_label = promo_count == 0 ? 'brak aktywnych promocji' : (promo_count == 1 ? '1 aktywna promocja' : (promo_count <= 4 ? '{promo_count} aktywne promocje' : '{promo_count} aktywnych promocji')) }}
+{{ today = now | timezone('Europe/Warsaw') }}
+{{ month_number = today | format('n') }}
+
 {{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
-{{ section:seo_title }}{{ seo_title ?? 'Promocje na {title} – aktualne rabaty na stacjach · {site:name}' }}{{ /section:seo_title }}
-{{ section:seo_description }}{{ (seo_description ?? 'Wszystkie aktualne promocje na {title} na stacjach Orlen, BP, Shell, Circle K, MOL, Moya, Amic, Auchan i Carrefour.') | entities }}{{ /section:seo_description }}
+{{ if promo_count > 0 }}
+    {{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ current_url }}#itemlist" }{{ /section:schema_main_entity }}
+{{ /if }}
+{{ section:seo_title }}{{ if seo_title }}{{ seo_title }}{{ else }}Promocje na {{ fuel_name }} – rabaty {{ view:months[month_number] }} {{ today | format('Y') }}{{ /if }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ elseif promo_count > 0 }}Promocje na {{ fuel_name }}: {{ promo_label }} na stacjach w Polsce (stan na {{ today | format('j.m.Y') }}). Rabaty, kupony i akcje w aplikacjach.{{ else }}Promocje na {{ fuel_name }} na stacjach w Polsce – obecnie brak aktywnych akcji (stan na {{ today | format('j.m.Y') }}). Zobacz promocje na inne paliwa i archiwum.{{ /if }}{{ /section:seo_description }}
 
 {{ partial:section }}
     <div class="container">
-        <h1 class="mb-8 text-4xl font-bold tracking-tight">Promocje na {{ title }}</h1>
-        {{ partial:components/promotions/list
-            :fuel_type="slug"
-            ad_every="6"
-            per_page="48"
-        }}
+        <h1 class="mb-4 text-4xl font-bold tracking-tight">Promocje na {{ fuel_name }}</h1>
+        <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+            {{ if promo_count > 0 }}
+                Aktualnie: {{ promo_label }} na {{ fuel_name }} na stacjach w Polsce — stan na <time datetime="{{ today | format('Y-m-d') }}">{{ today | format('j.m.Y') }}</time>.
+                Przy każdej akcji podajemy wysokość rabatu, daty obowiązywania i warunki, np. wymaganą aplikację.
+            {{ else }}
+                Na dzień <time datetime="{{ today | format('Y-m-d') }}">{{ today | format('j.m.Y') }}</time> żadna z obserwowanych sieci nie prowadzi promocji na {{ fuel_name }}.
+                Sprawdź <a
+                    href="/promocje"
+                    class="font-medium text-brand-600 hover:underline"
+                >wszystkie aktualne promocje na paliwo</a>
+                albo <a
+                    href="/promocje/archiwum"
+                    class="font-medium text-brand-600 hover:underline"
+                >archiwum zakończonych promocji</a>, żeby zobaczyć, jakie akcje sieci prowadziły wcześniej.
+            {{ /if }}
+        </p>
+        {{ if promo_count > 0 }}
+            {{ partial:components/promotions/list
+                :fuel_type="slug"
+                heading_level="2"
+                ad_every="6"
+                per_page="48"
+                schema="true"
+            }}
+        {{ /if }}
         {{ if description }}
             <div class="prose mt-12 max-w-3xl">
                 {{ description }}
             </div>
         {{ /if }}
+        <p class="mt-8 max-w-3xl text-zinc-600">
+            Promocje liczą się od ceny na dystrybutorze — dzisiejsze ceny maksymalne sprawdzisz na stronie
+            <a
+                href="/program-cpn"
+                class="font-medium text-brand-600 hover:underline"
+            >programu CPN</a>.
+        </p>
     </div>
 {{ /partial:section }}
 
@@ -33,5 +92,15 @@
                 </li>
             {{ /taxonomy:paliwa }}
         </ul>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section }}
+    <div class="container">
+        <h2 class="mb-8 text-3xl font-bold tracking-tight">Poradniki o rodzajach paliwa</h2>
+        {{ partial:components/articles/list
+            category="rodzaje-paliw"
+            per_page="3"
+        }}
     </div>
 {{ /partial:section }}

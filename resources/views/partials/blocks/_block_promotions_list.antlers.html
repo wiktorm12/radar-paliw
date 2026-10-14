@@ -25,6 +25,8 @@ bg:
             :sort_key="status:value == 'expired' ? 'archive' : (show_filters ? get:sortuj : null)"
             :paginated="paginate"
             :per_page="limit"
+            :heading_level="heading ? 3 : 2"
+            :schema="paginate"
         }}
     </div>
 {{ /partial:section }}

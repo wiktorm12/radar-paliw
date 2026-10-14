@@ -1,1 +1,19 @@
-title: 'Benzyna 98'
+title: Benzyna 98
+title_accusative: benzynę 98
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Benzyna 98 (Pb98) to paliwo o wyższej liczbie oktanowej niż standardowa „dziewięćdziesiątka piątka”. Przeznaczona jest głównie do silników o podwyższonym stopniu sprężania i do aut, w których producent wprost zaleca takie paliwo. Jeśli instrukcja nie wymaga benzyny 98, nie musisz po nią sięgać.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Benzyna 98 jest objęta dzienną ceną maksymalną w programie '
+  - type: text
+    text: CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: '. Na tej stronie zebraliśmy aktualne promocje na benzynę 98 z różnych sieci stacji: rabaty w groszach na litr, kupony i akcje w aplikacjach. Przy każdej promocji podajemy datę ważności, warunki i link do regulaminu operatora.'

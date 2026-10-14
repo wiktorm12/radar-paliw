@@ -9,15 +9,15 @@
 {{ push:schema }}
         ,{
             "@type": "FAQPage",
-            "@id": "{{ current_url }}#faq",
+            "@id": "{{ current_url }}#faq{{ section_index ? '-{section_index}' : '' }}",
             "mainEntity": [
                 {{ faq }}
                     {
                         "@type": "Question",
-                        "name": {{ question | to_json }},
+                        "name": {{ question | strip_tags | trim | to_json }},
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": {{ answer | to_json }}
+                            "text": {{ answer | strip_tags | trim | to_json }}
                         }
                     }{{ !last ?= ',' }}
                 {{ /faq }}

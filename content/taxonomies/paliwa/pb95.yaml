@@ -1,1 +1,19 @@
-title: 'Benzyna 95'
+title: Benzyna 95
+title_accusative: benzynę 95
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: Benzyna 95 (Pb95) to najpopularniejsze paliwo do samochodów z silnikiem benzynowym. Liczba 95 oznacza liczbę oktanową, czyli odporność paliwa na niekontrolowane zapłony. Większość aut osobowych z silnikiem benzynowym jest przystosowana właśnie do tej benzyny, ale zawsze warto sprawdzić zalecenie w instrukcji pojazdu.
+- type: paragraph
+  content:
+  - type: text
+    text: 'W programie '
+  - type: text
+    text: CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: ' benzyna 95 jest objęta dzienną ceną maksymalną i obniżonym VAT. Na tej stronie zebraliśmy aktualne promocje na benzynę 95: rabaty w groszach na litr, kupony w aplikacjach stacji i akcje czasowe. Przy każdej widać sieć, datę ważności i warunki, a link prowadzi do regulaminu operatora.'

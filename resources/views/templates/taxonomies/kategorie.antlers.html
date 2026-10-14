@@ -1,17 +1,31 @@
+{{ article_count = 0 }}
+{{ collection:articles
+    as="category_articles"
+    query_scope="articles_filter"
+    :category="slug"
+}}
+    {{ article_count = category_articles | length }}
+{{ /collection:articles }}
+
 {{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
-{{ section:seo_title }}{{ seo_title ?? '{title} – blog · {site:name}' }}{{ /section:seo_title }}
+{{ section:seo_title }}{{ if seo_title }}{{ seo_title }}{{ else }}{{ title }} – artykuły i poradniki{{ /if }}{{ /section:seo_title }}
+{{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ elseif description }}{{ description | bard_text }}{{ else }}{{ title }}: {{ article_count }} artykułów i poradników Radar Paliw o paliwach, cenach i promocjach na stacjach w Polsce.{{ /if }}{{ /section:seo_description }}
 
 {{ partial:section }}
     <div class="container">
         <h1 class="mb-4 text-4xl font-bold tracking-tight">{{ title }}</h1>
         {{ if description }}
-            <p class="mb-8 max-w-2xl text-lg text-zinc-600">{{ description }}</p>
+            <div class="prose mb-4 max-w-3xl text-lg">
+                {{ description }}
+            </div>
         {{ /if }}
+        <p class="mb-8 text-sm text-zinc-600">Artykułów w kategorii: {{ article_count }}</p>
         <div class="mb-12">
             {{ partial:ads/slot position="blog_top" }}
         </div>
         {{ partial:components/articles/list
             :category="slug"
+            heading_level="2"
             per_page="12"
             paginated="true"
             ad_every="3"

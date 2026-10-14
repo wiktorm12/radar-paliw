@@ -1,15 +1,48 @@
+---
+intros:
+    'paliwa': 'Promocje na paliwo pogrupowane według rodzaju: benzyna 95 i 98, olej napędowy, diesel premium, LPG i AdBlue. Wybierz paliwo, żeby zobaczyć aktualne rabaty w gr/l, kupony i akcje w aplikacjach na stacjach Orlen, BP, Shell, Circle K, MOL, Moya i innych — z datami ważności i warunkami.'
+    'kategorie': 'Artykuły Radar Paliw pogrupowane tematycznie: poradniki dla kierowców, ceny paliw, program CPN, aplikacje i programy lojalnościowe stacji oraz rodzaje paliwa. Wybierz kategorię, żeby zobaczyć wszystkie teksty na dany temat.'
+descriptions:
+    'paliwa': 'Promocje na paliwo według rodzaju: benzyna 95 i 98, diesel, LPG i AdBlue. Liczba aktywnych promocji, rabaty i kupony na stacjach w Polsce.'
+    'kategorie': 'Kategorie bloga Radar Paliw: poradniki, ceny paliw, program CPN, aplikacje i programy lojalnościowe stacji. Wszystkie artykuły według tematu.'
+---
+{{ taxonomy_handle = handle }}
 {{ section:schema_page_type }}CollectionPage{{ /section:schema_page_type }}
+{{ section:seo_description }}{{ view:descriptions[taxonomy_handle] }}{{ /section:seo_description }}
+
 {{ partial:section }}
     <div class="container">
-        <h1 class="mb-8 text-4xl font-bold tracking-tight">{{ title }}</h1>
+        <h1 class="mb-4 text-4xl font-bold tracking-tight">{{ title }}</h1>
+        {{ if view:intros[taxonomy_handle] }}
+            <p class="mb-8 max-w-3xl text-lg text-zinc-600">{{ view:intros[taxonomy_handle] }}</p>
+        {{ /if }}
         <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {{ taxonomy :from="handle" }}
+            {{ taxonomy :from="taxonomy_handle" }}
                 <li>
                     <a
                         href="{{ url }}"
-                        class="block rounded-2xl border border-zinc-200 p-5 font-semibold hover:border-brand-500"
+                        class="block h-full rounded-2xl border border-zinc-200 p-5 hover:border-brand-500"
                     >
-                        {{ title }}
+                        <span class="mb-1 block font-semibold">{{ title }}</span>
+                        <span class="block text-sm text-zinc-500">
+                            {{ if taxonomy_handle == 'paliwa' }}
+                                {{ collection:promotions
+                                    as="term_promotions"
+                                    query_scope="active_promotions"
+                                    :fuel_type="slug"
+                                }}
+                                    Aktywne promocje: {{ term_promotions | length }}
+                                {{ /collection:promotions }}
+                            {{ else }}
+                                {{ collection:articles
+                                    as="term_articles"
+                                    query_scope="articles_filter"
+                                    :category="slug"
+                                }}
+                                    Artykuły: {{ term_articles | length }}
+                                {{ /collection:articles }}
+                            {{ /if }}
+                        </span>
                     </a>
                 </li>
             {{ /taxonomy }}

@@ -1,1 +1,18 @@
-title: 'Ceny paliw'
+title: Ceny paliw
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: 'W tej kategorii publikujemy artykuły o cenach paliw w Polsce: co wpływa na cenę przy dystrybutorze, jak zmieniają się notowania i dlaczego ceny różnią się między stacjami.'
+- type: paragraph
+  content:
+  - type: text
+    text: 'Znajdziesz tu analizy opierające się na publicznych danych, takich jak komunikaty Ministerstwa Energii czy zestawienia e-petrol.pl, oraz wyjaśnienia mechanizmów rynkowych. Dzienne ceny maksymalne w programie CPN sprawdzisz na stronie '
+  - type: text
+    text: Program CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: .

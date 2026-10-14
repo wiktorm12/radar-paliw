@@ -1,1 +1,19 @@
-title: 'LPG'
+title: LPG
+title_accusative: LPG
+description:
+- type: paragraph
+  content:
+  - type: text
+    text: LPG, czyli gaz płynny do napędu pojazdów (autogaz), to tańsza alternatywa dla benzyny, ale wymaga zamontowanej w samochodzie instalacji gazowej. Jest dostępny na wielu stacjach, choć nie na wszystkich. Warto sprawdzić, czy wybrana stacja go sprzedaje.
+- type: paragraph
+  content:
+  - type: text
+    text: 'Ceny LPG nie są objęte limitem w programie '
+  - type: text
+    text: CPN
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn
+  - type: text
+    text: ', dlatego promocje na autogaz mają szczególne znaczenie dla kierowców jeżdżących na gazie. Na tej stronie znajdziesz aktualne promocje na LPG: rabaty w groszach na litr, kupony i akcje w aplikacjach stacji. Przy każdej widać sieć, datę ważności i link do regulaminu operatora.'
