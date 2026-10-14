@@ -9,6 +9,18 @@
         decoding="async"
     >
 {{ else }}
+    {{ glide_src = {glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp"} }}
+    {{# Glide returns an empty string when it fails — fall back to the original file instead of emitting broken srcsets. #}}
+    {{ unless glide_src }}
+        <img
+            src="{{ url }}"
+            alt="{{ decorative ? '' : (alt ?? alt_fallback) }}"
+            width="{{ w }}"
+            height="{{ h }}"
+            class="{{ class }}"
+            {{ priority || no_lazy ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"' }}
+        >
+    {{ else }}
     <picture class="block {{ wrapper_class }}">
         {{ if w_xl }}
             <source
@@ -39,7 +51,7 @@
             >
         {{ /if }}
         <img
-            src="{{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" }}"
+            src="{{ glide_src }}"
             alt="{{ decorative ? '' : (alt ?? alt_fallback) }}"
             width="{{ w }}"
             height="{{ h }}"
@@ -47,4 +59,5 @@
             {{ priority || no_lazy ? 'loading="eager" fetchpriority="high"' : 'loading="lazy" decoding="async"' }}
         >
     </picture>
+    {{ /unless }}
 {{ /if }}

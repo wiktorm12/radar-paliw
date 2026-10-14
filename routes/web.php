@@ -1,17 +1,13 @@
 <?php
 
+use App\Http\Controllers\CollectionSitemapController;
 use Illuminate\Support\Facades\Route;
 use Statamic\Facades\GlobalSet;
 
 Route::statamic('sitemap.xml', 'sitemaps/index', ['layout' => null, 'content_type' => 'xml']);
 
-foreach (['pages', 'promotions', 'stations', 'articles', 'authors'] as $collection) {
-    Route::statamic("sitemap-{$collection}.xml", 'sitemaps/collection', [
-        'layout' => null,
-        'content_type' => 'xml',
-        'sitemap_collection' => $collection,
-    ]);
-}
+Route::get('sitemap-{collection}.xml', CollectionSitemapController::class)
+    ->whereIn('collection', ['pages', 'promotions', 'stations', 'articles', 'authors']);
 
 foreach (['paliwa', 'kategorie'] as $taxonomy) {
     Route::statamic("sitemap-{$taxonomy}.xml", 'sitemaps/taxonomy', [

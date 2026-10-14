@@ -88,6 +88,19 @@ class SeoInfrastructureTest extends TestCase
         $this->assertStringContainsString('## Aktywne promocje', $response->getContent());
     }
 
+    public function test_articles_sitemap_is_valid_xml_with_images(): void
+    {
+        $response = $this->get('/sitemap-articles.xml')->assertOk();
+
+        $this->assertStringStartsWith('text/xml', $response->headers->get('Content-Type'));
+        $xml = simplexml_load_string($response->getContent());
+        $this->assertNotFalse($xml);
+        $this->assertGreaterThan(200, count($xml->url));
+        $this->assertStringContainsString('<image:loc>', $response->getContent());
+
+        $this->get('/sitemap-unknown.xml')->assertNotFound();
+    }
+
     private function assertRedirectsTo(string $url, string $pathAndQuery): void
     {
         $response = $this->get($url)->assertStatus(301);

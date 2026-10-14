@@ -4,6 +4,9 @@
     {{ og_image_url = permalink }}
 {{ else }}
     {{ og_image_url = {glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true"} }}
+    {{ unless og_image_url }}
+        {{ og_image_url = permalink }}
+    {{ /unless }}
 {{ /if }}
 <meta
     property="og:image"

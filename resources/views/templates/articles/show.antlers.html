@@ -12,12 +12,13 @@
             "isPartOf": { "@id": "{{ site:permalink }}/#website" },
             "inLanguage": "pl-PL",
             "wordCount": {{ content | bard_text | word_count }},
-            "articleSection": {{ kategorie | pluck('title') | to_json }},{{ if featured_image }}{{ featured_image }}
+            "articleSection": {{ kategorie | pluck('title') | to_json }},{{ if featured_image }}{{ featured_image }}{{ schema_img = {glide :src="id" width="1200" height="675" fit="crop_focal" format="webp" absolute="true"} }}{{ if !schema_img }}
+            "image": { "@type": "ImageObject", "url": "{{ permalink }}", "width": {{ width }}, "height": {{ height }} },{{ else }}
             "image": [
                 { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="675" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 675 },
                 { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="900" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 900 },
                 { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="1200" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 1200 }
-            ],{{ /featured_image }}{{ else }}
+            ],{{ /if }}{{ /featured_image }}{{ else }}
             "image": { "@type": "ImageObject", "url": "{{ site:permalink }}/img/og/default.png", "width": 1200, "height": 630 },{{ /if }}{{ if stations }}
             "about": [
                 {{ stations }}

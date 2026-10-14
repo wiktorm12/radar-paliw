@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^8.3",
+        "ext-gd": "*",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "statamic/cms": "^6.0"
