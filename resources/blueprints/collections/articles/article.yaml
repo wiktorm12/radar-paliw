@@ -28,7 +28,15 @@ tabs:
               type: assets
               display: 'Zdjęcie główne'
               container: img
+              folder: articles
               max_files: 1
+          -
+            handle: featured_image_alt
+            field:
+              type: text
+              display: 'Alt zdjęcia w tym artykule'
+              instructions: 'Opcjonalny. Nadpisuje alt z biblioteki assetów tylko w tym artykule — opisz zdjęcie i wpleć frazę kluczową artykułu.'
+              character_limit: 160
           -
             handle: content
             field:
@@ -59,6 +67,25 @@ tabs:
                       fields:
                         -
                           import: partial_ad_placement
+                    image:
+                      display: Zdjęcie
+                      icon: media-image-picture
+                      fields:
+                        -
+                          handle: image
+                          field:
+                            type: assets
+                            display: Zdjęcie
+                            container: img
+                            folder: articles
+                            max_files: 1
+                            validate:
+                              - required
+                        -
+                          handle: caption
+                          field:
+                            type: text
+                            display: Podpis
                     offer:
                       display: 'Oferta partnera'
                       icon: shopping-cart

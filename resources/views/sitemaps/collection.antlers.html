@@ -13,6 +13,17 @@
                         <image:loc>{{ permalink }}</image:loc>
                     </image:image>
                 {{ /featured_image }}
+                {{ if sitemap_collection == 'articles' }}
+                    {{ content }}
+                        {{ if type == 'image' }}
+                            {{ image }}
+                                <image:image>
+                                    <image:loc>{{ permalink }}</image:loc>
+                                </image:image>
+                            {{ /image }}
+                        {{ /if }}
+                    {{ /content }}
+                {{ /if }}
             </url>
         {{ /unless }}
     {{ /collection }}

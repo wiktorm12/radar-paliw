@@ -14,9 +14,9 @@
             "wordCount": {{ content | bard_text | word_count }},
             "articleSection": {{ kategorie | pluck('title') | to_json }},{{ if featured_image }}{{ featured_image }}
             "image": [
-                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="675" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 675 },
-                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="900" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 900 },
-                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="1200" fit="crop_focal" absolute="true" }}", "width": 1200, "height": 1200 }
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="675" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 675 },
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="900" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 900 },
+                { "@type": "ImageObject", "url": "{{ glide :src="id" width="1200" height="1200" fit="crop_focal" format="webp" absolute="true" }}", "width": 1200, "height": 1200 }
             ],{{ /featured_image }}{{ else }}
             "image": { "@type": "ImageObject", "url": "{{ site:permalink }}/img/og/default.png", "width": 1200, "height": 630 },{{ /if }}{{ if stations }}
             "about": [
@@ -65,8 +65,10 @@
                     {{ /author }}
                 </p>
                 <p class="mb-8 text-xl text-zinc-600">{{ excerpt }}</p>
+                {{ image_alt = featured_image_alt }}
                 {{ featured_image }}
                     {{ partial:image
+                        :alt="image_alt ?? alt"
                         w="800"
                         h="450"
                         w_xl="1100"
@@ -88,6 +90,22 @@
                         <div class="mb-8">
                             {{ partial:ads/slot :position="placement:value" }}
                         </div>
+                    {{ elseif type == 'image' }}
+                        <figure class="mb-8">
+                            {{ image }}
+                                {{ partial:image
+                                    w="800"
+                                    h="450"
+                                    w_xl="1100"
+                                    h_xl="620"
+                                    cover="true"
+                                    class="aspect-video w-full rounded-2xl object-cover"
+                                }}
+                            {{ /image }}
+                            {{ if caption }}
+                                <figcaption class="mt-2 text-sm text-zinc-600">{{ caption }}</figcaption>
+                            {{ /if }}
+                        </figure>
                     {{ elseif type == 'offer' }}
                         {{ offer }}
                             <div class="mb-2">

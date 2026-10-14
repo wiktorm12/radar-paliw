@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>{{ site:permalink }}/{{ sitemap_taxonomy }}</loc>
+        {{ collection :from="sitemap_taxonomy == 'paliwa' ? 'promotions' : 'articles'" sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection }}
     </url>
     {{ taxonomy :from="sitemap_taxonomy" }}
         {{ unless noindex || canonical_url || entries_count == 0 }}

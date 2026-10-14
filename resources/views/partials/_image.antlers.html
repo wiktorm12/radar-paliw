@@ -39,7 +39,7 @@
             >
         {{ /if }}
         <img
-            src="{{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" }}"
+            src="{{ glide :src="id" :width="w" :height="h" :fit="cover ? 'crop_focal' : (fit ?? 'contain')" format="webp" }}"
             alt="{{ decorative ? '' : (alt ?? alt_fallback) }}"
             width="{{ w }}"
             height="{{ h }}"

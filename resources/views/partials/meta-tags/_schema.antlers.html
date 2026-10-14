@@ -50,7 +50,7 @@
             "breadcrumb": { "@id": "{{ current_url }}#breadcrumb" }{{ /unless }}{{ featured_image }},
             "primaryImageOfPage": {
                 "@type": "ImageObject",
-                "url": "{{ glide :src="id" width="1200" height="630" fit="crop_focal" absolute="true" }}"
+                "url": "{{ glide :src="id" width="1200" height="630" fit="crop_focal" format="webp" absolute="true" }}"
             }{{ /featured_image }}{{ yield:schema_main_entity }}{{ if meta_has_itemlist }},
             "mainEntity": { "@id": "{{ current_url }}#itemlist" }{{ /if }}{{ /yield:schema_main_entity }}
         }{{ stack:schema }}

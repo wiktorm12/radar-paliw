@@ -1,7 +1,9 @@
 <article class="relative flex h-full focus-within:ring-2 focus-within:ring-brand-600 flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white text-zinc-800 shadow-sm transition hover:shadow-md">
     {{ card_title = title }}
+    {{ image_alt = featured_image_alt }}
     {{ featured_image }}
         {{ partial:image
+            :alt="image_alt ?? alt"
             w="640"
             h="360"
             cover="true"

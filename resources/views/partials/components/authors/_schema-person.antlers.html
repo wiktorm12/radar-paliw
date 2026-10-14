@@ -7,7 +7,7 @@
             "email": {{ email | to_json }}{{ /if }}{{ if job_title }},
             "jobTitle": {{ job_title | to_json }}{{ /if }}{{ if bio }},
             "description": {{ bio | to_json }}{{ /if }}{{ photo }},
-            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if knows_about }},
+            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" format="webp" absolute="true" }}"{{ /photo }}{{ if knows_about }},
             "knowsAbout": {{ knows_about | to_json }}{{ /if }}{{ if same_as }},
             "sameAs": {{ same_as | to_json }}{{ /if }},
             "worksFor": { "@id": "{{ site:permalink }}/#organization" }

@@ -2,15 +2,27 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-pages.xml</loc>
+        {{ collection:pages sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection:pages }}
     </sitemap>
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-promotions.xml</loc>
+        {{ collection:promotions sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection:promotions }}
     </sitemap>
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-stations.xml</loc>
+        {{ collection:stations sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection:stations }}
     </sitemap>
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-articles.xml</loc>
+        {{ collection:articles sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection:articles }}
     </sitemap>
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-paliwa.xml</loc>
@@ -20,5 +32,8 @@
     </sitemap>
     <sitemap>
         <loc>{{ site:permalink }}/sitemap-authors.xml</loc>
+        {{ collection:authors sort="updated_at:desc" limit="1" }}
+            <lastmod>{{ last_modified | timezone('Europe/Warsaw') | format('c') }}</lastmod>
+        {{ /collection:authors }}
     </sitemap>
 </sitemapindex>

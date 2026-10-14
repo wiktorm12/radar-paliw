@@ -13,7 +13,7 @@
             "email": {{ email | to_json }}{{ /if }}{{ if job_title }},
             "jobTitle": {{ job_title | to_json }}{{ /if }}{{ if bio }},
             "description": {{ bio | to_json }}{{ /if }}{{ photo }},
-            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" absolute="true" }}"{{ /photo }}{{ if same_as }},
+            "image": "{{ glide :src="id" width="400" height="400" fit="crop_focal" format="webp" absolute="true" }}"{{ /photo }}{{ if same_as }},
             "sameAs": [{{ same_as }}{{ value | to_json }}{{ !last ?= ',' }}{{ /same_as }}]{{ /if }}{{ if knows_about }},
             "knowsAbout": [{{ knows_about }}{{ value | to_json }}{{ !last ?= ',' }}{{ /knows_about }}]{{ /if }},
             "worksFor": { "@id": "{{ site:permalink }}/#organization" }
