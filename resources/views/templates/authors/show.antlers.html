@@ -1,7 +1,7 @@
 {{ section:schema_page_type }}ProfilePage{{ /section:schema_page_type }}
 {{ section:schema_main_entity }},
             "mainEntity": { "@id": "{{ permalink }}#person" }{{ /section:schema_main_entity }}
-{{ section:seo_title }}{{ seo_title ?? '{title} – autor' }}{{ /section:seo_title }}
+{{ section:seo_title }}{{ seo_title ?? '{title} – autor Radar Paliw: artykuły o paliwach' }}{{ /section:seo_title }}
 {{ section:seo_description }}{{ if seo_description }}{{ seo_description }}{{ else }}Artykuły i poradniki: {{ title }}{{ if job_title }} – {{ job_title }}{{ /if }}. {{ bio ? (bio | safe_truncate(100, '…')) : 'Teksty o promocjach na paliwo, cenach i programach lojalnościowych stacji w Radar Paliw.' }}{{ /if }}{{ /section:seo_description }}
 {{ push:schema }}
         ,{

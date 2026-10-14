@@ -177,6 +177,36 @@
     </div>
 {{ /partial:section }}
 
+{{ partial:section }}
+    {{# Chronological neighbours: every article gets at least two internal links, not only the newest ones in "Przeczytaj także". #}}
+    <nav class="container grid gap-4 md:grid-cols-2" aria-label="Sąsiednie artykuły">
+        {{ collection:previous in="articles" limit="1" as="prev_articles" }}
+            {{ prev_articles }}
+                <a
+                    href="{{ url }}"
+                    class="block rounded-2xl border border-zinc-200 p-6 hover:border-brand-600"
+                    rel="prev"
+                >
+                    <span class="mb-1 block text-sm text-zinc-600">← Poprzedni artykuł</span>
+                    <span class="font-semibold text-zinc-900">{{ title }}</span>
+                </a>
+            {{ /prev_articles }}
+        {{ /collection:previous }}
+        {{ collection:next in="articles" limit="1" as="next_articles" }}
+            {{ next_articles }}
+                <a
+                    href="{{ url }}"
+                    class="block rounded-2xl border border-zinc-200 p-6 text-right hover:border-brand-600 md:col-start-2"
+                    rel="next"
+                >
+                    <span class="mb-1 block text-sm text-zinc-600">Następny artykuł →</span>
+                    <span class="font-semibold text-zinc-900">{{ title }}</span>
+                </a>
+            {{ /next_articles }}
+        {{ /collection:next }}
+    </nav>
+{{ /partial:section }}
+
 {{ partial:section class="bg-zinc-100" }}
     <div class="container">
         <h2 class="mb-8 text-3xl font-bold tracking-tight">Przeczytaj także</h2>

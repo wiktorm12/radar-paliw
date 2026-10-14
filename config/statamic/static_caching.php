@@ -64,6 +64,14 @@ return [
         'urls' => [
             '/cp*',
             '/!/*',
+            // Non-HTML routes: the full strategy would store and serve them as text/html.
+            '/sitemap.xml',
+            '/sitemap-*',
+            '/blog/feed.xml',
+            '/promocje/feed.xml',
+            '/robots.txt',
+            '/llms.txt',
+            '/ads.txt',
         ],
 
     ],

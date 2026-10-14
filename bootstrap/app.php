@@ -22,7 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 | Request::HEADER_X_FORWARDED_PROTO,
         );
 
-        $middleware->prepend(NormalizeUrl::class);
+        // Appended (not prepended) so it runs after TrustProxies and redirects keep the https scheme.
+        $middleware->append(NormalizeUrl::class);
         $middleware->append(PublicResponseHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
