@@ -50,8 +50,11 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   data-price-chart-data>`), statystyki, porównanie z ceną sprzed programu, tabela, a pod spodem
   zwykły builder (`content`) z opisem i FAQ.
 - Dane: kolekcja `cpn_prices` (dated, bez route), `type` = `max` (dzienne ceny maksymalne ME) albo
-  `retail` (średnie e-petrol). Jeden wpis na dzień obowiązywania limitu.
-- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `stats`, `table`, `columns`, `series` (JSON),
+  `retail` (średnie e-petrol) albo `hurt` (ceny hurtowe Orlen netto w zł/l, data = dzień obowiązywania
+  hurtu). Jeden wpis na dzień obowiązywania limitu.
+- Prognoza (`{{ cpn:forecast }}`, blok `#prognoza`): kolejny limit = round((hurt netto + 0,30) × 1,08, 2),
+  hurt z dnia D → limit na D+1 (piątek → sob.–pon.). Ukrywa się, gdy oficjalny limit już jest.
+- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `forecast`, `stats`, `table`, `columns`, `series` (JSON),
   `compare`. Klucze w pętlach nie mogą nazywać się `first`/`last`/`count` — kolidują z
   wbudowanymi zmiennymi pętli Antlers.
 - Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.

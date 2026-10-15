@@ -27,6 +27,10 @@ tabs:
                 -
                   key: retail
                   value: 'Średnia cena na stacjach'
+                -
+                  key: hurt
+                  value: 'Cena hurtowa Orlen (netto)'
+              instructions: 'Cena hurtowa: zł/l netto (np. 6190 zł/m³ → 6,19). Służy do prognozy kolejnej ceny maksymalnej.'
           -
             handle: pb95
             field:

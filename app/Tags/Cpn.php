@@ -2,6 +2,7 @@
 
 namespace App\Tags;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Tags\Tags;
@@ -14,6 +15,52 @@ class Cpn extends Tags
         'on' => 'Olej napędowy',
         'lpg' => 'LPG',
     ];
+
+    /** Stała na koszty stacji (zł/l netto) we wzorze ceny maksymalnej. */
+    public const STATION_MARGIN = 0.30;
+
+    /** Mnożnik VAT 8% obowiązujący w programie CPN. */
+    public const VAT = 1.08;
+
+    /**
+     * Prognoza kolejnej ceny maksymalnej z ostatniej ceny hurtowej Orlenu:
+     * (hurt netto + 0,30 zł) × 1,08. Znika, gdy ministerstwo opublikuje limit.
+     */
+    public function forecast()
+    {
+        $hurt = $this->rows('hurt')->last();
+
+        if (! $hurt) {
+            return $this->parseNoResults();
+        }
+
+        $max = $this->rows('max');
+        $dates = $this->limitDates($hurt['date']);
+
+        if ($max->contains(fn ($row) => $row['date'] >= $dates[0])) {
+            return $this->parseNoResults();
+        }
+
+        $latest = $max->last();
+
+        return [
+            'date' => $dates[0],
+            'date_end' => end($dates),
+            'hurt_date' => $hurt['date'],
+            'source_url' => $hurt['source_url'],
+            'source_name' => $hurt['source_name'],
+            'fuels' => collect(['pb95', 'pb98', 'on'])
+                ->filter(fn ($fuel) => $hurt[$fuel] !== null)
+                ->map(fn ($fuel) => [
+                    'key' => $fuel,
+                    'label' => self::FUELS[$fuel],
+                    'price' => $this->money($this->predict($hurt[$fuel])),
+                    'hurt' => $this->money($hurt[$fuel]),
+                    ...$this->delta($this->predict($hurt[$fuel]), $latest[$fuel] ?? null),
+                ])->values()->all(),
+            ...$this->accuracy($max),
+        ];
+    }
 
     public function latest()
     {
@@ -163,6 +210,45 @@ class Cpn extends Tags
                     ...$this->delta($max[$fuel], $before[$fuel]),
                 ])->values()->all(),
         ];
+    }
+
+    private function predict(float $hurt): float
+    {
+        return round(($hurt + self::STATION_MARGIN) * self::VAT, 2);
+    }
+
+    /** Dni, dla których hurt z danego dnia wyznacza limit (piątek → sobota–poniedziałek). */
+    private function limitDates(string $hurtDate): array
+    {
+        $day = Carbon::parse($hurtDate);
+        $days = $day->isFriday() ? 3 : 1;
+
+        return collect(range(1, $days))->map(fn ($i) => $day->copy()->addDays($i)->toDateString())->all();
+    }
+
+    /** Ile opublikowanych limitów wzór trafił co do grosza. */
+    private function accuracy(Collection $max): array
+    {
+        $byDate = $max->keyBy('date');
+        $checked = 0;
+        $hits = 0;
+
+        foreach ($this->rows('hurt') as $hurt) {
+            foreach ($this->limitDates($hurt['date']) as $date) {
+                foreach (['pb95', 'pb98', 'on'] as $fuel) {
+                    $actual = $byDate[$date][$fuel] ?? null;
+
+                    if ($hurt[$fuel] === null || $actual === null) {
+                        continue;
+                    }
+
+                    $checked++;
+                    $hits += abs($this->predict($hurt[$fuel]) - $actual) < 0.005 ? 1 : 0;
+                }
+            }
+        }
+
+        return ['checked' => $checked, 'hits' => $hits];
     }
 
     private function rows(string $type): Collection
