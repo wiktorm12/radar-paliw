@@ -95,49 +95,51 @@ trend_labels:
         {{ /cpn:latest }}
         {{ if no_results }}{{ /if }}
         {{ cpn:forecast }}
-            <div
-                id="prognoza"
-                class="mt-8 rounded-2xl border-2 border-dashed border-zinc-300 bg-white/60 p-6"
-            >
-                <h2 class="mb-1 text-xl font-bold tracking-tight">
-                    Prognoza ceny maksymalnej na
-                    <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>{{ if date_end != date }}–<time datetime="{{ date_end }}">{{ date_end | format("j.m.Y") }}</time>{{ /if }}
-                </h2>
-                <p class="mb-5 text-sm text-zinc-600">
-                    Szacunek z hurtowej ceny Orlenu z <time datetime="{{ hurt_date }}">{{ hurt_date | format("j.m.Y") }}</time>
-                    według wzoru (hurt netto + 0,30 zł) × 1,08. Wiążące jest dopiero obwieszczenie Ministra Energii.
-                </p>
-                <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    {{ fuels }}
-                        <li>
-                            <p class="mb-1 text-sm font-medium text-zinc-500">{{ label }}</p>
-                            <p class="mb-1 text-3xl font-bold tracking-tight text-zinc-900">
-                                ~{{ price }}
-                                <span class="text-base font-medium text-zinc-500">zł/l</span>
-                            </p>
-                            {{ if trend }}
-                                <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
-                                    <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
-                                    {{ view:trend_labels[trend] }} {{ change }} vs obecny limit
+            {{ unless no_results }}
+                <div
+                    id="prognoza"
+                    class="mt-8 rounded-2xl border-2 border-dashed border-zinc-300 bg-white/60 p-6"
+                >
+                    <h2 class="mb-1 text-xl font-bold tracking-tight">
+                        Prognoza ceny maksymalnej na
+                        <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>{{ if date_end != date }}–<time datetime="{{ date_end }}">{{ date_end | format("j.m.Y") }}</time>{{ /if }}
+                    </h2>
+                    <p class="mb-5 text-sm text-zinc-600">
+                        Szacunek z hurtowej ceny Orlenu z <time datetime="{{ hurt_date }}">{{ hurt_date | format("j.m.Y") }}</time>
+                        według wzoru (hurt netto + 0,30 zł) × 1,08. Wiążące jest dopiero obwieszczenie Ministra Energii.
+                    </p>
+                    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        {{ fuels }}
+                            <li>
+                                <p class="mb-1 text-sm font-medium text-zinc-500">{{ label }}</p>
+                                <p class="mb-1 text-3xl font-bold tracking-tight text-zinc-900">
+                                    ~{{ price }}
+                                    <span class="text-base font-medium text-zinc-500">zł/l</span>
                                 </p>
-                            {{ /if }}
-                            <p class="text-xs text-zinc-500">hurt netto {{ hurt }} zł/l</p>
-                        </li>
-                    {{ /fuels }}
-                </ul>
-                <p class="mt-4 text-xs text-zinc-500">
-                    {{ if checked > 0 }}Wzór trafił co do grosza {{ hits }} z {{ checked }} opublikowanych cen.{{ /if }}
-                    {{ if source_url }}
-                        Źródło ceny hurtowej:
-                        <a
-                            href="{{ source_url }}"
-                            class="underline hover:text-brand-600"
-                            target="_blank"
-                            rel="noopener"
-                        >{{ source_name ?? 'Orlen' }}</a>.
-                    {{ /if }}
-                </p>
-            </div>
+                                {{ if trend }}
+                                    <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
+                                        <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                        {{ view:trend_labels[trend] }} {{ change }} vs obecny limit
+                                    </p>
+                                {{ /if }}
+                                <p class="text-xs text-zinc-500">hurt netto {{ hurt }} zł/l</p>
+                            </li>
+                        {{ /fuels }}
+                    </ul>
+                    <p class="mt-4 text-xs text-zinc-500">
+                        {{ if checked > 0 }}Wzór trafił co do grosza {{ hits }} z {{ checked }} opublikowanych cen.{{ /if }}
+                        {{ if source_url }}
+                            Źródło ceny hurtowej:
+                            <a
+                                href="{{ source_url }}"
+                                class="underline hover:text-brand-600"
+                                target="_blank"
+                                rel="noopener"
+                            >{{ source_name ?? 'Orlen' }}</a>.
+                        {{ /if }}
+                    </p>
+                </div>
+            {{ /unless }}
         {{ /cpn:forecast }}
     </div>
 {{ /partial:section }}
