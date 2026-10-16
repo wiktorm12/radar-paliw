@@ -32,7 +32,7 @@ discount_fallback:
             "name": {{ title | to_json }},
             "description": {{ if content }}{{ content | bard_html | replace('</p>', ' </p>') | replace('</li>', ' </li>') | strip_tags | decode | collapse_whitespace | trim | safe_truncate(300, '…') | to_json }}{{ else }}{{ title | to_json }}{{ /if }},
             "url": "{{ permalink }}",
-            "category": "Paliwo",
+            "category": {{ (paliwa ? ('Paliwo: ' + (paliwa | pluck('title') | join(', '))) : 'Paliwo') | to_json }},
             "validFrom": "{{ valid_from format='Y-m-d' }}T00:00:00{{ valid_from | timezone('Europe/Warsaw') | format('P') }}",
             "validThrough": "{{ valid_to format='Y-m-d' }}T23:59:59{{ valid_to | timezone('Europe/Warsaw') | format('P') }}",
             "eligibleRegion": { "@type": "Country", "name": "PL" },
@@ -55,11 +55,7 @@ discount_fallback:
             "isBasedOn": {{ source_url | to_json }},{{ /if }}{{ station }}
             "offeredBy": { "@id": "{{ permalink }}#brand" },
             "seller": { "@id": "{{ permalink }}#brand" },{{ /station }}
-            "itemOffered": [
-                {{ paliwa }}
-                    { "@type": "Product", "name": {{ title | to_json }}, "category": "Paliwo", "url": "{{ site:permalink }}/paliwa/{{ slug }}" }{{ !last ?= ',' }}
-                {{ /paliwa }}
-            ]
+            "eligibleCustomerType": "https://schema.org/Enduser"
         }{{ station }},
         {
             "@type": "Organization",

@@ -42,7 +42,7 @@ trend_labels:
             ],
             "dateModified": "{{ end_date }}",
             "temporalCoverage": "{{ start_date }}/{{ end_date }}",
-            "spatialCoverage": { "@type": "Country", "name": "Polska" },
+            "spatialCoverage": { "@type": "Place", "name": "Polska" },
             "variableMeasured": [
                 {{ cpn:columns type="max" }}
                     { "@type": "PropertyValue", "name": {{ ('Cena maksymalna – ' + label) | to_json }}, "unitText": "PLN/l" }{{ !last ?= ',' }}
