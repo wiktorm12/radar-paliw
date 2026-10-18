@@ -21,6 +21,48 @@ slots:
       mode: htmlmixed
     type: ad
     enabled: true
+  -
+    id: lcQb-1FbweR_4AA-zimOW
+    label: 'AdSense - footer'
+    placement: site_bottom
+    kind: code
+    code:
+      code: |-
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
+             crossorigin="anonymous"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-2682211062149512"
+             data-ad-slot="2383157078"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      mode: htmlmixed
+    type: ad
+    enabled: true
+  -
+    id: PIm2PmUT_cNqC2wpYn5VU
+    label: 'AdSense - artykul 1'
+    placement: article_top
+    kind: code
+    code:
+      code: |-
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
+             crossorigin="anonymous"></script>
+        <!-- artykul 1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-2682211062149512"
+             data-ad-slot="3689244748"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      mode: htmlmixed
+    type: ad
+    enabled: true
 head_code:
   code: |-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
