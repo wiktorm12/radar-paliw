@@ -84,6 +84,7 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
   Rezerwuje wysokość (mapa `formats` we front-matter partiala) — nowe miejsce dopisz
   w obu: `partial_ad_placement.yaml` i mapie `formats`.
 - Poza produkcją pusty slot pokazuje przerywany placeholder z nazwą miejsca.
+- Puste sloty AdSense (`data-ad-status="unfilled"`) chowa CSS w `components/ads.css` przez `:has()`; nowy wrapper wokół slotu oznacz `data-ad-wrapper`.
 - `head_code` ładowany tylko na produkcji; `/ads.txt` serwowany z globala.
 
 ## Afiliacja

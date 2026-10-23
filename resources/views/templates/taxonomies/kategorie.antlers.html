@@ -20,7 +20,10 @@
             </div>
         {{ /if }}
         <p class="mb-8 text-sm text-zinc-600">Artykułów w kategorii: {{ article_count }}</p>
-        <div class="mb-12">
+        <div
+            class="mb-12"
+            data-ad-wrapper
+        >
             {{ partial:ads/slot position="blog_top" }}
         </div>
         {{ partial:components/articles/list

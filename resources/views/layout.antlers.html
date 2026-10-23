@@ -14,7 +14,10 @@
         {{ partial:layout/header }}
         {{ ad_slot placement="site_top" }}
             {{ if !no_results || environment !== 'production' }}
-                <div class="container py-4">
+                <div
+                    class="container py-4"
+                    data-ad-wrapper
+                >
                     {{ partial:ads/slot position="site_top" }}
                 </div>
             {{ /if }}
@@ -31,7 +34,10 @@
         </main>
         {{ ad_slot placement="site_bottom" }}
             {{ if !no_results || environment !== 'production' }}
-                <div class="container py-8">
+                <div
+                    class="container py-8"
+                    data-ad-wrapper
+                >
                     {{ partial:ads/slot position="site_bottom" }}
                 </div>
             {{ /if }}

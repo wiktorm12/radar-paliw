@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@import "./components/ads.css";
 @import "./components/buttons.css";
 
 @plugin "@tailwindcss/typography";

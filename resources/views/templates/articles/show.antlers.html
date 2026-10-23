@@ -79,7 +79,10 @@
                         class="mb-8 aspect-video w-full rounded-2xl object-cover"
                     }}
                 {{ /featured_image }}
-                <div class="mb-8">
+                <div
+                    class="mb-8"
+                    data-ad-wrapper
+                >
                     {{ partial:ads/slot position="article_top" }}
                 </div>
                 {{ content }}
@@ -88,7 +91,10 @@
                             {{ text }}
                         </div>
                     {{ elseif type == 'ad' }}
-                        <div class="mb-8">
+                        <div
+                            class="mb-8"
+                            data-ad-wrapper
+                        >
                             {{ partial:ads/slot :position="placement:value" }}
                         </div>
                     {{ elseif type == 'image' }}
@@ -169,7 +175,10 @@
                         {{ /collection:promotions }}
                     </ul>
                 </div>
-                <div class="lg:sticky lg:top-8">
+                <div
+                    class="lg:sticky lg:top-8"
+                    data-ad-wrapper
+                >
                     {{ partial:ads/slot position="article_sidebar_sticky" }}
                 </div>
             </aside>

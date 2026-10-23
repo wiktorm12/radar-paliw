@@ -1,0 +1,10 @@
+/* Gdy AdSense nie zwróci reklamy (data-ad-status="unfilled"), chowamy cały slot razem z ramką,
+   zarezerwowaną wysokością i wrapperem z marginesem — bez pustej dziury w układzie. */
+@layer components {
+    [data-ad-wrapper]:has(ins.adsbygoogle[data-ad-status="unfilled"]),
+    [data-ad-placement]:has(ins.adsbygoogle[data-ad-status="unfilled"]),
+    [data-ad-sticky]:has(ins.adsbygoogle[data-ad-status="unfilled"]),
+    [data-ad-sticky]:has(ins.adsbygoogle[data-ad-status="unfilled"]) + [data-ad-sticky-spacer] {
+        display: none;
+    }
+}

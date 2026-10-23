@@ -34,7 +34,10 @@ sorts:
                 </li>
                 {{ if ad_every > 0 && !last }}
                     {{ if count % ad_every == 0 }}
-                        <li class="col-span-full">
+                        <li
+                            class="col-span-full"
+                            data-ad-wrapper
+                        >
                             {{ partial:ads/slot position="promotions_in_feed" }}
                         </li>
                     {{ /if }}
