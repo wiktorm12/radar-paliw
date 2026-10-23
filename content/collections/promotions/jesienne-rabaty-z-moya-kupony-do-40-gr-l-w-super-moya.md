@@ -14,6 +14,7 @@ valid_from: '2026-09-22'
 valid_to: '2026-10-18'
 requires_app: true
 source_url: 'https://moyastacja.pl/super-moya'
+terms_url: 'https://moyastacja.pl/super-moya'
 featured: false
 content:
   -

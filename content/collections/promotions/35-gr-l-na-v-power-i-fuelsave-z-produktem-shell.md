@@ -13,6 +13,7 @@ valid_from: '2026-09-21'
 valid_to: '2026-10-15'
 requires_app: true
 source_url: 'https://www.shell.pl/stacje-shell/oferty-i-promocje/lap-jesienne-rabaty.html'
+terms_url: 'https://www.shell.pl/shell-stations/offers-and-competitions/catch-autumn-discounts/_jcr_content/root/main/section_1900762968/call_to_action/links/item0.stream/1789981989770/86534282766d755033acebb4bdde7b04d42160f7/regulamin-jesienne-rabaty.pdf'
 featured: false
 content:
   -

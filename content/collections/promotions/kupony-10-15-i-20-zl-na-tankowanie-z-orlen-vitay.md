@@ -12,7 +12,8 @@ discount_type: points
 valid_from: '2026-09-15'
 valid_to: '2026-10-15'
 requires_app: true
-source_url: 'https://www.wiadomoscihandlowe.pl/konsument-i-trendy-zakupowe/marketing-i-strategie-promocyjne/orlen-vitay-45-zl-rabatu-na-trzy-tankowania-nowa-promocja-2537955'
+source_url: 'https://vitay.pl/kupony'
+terms_url: 'https://vitay.pl/media/wysiwyg/rabaty2026/Kupony/Regulamin_Promocja_Kupony_rabatowe_ORLEN_2026_.pdf'
 featured: false
 content:
   -
