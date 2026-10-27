@@ -90,6 +90,7 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
 ## Afiliacja
 
 - Oferty: kolekcja `offers` (link partnerski, logo, wyróżnik, kategoria). Nieopublikowana = ukryta.
+- Link partnerski to pole `partner_url` (nie `url`, bo w Antlers `url` wpisu przesłania pole).
 - Render: `block_offers` (karty `components/offers/card`) i set Bard `offer` w artykułach
   (`components/offers/box`). Linki zawsze `rel="sponsored noopener"`, etykieta „Link partnerski”
   i `components/offers/disclosure` pod ofertami.
