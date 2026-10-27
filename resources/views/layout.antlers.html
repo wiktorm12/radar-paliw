@@ -46,5 +46,21 @@
         {{ partial:ads/sticky }}
         {{ stack:modals }}
         {{ stack:scripts }}
+        {{ if environment === 'production' }}
+        <script type="application/javascript">// <![CDATA[
+window.ctxtconfig = {"debug":false,"theme":"blue","frequency":"optimum","key":"9b6d5fbe36a614465cbfa952fe79fe010940f584","widget":true,"positive_cls":"ctxt-target-node","negative_cls":"ctxt-skip","ignore_domains":"","features":["modwords","modlinks"]};
+(function() {
+    if (document.getElementById('ctxt-script')) {return;}
+    var ctxt = document.createElement('script');
+    ctxt.type = 'text/javascript';
+    ctxt.async = true;
+    ctxt.charset = 'utf-8';
+    ctxt.id = 'ctxt-script';
+    ctxt.src = '//widget.convertiser.com/convertext.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ctxt, s);
+})();
+// ]]></script>
+        {{ /if }}
     </body>
 </html>
