@@ -82,6 +82,9 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   nastała, albo czas pliku; hub: najnowszy `max`/`outlook`, ta sama reguła co `App\Support\Lastmod::cpn()` i `Lastmod::cpnEntry()`),
   `{{ section:og_image_url }}` (`/og/program-cpn.png?v={data ostatniego limitu}`) oraz `seo_title`/`seo_description`
   budowane z danych (hub nie ma `seo_title` we wpisie).
+- Strona `/dane-cpn` (`CpnController::docs`, `templates/cpn/docs`): dokumentacja widgetu, API JSON, CSV, licencji i kontakt dla mediów;
+  przycisk „Kopiuj” to `modules/copy-button.js` (`components/cpn/code-block`). `/program-cpn/dane.json` ma pole `version` (1) —
+  zmiany muszą być wstecznie zgodne: nowa wersja = nowe pola, nigdy zmiana ani usunięcie istniejących (`today`, `tomorrow` korzystają z `CpnData::current()` i `Cpn::nextLimit()`).
 - Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.
 - Kolory serii wykresu (paleta zwalidowana dla CVD): Pb95 `#2a78d6`, Pb98 `#eb6834`,
   ON `#1baf7a`, LPG `#eda100`.

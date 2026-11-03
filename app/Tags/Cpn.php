@@ -570,7 +570,7 @@ class Cpn extends Tags
      * Limit na dany dzień: oficjalny wpis max, a bez niego dzień z projekcji
      * (wzór z hurtu albo trend). Null, gdy nie ma ani jednego, ani drugiego.
      */
-    private function nextLimit(string $date, Collection $max): ?array
+    public function nextLimit(string $date, Collection $max): ?array
     {
         if ($row = CpnData::find($date, $max)) {
             $dates = CpnData::noticeDates($row, $max);

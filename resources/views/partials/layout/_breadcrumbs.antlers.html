@@ -1,5 +1,5 @@
 {{ nav:breadcrumbs as="crumbs" }}
-    {{ if crumbs | length > 1 }}
+    {{ if (crumbs | length > 1) || breadcrumb_parent_url }}
         <nav
             class="ctxt-skip container pt-6"
             aria-label="Okruszki"
@@ -23,6 +23,17 @@
                         {{ /if }}
                     </li>
                 {{ /crumbs }}
+                {{ if breadcrumb_parent_url }}
+                    <li class="flex items-center gap-2">
+                        <a
+                            href="{{ breadcrumb_parent_url }}"
+                            class="inline-block py-2 hover:text-brand-700 hover:underline"
+                        >
+                            {{ breadcrumb_parent_title }}
+                        </a>
+                        <span aria-hidden="true">/</span>
+                    </li>
+                {{ /if }}
                 {{ if breadcrumb_title }}
                     <li class="flex items-center gap-2">
                         <span
@@ -47,10 +58,18 @@
                         "item": "{{ permalink ?? url }}"
                     }{{ (!last || breadcrumb_title) ?= ',' }}
                 {{ /crumbs }}
-                {{ if breadcrumb_title }}
+                {{ if breadcrumb_parent_url }}
                     {
                         "@type": "ListItem",
                         "position": {{ (crumbs | length) + 1 }},
+                        "name": {{ breadcrumb_parent_title | to_json }},
+                        "item": "{{ site:permalink }}{{ breadcrumb_parent_url }}"
+                    },
+                {{ /if }}
+                {{ if breadcrumb_title }}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ (crumbs | length) + (breadcrumb_parent_url ? 2 : 1) }},
                         "name": {{ breadcrumb_title | to_json }},
                         "item": "{{ current_url }}"
                     }

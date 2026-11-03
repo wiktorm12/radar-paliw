@@ -1,0 +1,28 @@
+<div class="mb-6 min-w-0">
+    <div class="mb-2 flex items-center justify-between gap-4">
+        <p
+            id="{{ id }}-label"
+            class="text-sm font-medium text-zinc-700"
+        >{{ label }}</p>
+        <button
+            type="button"
+            class="button px-4 py-2"
+            data-copy-button
+            data-copy-target="{{ id }}"
+            hidden
+        >Kopiuj</button>
+    </div>
+    <pre
+        class="max-w-full overflow-x-auto rounded-lg bg-zinc-900 p-4 text-xs text-zinc-100 sm:text-sm"
+        tabindex="0"
+        aria-labelledby="{{ id }}-label"
+    ><code
+        id="{{ id }}"
+        class="select-all"
+    >{{ slot }}</code></pre>
+    <span
+        class="sr-only"
+        role="status"
+        data-copy-status
+    ></span>
+</div>

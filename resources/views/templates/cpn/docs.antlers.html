@@ -1,0 +1,346 @@
+---
+fields:
+    -
+        name: version
+        type: liczba
+        description: Wersja formatu odpowiedzi. Zmiany są wstecznie zgodne — nowa wersja dodaje pola, nie zmienia istniejących.
+    -
+        name: name, description, url
+        type: tekst
+        description: Nazwa i opis zbioru oraz adres strony programu CPN.
+    -
+        name: license
+        type: URL
+        description: Licencja danych (CC BY 4.0).
+    -
+        name: attribution
+        type: tekst
+        description: Gotowa formułka źródła, którą należy podać przy wykorzystaniu danych.
+    -
+        name: unit
+        type: tekst
+        description: Jednostka cen — PLN/l brutto.
+    -
+        name: updated
+        type: data ISO 8601
+        description: Moment ostatniej zmiany danych w strefie Europe/Warsaw.
+    -
+        name: today
+        type: obiekt
+        description: Limit obowiązujący dziś (Europe/Warsaw) z pól date, pb95, pb98, on, source_name i source_url.
+    -
+        name: tomorrow
+        type: obiekt lub null
+        description: Limit na kolejny dzień. Pole status to official (jest obwieszczenie Ministra Energii) albo forecast (nasza nieoficjalna prognoza). Pola date, date_end (ostatni dzień obowiązywania, np. poniedziałek po piątku), pb95, pb98, on, source_name i source_url. Przy prognozie dochodzi hurt_date, czyli dzień ceny hurtowej Orlenu, z której liczymy limit. Brak danych daje null.
+    -
+        name: data
+        type: tablica
+        description: Wszystkie dzienne limity od 3.10.2026, od najstarszego. Każdy element ma pola date, pb95, pb98, on, source_name, source_url oraz url (strona dnia).
+    -
+        name: pb95, pb98, on
+        type: liczba lub null
+        description: Cena maksymalna w zł/l brutto (benzyna 95, benzyna 98, olej napędowy). Null, gdy brak ceny danego paliwa.
+    -
+        name: source_name, source_url
+        type: tekst lub null
+        description: Źródło ceny — obwieszczenie Ministra Energii albo serwis, z którego je przepisaliśmy.
+---
+
+{{ section:seo_title }}Dane o cenach maksymalnych CPN — API, CSV i widget{{ /section:seo_title }}
+{{ section:seo_description }}
+    Ceny maksymalne paliw z programu CPN jako JSON, CSV i widget do osadzenia. Dokumentacja, przykłady, licencja CC BY 4.0 i kontakt dla mediów.
+{{ /section:seo_description }}
+{{ section:seo_modified }}{{ cpn:modified }}{{ /section:seo_modified }}
+{{ section:og_image_url }}{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}{{ /section:og_image_url }}
+{{ section:schema_main_entity }},
+            "mainEntity": { "@id": "{{ site:permalink }}/program-cpn#dataset" }{{ /section:schema_main_entity }}
+
+{{ push:schema }}
+    ,{
+        "@type": "Dataset",
+        "@id": "{{ site:permalink }}/program-cpn#dataset",
+        "name": "Ceny maksymalne paliw w programie CPN (Ceny Paliwa Niżej)",
+        "url": "{{ site:permalink }}/program-cpn",
+        "inLanguage": "pl-PL",
+        "isAccessibleForFree": true,
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "creditText": "Radar Paliw (radarpaliw.pl/program-cpn) na podstawie obwieszczeń Ministra Energii",
+        "creator": { "@id": "{{ site:permalink }}/#organization" },
+        "publisher": { "@id": "{{ site:permalink }}/#organization" },
+        "distribution": [
+            { "@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "{{ site:permalink }}/program-cpn/dane.csv" },
+            { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "{{ site:permalink }}/program-cpn/dane.json" }
+        ]
+    }
+{{ /push:schema }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">Program CPN · dane otwarte</p>
+        <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">Dane o cenach maksymalnych CPN: API, CSV i widget</h1>
+        <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+            Ceny maksymalne paliw z obwieszczeń Ministra Energii możesz pobrać jako JSON lub CSV albo osadzić na swojej stronie jako widget.
+            Dane są otwarte, na licencji CC BY 4.0 — wystarczy podać źródło.
+        </p>
+        <nav aria-label="Spis treści strony">
+            <ul class="flex flex-wrap gap-2 text-sm font-medium">
+                <li>
+                    <a
+                        href="#widget"
+                        class="inline-block rounded-full border border-zinc-300 bg-white px-4 py-2 text-zinc-800 hover:border-brand-600 hover:text-brand-700"
+                    >Widget</a>
+                </li>
+                <li>
+                    <a
+                        href="#api"
+                        class="inline-block rounded-full border border-zinc-300 bg-white px-4 py-2 text-zinc-800 hover:border-brand-600 hover:text-brand-700"
+                    >API JSON</a>
+                </li>
+                <li>
+                    <a
+                        href="#csv"
+                        class="inline-block rounded-full border border-zinc-300 bg-white px-4 py-2 text-zinc-800 hover:border-brand-600 hover:text-brand-700"
+                    >CSV</a>
+                </li>
+                <li>
+                    <a
+                        href="#licencja"
+                        class="inline-block rounded-full border border-zinc-300 bg-white px-4 py-2 text-zinc-800 hover:border-brand-600 hover:text-brand-700"
+                    >Licencja i cytowanie</a>
+                </li>
+                <li>
+                    <a
+                        href="#media"
+                        class="inline-block rounded-full border border-zinc-300 bg-white px-4 py-2 text-zinc-800 hover:border-brand-600 hover:text-brand-700"
+                    >Dla mediów</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section section_id="widget" }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">Widget</h2>
+        <p class="mb-6 max-w-3xl text-zinc-600">
+            Widget pokazuje dzisiejsze ceny maksymalne Pb95, Pb98 i ON i sam się aktualizuje. Wklej kod w HTML swojej strony.
+            Poniżej podgląd na żywo.
+        </p>
+        <iframe
+            src="/program-cpn/widget"
+            title="Podgląd widgetu z cenami maksymalnymi CPN"
+            width="100%"
+            height="240"
+            class="mb-8 w-full max-w-md border-0"
+            loading="lazy"
+        ></iframe>
+        {{ partial:components/cpn/code-block
+            id="cpn-widget-code"
+            label="Kod widgetu (iframe)"
+        }}&lt;iframe src="https://radarpaliw.pl/program-cpn/widget" title="Ceny maksymalne paliw CPN" width="100%" height="240" style="border:0;max-width:420px" loading="lazy"&gt;&lt;/iframe&gt;{{ /partial:components/cpn/code-block }}
+        <h3 class="mb-2 text-lg font-semibold">Link tekstowy</h3>
+        <p class="mb-4 max-w-3xl text-zinc-600">
+            Jeśli korzystasz z widgetu, dodaj proszę pod nim zwykły link tekstowy do programu CPN. Dzięki temu czytelnicy trafią do pełnych danych,
+            a my możemy dalej utrzymywać serwis.
+        </p>
+        {{ partial:components/cpn/code-block
+            id="cpn-link-code"
+            label="Kod linku (HTML)"
+        }}&lt;a href="https://radarpaliw.pl/program-cpn"&gt;Ceny maksymalne CPN – Radar Paliw&lt;/a&gt;{{ /partial:components/cpn/code-block }}
+    </div>
+{{ /partial:section }}
+
+{{ partial:section section_id="api" class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">API JSON</h2>
+        <p class="mb-6 max-w-3xl text-zinc-600">
+            Jeden publiczny adres zwraca aktualne ceny na dziś i jutro oraz pełną historię limitów od startu III edycji programu.
+            Nie wymaga klucza ani rejestracji.
+        </p>
+        {{ partial:components/cpn/code-block
+            id="cpn-api-url"
+            label="Adres API (GET)"
+        }}https://radarpaliw.pl/program-cpn/dane.json{{ /partial:components/cpn/code-block }}
+
+        <h3 class="mb-4 text-xl font-semibold">Pola odpowiedzi</h3>
+        <div class="mb-8 overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
+            <table class="w-full min-w-2xl text-left text-sm">
+                <caption class="sr-only">Pola odpowiedzi API dane.json</caption>
+                <thead class="bg-zinc-100 text-zinc-600">
+                    <tr>
+                        <th
+                            scope="col"
+                            class="px-4 py-3 font-semibold"
+                        >Pole</th>
+                        <th
+                            scope="col"
+                            class="px-4 py-3 font-semibold"
+                        >Typ</th>
+                        <th
+                            scope="col"
+                            class="px-4 py-3 font-semibold"
+                        >Opis</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-200">
+                    {{ view:fields }}
+                        <tr>
+                            <th
+                                scope="row"
+                                class="px-4 py-3 align-top font-mono text-xs font-medium whitespace-nowrap text-zinc-900"
+                            >{{ name }}</th>
+                            <td class="px-4 py-3 align-top whitespace-nowrap text-zinc-600">{{ type }}</td>
+                            <td class="px-4 py-3 text-zinc-700">{{ description }}</td>
+                        </tr>
+                    {{ /view:fields }}
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="mb-2 text-xl font-semibold">Przykładowa odpowiedź</h3>
+        <p class="mb-4 max-w-3xl text-sm text-zinc-600">
+            Odpowiedź skrócona: tablica <code>data</code> zawiera {{ sample_rows }} ostatnie wpisy z {{ total_rows }}.
+        </p>
+        {{ partial:components/cpn/code-block
+            id="cpn-api-sample"
+            label="Przykładowa odpowiedź (skrócona)"
+        }}{{ sample_json | sanitize }}{{ /partial:components/cpn/code-block }}
+
+        <h3 class="mb-4 text-xl font-semibold">Przykłady użycia</h3>
+        {{ partial:components/cpn/code-block
+            id="cpn-api-curl"
+            label="curl"
+        }}curl -s https://radarpaliw.pl/program-cpn/dane.json
+curl -s https://radarpaliw.pl/program-cpn/dane.json | jq '.today'{{ /partial:components/cpn/code-block }}
+        {{ partial:components/cpn/code-block
+            id="cpn-api-fetch"
+            label="JavaScript (fetch)"
+        }}const response = await fetch('https://radarpaliw.pl/program-cpn/dane.json');
+const { today, tomorrow } = await response.json();
+
+console.log(`Pb95 dziś: ${today.pb95} zł/l`);
+
+if (tomorrow) {
+  console.log(`Pb95 jutro (${tomorrow.status}): ${tomorrow.pb95} zł/l`);
+}{{ /partial:components/cpn/code-block }}
+        {{ partial:components/cpn/code-block
+            id="cpn-api-homeassistant"
+            label="Home Assistant (configuration.yaml)"
+        }}{{ noparse }}sensor:
+  - platform: rest
+    name: "CPN Pb95 dziś"
+    unique_id: cpn_pb95_dzis
+    resource: https://radarpaliw.pl/program-cpn/dane.json
+    method: GET
+    scan_interval: 3600
+    value_template: "{{ value_json.today.pb95 }}"
+    unit_of_measurement: "zł/l"
+    json_attributes_path: "$.today"
+    json_attributes:
+      - date
+      - pb98
+      - "on"
+      - source_name{{ /noparse }}{{ /partial:components/cpn/code-block }}
+        <p class="mb-2 max-w-3xl text-sm text-zinc-600">
+            W atrybutach sensora dostaniesz też cenę Pb98 i ON. Pole <code>on</code> jest w cudzysłowie, bo w YAML samo <code>on</code> oznacza „prawda”.
+            Atrybuty pobieramy tylko z obiektu <code>today</code>, bo cała odpowiedź jest za duża na atrybuty encji.
+        </p>
+
+        <h3 class="mb-2 mt-8 text-xl font-semibold">CORS i odświeżanie</h3>
+        <ul class="flex max-w-3xl list-disc flex-col gap-2 pl-5 text-zinc-700">
+            <li>
+                Odpowiedź ma nagłówek <code>Access-Control-Allow-Origin: *</code>, więc możesz pobierać dane bezpośrednio z przeglądarki, z dowolnej domeny.
+            </li>
+            <li>
+                Dane odświeżamy kilka razy dziennie — nowy limit pojawia się po obwieszczeniu Ministra Energii, zwykle po południu.
+                Odpowiedź jest buforowana, więc częstsze zapytania nie dadzą świeższych danych.
+            </li>
+            <li>
+                <strong class="text-zinc-900">Prosimy, nie odpytuj API częściej niż co 15 minut.</strong>
+            </li>
+        </ul>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section section_id="csv" }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">CSV</h2>
+        <p class="mb-6 max-w-3xl text-zinc-600">
+            Te same dzienne limity w formacie CSV (UTF-8, separator przecinek, kropka dziesiętna), gotowe do arkusza kalkulacyjnego.
+        </p>
+        {{ partial:components/cpn/code-block
+            id="cpn-csv-url"
+            label="Adres pliku CSV"
+        }}https://radarpaliw.pl/program-cpn/dane.csv{{ /partial:components/cpn/code-block }}
+        <p class="mb-4 max-w-3xl text-zinc-600">
+            Kolumny: <code>data</code> (RRRR-MM-DD), <code>pb95</code>, <code>pb98</code>, <code>on</code> (zł/l brutto),
+            <code>zrodlo</code> (nazwa źródła) i <code>zrodlo_url</code> (adres obwieszczenia lub serwisu).
+        </p>
+        <h3 class="mb-2 text-xl font-semibold">Google Sheets</h3>
+        <p class="mb-4 max-w-3xl text-zinc-600">Wpisz w komórce formułę — arkusz sam pobierze i odświeży dane.</p>
+        {{ partial:components/cpn/code-block
+            id="cpn-csv-sheets"
+            label="Formuła Google Sheets"
+        }}=IMPORTDATA("https://radarpaliw.pl/program-cpn/dane.csv"){{ /partial:components/cpn/code-block }}
+        <h3 class="mb-2 text-xl font-semibold">Excel</h3>
+        <p class="max-w-3xl text-zinc-600">
+            Wybierz <strong class="text-zinc-900">Dane → Z sieci Web</strong>, wklej adres pliku CSV i zatwierdź.
+            Dane odświeżysz przyciskiem <strong class="text-zinc-900">Odśwież wszystko</strong>.
+        </p>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section section_id="licencja" class="bg-zinc-100" }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">Licencja i cytowanie</h2>
+        <p class="mb-6 max-w-3xl text-zinc-600">
+            Dane udostępniamy na licencji
+            <a
+                href="https://creativecommons.org/licenses/by/4.0/deed.pl"
+                class="underline hover:text-brand-600"
+                target="_blank"
+                rel="license noopener"
+            >Creative Commons Uznanie autorstwa 4.0 (CC BY 4.0)</a>.
+            Możesz je kopiować, przetwarzać i wykorzystywać także komercyjnie, pod warunkiem podania źródła z linkiem.
+        </p>
+        {{ partial:components/cpn/code-block
+            id="cpn-citation"
+            label="Formułka źródła"
+        }}Źródło: Radar Paliw (radarpaliw.pl/program-cpn){{ /partial:components/cpn/code-block }}
+        <ul class="flex max-w-3xl list-disc flex-col gap-2 pl-5 text-zinc-700">
+            <li>
+                Ceny maksymalne pochodzą z obwieszczeń Ministra Energii. Wiążąca jest zawsze treść obwieszczenia, a nie nasza kopia danych.
+            </li>
+            <li>
+                Prognozy (pole <code>tomorrow</code> ze statusem <code>forecast</code> oraz prognoza na 7 dni na stronie programu) są nieoficjalne
+                i mają charakter szacunku.
+            </li>
+        </ul>
+    </div>
+{{ /partial:section }}
+
+{{ partial:section section_id="media" }}
+    <div class="container">
+        <h2 class="mb-2 text-3xl font-bold tracking-tight">Dla mediów</h2>
+        <p class="mb-4 max-w-3xl text-zinc-600">
+            Piszesz o cenach paliw? Odpowiemy na pytania o zmiany limitu i naszą prognozę. Napisz na
+            <a
+                href="mailto:kontakt@radarpaliw.pl"
+                class="underline hover:text-brand-600"
+            >kontakt@radarpaliw.pl</a>
+            — podaj redakcję i termin, na który potrzebujesz komentarza.
+        </p>
+        <p class="max-w-3xl text-zinc-600">
+            Jak zbieramy dane i oznaczamy prognozy, opisujemy w
+            <a
+                href="/zasady-redakcyjne"
+                class="underline hover:text-brand-600"
+            >zasadach redakcyjnych</a>.
+            Aktualne ceny znajdziesz na stronie
+            <a
+                href="/program-cpn"
+                class="underline hover:text-brand-600"
+            >programu CPN</a>.
+        </p>
+    </div>
+{{ /partial:section }}

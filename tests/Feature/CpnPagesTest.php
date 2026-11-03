@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Cpn\CpnData;
 use Statamic\Facades\Site;
 use Tests\TestCase;
 
@@ -97,6 +98,88 @@ class CpnPagesTest extends TestCase
         $this->assertCount(count($lines) - 1, $json->json('data'));
     }
 
+    public function test_json_export_keeps_legacy_fields_and_adds_versioned_ones(): void
+    {
+        $json = $this->get('/program-cpn/dane.json')->assertOk();
+        $json->assertHeader('Access-Control-Allow-Origin', '*');
+
+        foreach (['name', 'description', 'url', 'license', 'attribution', 'unit', 'updated', 'data'] as $field) {
+            $this->assertArrayHasKey($field, $json->json(), $field);
+        }
+
+        foreach (['date', 'pb95', 'pb98', 'on', 'source_name', 'source_url', 'url'] as $field) {
+            $this->assertArrayHasKey($field, $json->json('data.0'), $field);
+        }
+
+        $json->assertJsonPath('version', 1);
+        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/', $json->json('updated'));
+
+        $webPage = collect($this->jsonLd($this->get('/program-cpn')->getContent(), '@graph')['@graph'])->firstWhere('@type', 'WebPage');
+        $this->assertSame($webPage['dateModified'], $json->json('updated'));
+
+        $today = $json->json('today');
+        $this->assertSame(CpnData::today(), $today['date']);
+        $this->assertSame(CpnData::find($today['date'])['pb95'], $today['pb95']);
+        $this->assertSame(['date', 'pb95', 'pb98', 'on', 'source_name', 'source_url'], array_keys($today));
+
+        $tomorrow = $json->json('tomorrow');
+
+        if ($tomorrow !== null) {
+            $this->assertSame(CpnData::tomorrow(), $tomorrow['date']);
+            $this->assertContains($tomorrow['status'], ['official', 'forecast']);
+            $this->assertIsFloat($tomorrow['pb95']);
+            $this->assertSame($tomorrow['status'] === 'forecast', array_key_exists('hurt_date', $tomorrow));
+        }
+
+        $this->assertArrayHasKey('tomorrow', $json->json());
+    }
+
+    public function test_data_docs_page_renders_all_sections(): void
+    {
+        $html = $this->get('/dane-cpn')->assertOk()->getContent();
+
+        $this->assertSame(1, substr_count($html, '<h1'));
+        $this->assertMatchesRegularExpression('#rel="canonical"\s+href="'.preg_quote($this->siteUrl().'/dane-cpn', '#').'"#', $html);
+        $this->assertStringContainsString('<title>Dane o cenach maksymalnych CPN — API, CSV i widget</title>', $html);
+
+        foreach (['widget', 'api', 'csv', 'licencja', 'media'] as $id) {
+            $this->assertStringContainsString('id="'.$id.'"', $html, $id);
+        }
+
+        foreach ([
+            'https://radarpaliw.pl/program-cpn/dane.json',
+            '=IMPORTDATA("https://radarpaliw.pl/program-cpn/dane.csv")',
+            'value_template: "{{ value_json.today.pb95 }}"',
+            '&lt;a href="https://radarpaliw.pl/program-cpn"&gt;Ceny maksymalne CPN – Radar Paliw&lt;/a&gt;',
+            'src="/program-cpn/widget"',
+            'data-copy-button',
+            'Access-Control-Allow-Origin: *',
+            'kontakt@radarpaliw.pl',
+            'href="/zasady-redakcyjne"',
+        ] as $needle) {
+            $this->assertStringContainsString($needle, $html, $needle);
+        }
+
+        $this->assertMatchesRegularExpression('/<meta\s+name="description"\s+content="[^"]{1,155}"/', $html);
+
+        $breadcrumbs = $this->jsonLd($html, 'BreadcrumbList');
+        $this->assertSame(['Strona główna', 'Program CPN', 'Dane i API'], array_column($breadcrumbs['itemListElement'], 'name'));
+        $this->assertSame($this->siteUrl().'/dane-cpn', end($breadcrumbs['itemListElement'])['item']);
+
+        $graph = collect($this->jsonLd($html, '@graph')['@graph']);
+        $this->assertSame($this->siteUrl().'/dane-cpn#webpage', $graph->firstWhere('@type', 'WebPage')['@id']);
+        $dataset = $graph->firstWhere('@type', 'Dataset');
+        $this->assertSame(['text/csv', 'application/json'], array_column($dataset['distribution'], 'encodingFormat'));
+    }
+
+    public function test_data_docs_is_linked_from_footer_hub_llms_and_widget(): void
+    {
+        $this->assertStringContainsString('href="/dane-cpn"', $this->get('/program-cpn')->getContent());
+        $this->assertStringContainsString('/dane-cpn#widget', $this->get('/program-cpn/widget')->getContent());
+        $this->assertStringContainsString($this->siteUrl().'/dane-cpn', $this->get('/llms.txt')->getContent());
+        $this->assertStringContainsString('Dane i API', $this->get('/o-nas')->getContent());
+    }
+
     public function test_widget_is_embeddable_and_noindex(): void
     {
         $this->get('/program-cpn/widget')
@@ -126,6 +209,7 @@ class CpnPagesTest extends TestCase
 
         $this->assertContains("{$base}/jutro", $locs);
         $this->assertContains("{$base}/obwieszczenia", $locs);
+        $this->assertContains($this->siteUrl().'/dane-cpn', $locs);
         $this->assertContains("{$base}/2026-10-03", $locs);
         $this->assertNotContains($base, $locs);
 

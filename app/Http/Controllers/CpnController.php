@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Cpn\CpnData;
+use App\Tags\Cpn;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Statamic\Facades\Cascade;
 use Statamic\Facades\Entry;
@@ -102,32 +104,28 @@ class CpnController extends Controller implements HasMiddleware
 
     public function json(): Response
     {
-        $base = rtrim(Site::default()->absoluteUrl(), '/');
-
-        $body = [
-            'name' => 'Ceny maksymalne paliw w programie CPN (Ceny Paliwa Niżej)',
-            'description' => 'Dzienne ceny maksymalne benzyny 95, benzyny 98 i oleju napędowego z obwieszczeń Ministra Energii, III edycja programu CPN.',
-            'url' => "{$base}/program-cpn",
-            'license' => CpnData::LICENSE_URL,
-            'attribution' => 'Źródło: Radar Paliw (radarpaliw.pl/program-cpn) na podstawie obwieszczeń Ministra Energii',
-            'unit' => 'PLN/l brutto',
-            'updated' => CpnData::modified('notices'),
-            'data' => CpnData::rows('max')->map(fn ($row) => [
-                'date' => $row['date'],
-                'pb95' => $row['pb95'],
-                'pb98' => $row['pb98'],
-                'on' => $row['on'],
-                'source_name' => $row['source_name'],
-                'source_url' => $row['source_url'],
-                'url' => "{$base}/program-cpn/{$row['date']}",
-            ])->all(),
-        ];
-
-        return response(json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION), 200, [
+        return response($this->encode($this->payload()), 200, [
             'Content-Type' => 'application/json; charset=UTF-8',
             'Cache-Control' => self::CACHE_CONTROL,
             'Link' => '<'.CpnData::LICENSE_URL.'>; rel="license"',
             'Access-Control-Allow-Origin' => '*',
+        ]);
+    }
+
+    public function docs(): Response
+    {
+        $payload = $this->payload();
+        $sample = [...$payload, 'data' => array_slice($payload['data'], -2)];
+
+        return $this->page('templates/cpn/docs', [
+            'cpn_page' => 'docs',
+            'breadcrumb_parent_title' => 'Program CPN',
+            'breadcrumb_parent_url' => '/program-cpn',
+            'breadcrumb_title' => 'Dane i API',
+            'sample_json' => $this->encode($sample),
+            'sample_rows' => count($sample['data']),
+            'total_rows' => count($payload['data']),
+            'today_pb95' => $payload['today']['pb95'] ?? null,
         ]);
     }
 
@@ -140,6 +138,7 @@ class CpnController extends Controller implements HasMiddleware
             ['loc' => "{$base}/jutro", 'lastmod' => CpnData::modified('tomorrow')],
             ...collect(CpnData::FUEL_PAGES)->keys()->map(fn ($slug) => ['loc' => "{$base}/{$slug}", 'lastmod' => CpnData::modified('fuel')]),
             ['loc' => "{$base}/obwieszczenia", 'lastmod' => CpnData::modified('notices')],
+            ['loc' => rtrim(Site::default()->absoluteUrl(), '/').'/dane-cpn', 'lastmod' => CpnData::modified('hub')],
             ...$max->sortByDesc('date')->map(fn ($row) => [
                 'loc' => "{$base}/{$row['date']}",
                 'lastmod' => CpnData::iso(Carbon::createFromTimestamp($row['modified'])),
@@ -149,6 +148,77 @@ class CpnController extends Controller implements HasMiddleware
         return response()
             ->view('sitemaps.cpn', ['urls' => $urls])
             ->header('Content-Type', 'text/xml; charset=UTF-8');
+    }
+
+    private function payload(): array
+    {
+        $base = rtrim(Site::default()->absoluteUrl(), '/');
+        $max = CpnData::rows('max');
+
+        return [
+            'version' => 1,
+            'name' => 'Ceny maksymalne paliw w programie CPN (Ceny Paliwa Niżej)',
+            'description' => 'Dzienne ceny maksymalne benzyny 95, benzyny 98 i oleju napędowego z obwieszczeń Ministra Energii, III edycja programu CPN.',
+            'url' => "{$base}/program-cpn",
+            'license' => CpnData::LICENSE_URL,
+            'attribution' => 'Źródło: Radar Paliw (radarpaliw.pl/program-cpn) na podstawie obwieszczeń Ministra Energii',
+            'unit' => 'PLN/l brutto',
+            'updated' => CpnData::modified('hub'),
+            'today' => $this->todayLimit($max),
+            'tomorrow' => $this->tomorrowLimit($max),
+            'data' => $max->map(fn ($row) => [
+                'date' => $row['date'],
+                'pb95' => $row['pb95'],
+                'pb98' => $row['pb98'],
+                'on' => $row['on'],
+                'source_name' => $row['source_name'],
+                'source_url' => $row['source_url'],
+                'url' => "{$base}/program-cpn/{$row['date']}",
+            ])->all(),
+        ];
+    }
+
+    private function todayLimit(Collection $max): ?array
+    {
+        $row = CpnData::current($max);
+
+        return $row ? [
+            'date' => $row['date'],
+            'pb95' => $row['pb95'],
+            'pb98' => $row['pb98'],
+            'on' => $row['on'],
+            'source_name' => $row['source_name'],
+            'source_url' => $row['source_url'],
+        ] : null;
+    }
+
+    private function tomorrowLimit(Collection $max): ?array
+    {
+        $next = app(Cpn::class)->nextLimit(CpnData::tomorrow(), $max);
+
+        if (! $next) {
+            return null;
+        }
+
+        $price = fn (string $fuel) => isset($next['values'][$fuel]) ? $next['values'][$fuel]['price'] : null;
+        $official = $next['kind'] === 'official';
+
+        return [
+            'date' => $next['date'],
+            'date_end' => $next['date_end'],
+            'status' => $official ? 'official' : 'forecast',
+            'pb95' => $price('pb95'),
+            'pb98' => $price('pb98'),
+            'on' => $price('on'),
+            ...($official ? [] : ['hurt_date' => $next['hurt_date']]),
+            'source_name' => $next['source_name'],
+            'source_url' => $next['source_url'],
+        ];
+    }
+
+    private function encode(array $body): string
+    {
+        return json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_PRESERVE_ZERO_FRACTION);
     }
 
     private function page(string $template, array $data): Response

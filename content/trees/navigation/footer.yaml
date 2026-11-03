@@ -9,6 +9,10 @@ tree:
     id: nav-footer-program-cpn
     entry: page-program-cpn
   -
+    id: nav-footer-dane-cpn
+    title: 'Dane i API'
+    url: /dane-cpn
+  -
     id: nav-footer-kontakt
     entry: page-kontakt
   -

@@ -17,3 +17,7 @@ if (document.querySelector('[data-price-chart]')) {
 if (document.querySelector('[data-cpn-calculator]')) {
     import('./modules/cpn-calculator').then((module) => module.default.init());
 }
+
+if (document.querySelector('[data-copy-button]')) {
+    import('./modules/copy-button').then((module) => module.default.init());
+}

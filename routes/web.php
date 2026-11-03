@@ -25,6 +25,7 @@ Route::statamic('promocje/feed.xml', 'feeds/promotions', ['layout' => null, 'con
 Route::get('og/program-cpn.png', [OgImageController::class, 'programCpn']);
 
 Route::get('sitemap-cpn.xml', [CpnController::class, 'sitemap']);
+Route::get('dane-cpn', [CpnController::class, 'docs']);
 Route::get('program-cpn/dane.csv', [CpnController::class, 'csv']);
 Route::get('program-cpn/dane.json', [CpnController::class, 'json']);
 Route::get('program-cpn/widget', [CpnController::class, 'widget']);
