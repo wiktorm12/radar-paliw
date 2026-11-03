@@ -105,20 +105,20 @@ discount_fallback:
                 <dl class="mb-8 grid grid-cols-2 gap-4 rounded-2xl bg-zinc-100 p-6 text-sm md:grid-cols-3">
                     {{ if discount_value }}
                         <div>
-                            <dt class="text-zinc-500">Rabat</dt>
+                            <dt class="text-zinc-600">Rabat</dt>
                             <dd class="font-semibold text-brand-600">{{ discount_type:value != 'fixed_price' ?= '-' }}{{ yield:promo_discount }}</dd>
                         </div>
                     {{ /if }}
                     <div>
-                        <dt class="text-zinc-500">Ważna od</dt>
+                        <dt class="text-zinc-600">Ważna od</dt>
                         <dd class="font-semibold"><time datetime="{{ valid_from format='Y-m-d' }}">{{ valid_from format="j.m.Y" }}</time></dd>
                     </div>
                     <div>
-                        <dt class="text-zinc-500">Ważna do</dt>
+                        <dt class="text-zinc-600">Ważna do</dt>
                         <dd class="font-semibold"><time datetime="{{ valid_to format='Y-m-d' }}">{{ valid_to format="j.m.Y" }}</time></dd>
                     </div>
                     <div>
-                        <dt class="text-zinc-500">Paliwa</dt>
+                        <dt class="text-zinc-600">Paliwa</dt>
                         <dd class="font-semibold">
                             {{ paliwa }}
                                 <a
@@ -129,12 +129,12 @@ discount_fallback:
                         </dd>
                     </div>
                     <div>
-                        <dt class="text-zinc-500">Aplikacja / karta</dt>
+                        <dt class="text-zinc-600">Aplikacja / karta</dt>
                         <dd class="font-semibold">{{ requires_app ? (station:loyalty_program ?? 'Tak') : 'Nie' }}</dd>
                     </div>
                     {{ station }}
                         <div>
-                            <dt class="text-zinc-500">Sieć</dt>
+                            <dt class="text-zinc-600">Sieć</dt>
                             <dd class="font-semibold">
                                 <a
                                     href="{{ url }}"

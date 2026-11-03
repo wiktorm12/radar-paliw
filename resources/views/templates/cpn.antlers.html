@@ -6,7 +6,7 @@ trend_icons:
 trend_classes:
     'up': 'text-red-700'
     'down': 'text-green-700'
-    'flat': 'text-zinc-500'
+    'flat': 'text-zinc-600'
 trend_labels:
     'up': 'wzrost'
     'down': 'spadek'
@@ -77,10 +77,10 @@ impact_classes:
             <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {{ fuels }}
                     <li class="rounded-2xl bg-white p-6 shadow-sm">
-                        <p class="mb-2 text-sm font-medium text-zinc-500">{{ label }}</p>
+                        <p class="mb-2 text-sm font-medium text-zinc-600">{{ label }}</p>
                         <p class="mb-2 text-4xl font-bold tracking-tight text-zinc-900">
                             {{ price }}
-                            <span class="text-base font-medium text-zinc-500">zł/l</span>
+                            <span class="text-base font-medium text-zinc-600">zł/l</span>
                         </p>
                         {{ if trend }}
                             <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
@@ -91,7 +91,7 @@ impact_classes:
                     </li>
                 {{ /fuels }}
             </ul>
-            <p class="mt-4 text-xs text-zinc-500">
+            <p class="mt-4 text-xs text-zinc-600">
                 Aktualizacja: <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>.
                 {{ if source_url }}
                     Źródło:
@@ -123,10 +123,10 @@ impact_classes:
                     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {{ fuels }}
                             <li>
-                                <p class="mb-1 text-sm font-medium text-zinc-500">{{ label }}</p>
+                                <p class="mb-1 text-sm font-medium text-zinc-600">{{ label }}</p>
                                 <p class="mb-1 text-3xl font-bold tracking-tight text-zinc-900">
                                     ~{{ price }}
-                                    <span class="text-base font-medium text-zinc-500">zł/l</span>
+                                    <span class="text-base font-medium text-zinc-600">zł/l</span>
                                 </p>
                                 {{ if trend }}
                                     <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
@@ -134,11 +134,11 @@ impact_classes:
                                         {{ view:trend_labels[trend] }} {{ change }} vs obecny limit
                                     </p>
                                 {{ /if }}
-                                <p class="text-xs text-zinc-500">hurt netto {{ hurt }} zł/l</p>
+                                <p class="text-xs text-zinc-600">hurt netto {{ hurt }} zł/l</p>
                             </li>
                         {{ /fuels }}
                     </ul>
-                    <p class="mt-4 text-xs text-zinc-500">
+                    <p class="mt-4 text-xs text-zinc-600">
                         {{ if checked > 0 }}Wzór trafił co do grosza {{ hits }} z {{ checked }} opublikowanych cen.{{ /if }}
                         {{ if source_url }}
                             Źródło ceny hurtowej:
@@ -169,7 +169,7 @@ impact_classes:
                 data-price-chart-data
             >{{ cpn:series type="max" projection="true" }}</script>
             <noscript>
-                <p class="text-sm text-zinc-500">
+                <p class="text-sm text-zinc-600">
                     Wykres wymaga JavaScriptu — pełne dane znajdziesz w
                     <a
                         href="#tabela"
@@ -204,12 +204,12 @@ impact_classes:
                     <ul class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {{ fuels }}
                             <li class="rounded-2xl border border-zinc-200 p-6">
-                                <p class="mb-2 text-sm font-medium text-zinc-500">{{ label }} · {{ end_date | format("j.m") }}</p>
+                                <p class="mb-2 text-sm font-medium text-zinc-600">{{ label }} · {{ end_date | format("j.m") }}</p>
                                 <p class="mb-1 text-3xl font-bold tracking-tight text-zinc-900">
                                     ~{{ price }}
-                                    <span class="text-base font-medium text-zinc-500">zł/l</span>
+                                    <span class="text-base font-medium text-zinc-600">zł/l</span>
                                 </p>
-                                <p class="mb-3 text-sm text-zinc-500 tabular-nums">zakres {{ low }}–{{ high }} zł</p>
+                                <p class="mb-3 text-sm text-zinc-600 tabular-nums">zakres {{ low }}–{{ high }} zł</p>
                                 {{ if trend }}
                                     <p class="mb-3 text-sm font-medium {{ view:trend_classes[trend] }}">
                                         <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
@@ -217,12 +217,12 @@ impact_classes:
                                     </p>
                                 {{ /if }}
                                 <dl class="grid grid-cols-2 gap-x-4 gap-y-1 border-t border-zinc-200 pt-3 text-sm">
-                                    <dt class="text-zinc-500">Trend z danych</dt>
+                                    <dt class="text-zinc-600">Trend z danych</dt>
                                     <dd class="text-right font-semibold {{ view:trend_classes[direction] }}">
                                         {{ view:trend_names[direction] }}, {{ weekly }}/tydz.
                                     </dd>
                                     {{ if market }}
-                                        <dt class="text-zinc-500">Analiza rynku</dt>
+                                        <dt class="text-zinc-600">Analiza rynku</dt>
                                         <dd class="text-right font-semibold tabular-nums">{{ market }} w 7 dni</dd>
                                     {{ /if }}
                                 </dl>
@@ -241,7 +241,7 @@ impact_classes:
                             {{ if summary }}
                                 <p class="mb-2 max-w-3xl text-zinc-700">{{ summary }}</p>
                             {{ /if }}
-                            <p class="mb-4 text-xs text-zinc-500">Analizę codziennie przygotowuje model AI na podstawie publicznych źródeł podlinkowanych przy czynnikach — może zawierać błędy. Ma charakter informacyjny i nie jest poradą inwestycyjną.</p>
+                            <p class="mb-4 text-xs text-zinc-600">Analizę codziennie przygotowuje model AI na podstawie publicznych źródeł podlinkowanych przy czynnikach — może zawierać błędy. Ma charakter informacyjny i nie jest poradą inwestycyjną.</p>
                             {{ if factors }}
                                 <ul class="grid grid-cols-1 gap-3 md:grid-cols-2">
                                     {{ factors }}
@@ -257,7 +257,7 @@ impact_classes:
                                                 {{ if url }}
                                                     <a
                                                         href="{{ url }}"
-                                                        class="text-xs text-zinc-500 underline hover:text-brand-600"
+                                                        class="text-xs text-zinc-600 underline hover:text-brand-600"
                                                         target="_blank"
                                                         rel="noopener"
                                                     >źródło</a>
@@ -312,7 +312,7 @@ impact_classes:
                                                 <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                                                     ~{{ price }}
                                                     {{ if low != high }}
-                                                        <span class="block text-xs text-zinc-500">{{ low }}–{{ high }}</span>
+                                                        <span class="block text-xs text-zinc-600">{{ low }}–{{ high }}</span>
                                                     {{ /if }}
                                                 </td>
                                             {{ /cells }}
@@ -325,7 +325,7 @@ impact_classes:
                             </table>
                         </div>
                     </details>
-                    <p class="text-xs text-zinc-500">
+                    <p class="text-xs text-zinc-600">
                         To szacunek, nie zapowiedź — wiążące są wyłącznie obwieszczenia Ministra Energii.
                         {{ if outlook }}Prognozę na dalsze dni wyznacza analiza rynku przygotowana przez AI.{{ /if }}
                         Prognoza i analiza rynku mają charakter wyłącznie informacyjny i nie stanowią porady inwestycyjnej
@@ -351,25 +351,25 @@ impact_classes:
                 <li class="rounded-2xl border border-zinc-200 p-6">
                     <h3 class="mb-4 text-lg font-semibold">{{ label }}</h3>
                     <dl class="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-                        <dt class="text-zinc-500">Start ({{ start_date | format("j.m") }})</dt>
+                        <dt class="text-zinc-600">Start ({{ start_date | format("j.m") }})</dt>
                         <dd class="text-right font-semibold tabular-nums">{{ start_price }} zł</dd>
-                        <dt class="text-zinc-500">Dziś ({{ end_date | format("j.m") }})</dt>
+                        <dt class="text-zinc-600">Dziś ({{ end_date | format("j.m") }})</dt>
                         <dd class="text-right font-semibold tabular-nums">{{ end_price }} zł</dd>
-                        <dt class="text-zinc-500">Zmiana od startu</dt>
+                        <dt class="text-zinc-600">Zmiana od startu</dt>
                         <dd class="text-right font-semibold tabular-nums {{ view:trend_classes[trend] }}">
                             <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
                             {{ change }} ({{ change_pct }})
                         </dd>
-                        <dt class="text-zinc-500">Najniższa</dt>
-                        <dd class="text-right font-semibold tabular-nums">{{ min }} zł <span class="font-normal text-zinc-500">{{ min_date | format("j.m") }}</span></dd>
-                        <dt class="text-zinc-500">Najwyższa</dt>
-                        <dd class="text-right font-semibold tabular-nums">{{ max }} zł <span class="font-normal text-zinc-500">{{ max_date | format("j.m") }}</span></dd>
-                        <dt class="text-zinc-500">Średnia</dt>
+                        <dt class="text-zinc-600">Najniższa</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ min }} zł <span class="font-normal text-zinc-600">{{ min_date | format("j.m") }}</span></dd>
+                        <dt class="text-zinc-600">Najwyższa</dt>
+                        <dd class="text-right font-semibold tabular-nums">{{ max }} zł <span class="font-normal text-zinc-600">{{ max_date | format("j.m") }}</span></dd>
+                        <dt class="text-zinc-600">Średnia</dt>
                         <dd class="text-right font-semibold tabular-nums">{{ avg }} zł</dd>
-                        <dt class="text-zinc-500">Bak 50 l dziś</dt>
+                        <dt class="text-zinc-600">Bak 50 l dziś</dt>
                         <dd class="text-right font-semibold tabular-nums">{{ tank_50 }} zł</dd>
                     </dl>
-                    <p class="mt-4 text-xs text-zinc-500">Na podstawie {{ days }} dni obowiązywania limitu.</p>
+                    <p class="mt-4 text-xs text-zinc-600">Na podstawie {{ days }} dni obowiązywania limitu.</p>
                 </li>
             {{ /cpn:stats }}
         </ul>
@@ -384,7 +384,7 @@ impact_classes:
                     <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {{ fuels }}
                             <li class="rounded-xl bg-white p-5">
-                                <p class="mb-1 text-sm font-medium text-zinc-500">{{ label }}</p>
+                                <p class="mb-1 text-sm font-medium text-zinc-600">{{ label }}</p>
                                 <p class="mb-1 text-sm tabular-nums">{{ before }} zł → <strong>{{ now }} zł</strong></p>
                                 <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
                                     <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
@@ -394,7 +394,7 @@ impact_classes:
                             </li>
                         {{ /fuels }}
                     </ul>
-                    <p class="mt-4 text-xs text-zinc-500">Cena maksymalna to górny limit — na wielu stacjach realna cena może być niższa. Rabaty z aplikacji znajdziesz w <a href="/promocje" class="underline hover:text-brand-600">zestawieniu promocji</a>.</p>
+                    <p class="mt-4 text-xs text-zinc-600">Cena maksymalna to górny limit — na wielu stacjach realna cena może być niższa. Rabaty z aplikacji znajdziesz w <a href="/promocje" class="underline hover:text-brand-600">zestawieniu promocji</a>.</p>
                 </div>
             {{ /unless }}
         {{ /cpn:compare }}
@@ -467,7 +467,7 @@ impact_classes:
                 </tbody>
             </table>
         </div>
-        <p class="text-xs text-zinc-500">
+        <p class="text-xs text-zinc-600">
             Źródła: obwieszczenia Ministra Energii publikowane na
             <a
                 href="https://www.gov.pl/web/energia"

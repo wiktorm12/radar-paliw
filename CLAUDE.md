@@ -92,6 +92,10 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
 - Poza produkcją pusty slot pokazuje przerywany placeholder z nazwą miejsca.
 - Puste sloty AdSense (`data-ad-status="unfilled"`) chowa CSS w `components/ads.css` przez `:has()`; nowy wrapper wokół slotu oznacz `data-ad-wrapper`.
 - `head_code` ładowany tylko na produkcji; `/ads.txt` serwowany z globala.
+- Zewnętrzne skrypty reklam (`head_code`, kod slotów, Convertiser) przechodzą przez modyfikator
+  `defer_scripts` → `<script type="text/plain" data-deferred-src>`; ładuje je `modules/deferred-scripts.js`
+  po pierwszej interakcji (albo 8 s po `load`). Nowy kod sieci reklamowej renderuj z `| defer_scripts`.
+- Na produkcji CSS jest inline (`vite:content`) — nie używaj w nim względnych `url()`.
 
 ## Afiliacja
 

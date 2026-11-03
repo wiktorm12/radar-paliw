@@ -47,7 +47,7 @@ formats:
                 </a>
             {{ else }}
                 <div class="w-full">
-                    {{ code }}
+                    {{ code | defer_scripts }}
                 </div>
             {{ /if }}
         </aside>

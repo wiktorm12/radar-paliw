@@ -51,7 +51,7 @@
                     {{ /kategorie }}
                 </ul>
                 <h1 class="mb-4 text-4xl font-bold tracking-tight text-balance md:text-5xl">{{ title }}</h1>
-                <p class="mb-6 text-sm text-zinc-500">
+                <p class="mb-6 text-sm text-zinc-600">
                     <time datetime="{{ date | timezone('Europe/Warsaw') | format('Y-m-d') }}">{{ date iso_format="D MMMM YYYY" }}</time>
                     {{ if last_modified && (last_modified | timezone('Europe/Warsaw') | format('Y-m-d')) > (date | timezone('Europe/Warsaw') | format('Y-m-d')) }}
                         · Zaktualizowano: <time datetime="{{ last_modified | timezone('Europe/Warsaw') | format('c') }}">{{ last_modified | timezone('Europe/Warsaw') | iso_format('D MMMM YYYY') }}</time>
@@ -168,7 +168,7 @@
                                     href="{{ url }}"
                                     class="block rounded-xl border border-zinc-200 p-4 text-sm hover:border-brand-500"
                                 >
-                                    <span class="mb-1 block text-xs font-semibold uppercase text-zinc-500">{{ station:title }}</span>
+                                    <span class="mb-1 block text-xs font-semibold uppercase text-zinc-600">{{ station:title }}</span>
                                     <span class="font-medium">{{ title }}</span>
                                 </a>
                             </li>

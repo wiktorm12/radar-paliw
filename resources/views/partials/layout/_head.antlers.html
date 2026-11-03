@@ -137,16 +137,15 @@
     >
 
 
-    {{ vite src="resources/css/site.css|resources/js/site.js" }}
+    {{# Na produkcji CSS (~10 KiB gzip) idzie inline — bez żądania blokującego pierwszy render. #}}
+    {{ if environment === 'production' }}
+        <style>{{ vite:content src="resources/css/site.css" }}</style>
+        {{ vite src="resources/js/site.js" }}
+    {{ else }}
+        {{ vite src="resources/css/site.css|resources/js/site.js" }}
+    {{ /if }}
 
     {{ if environment === 'production' }}
-        {{ if ads:head_code }}
-            <link
-                rel="preconnect"
-                href="https://pagead2.googlesyndication.com"
-                crossorigin
-            >
-        {{ /if }}
         {{ if settings:google_site_verification }}
             <meta
                 name="google-site-verification"
@@ -160,6 +159,6 @@
                 data-cf-beacon='{"token": "{{ settings:cloudflare_analytics_token | entities }}"}'
             ></script>
         {{ /if }}
-        {{ ads:head_code }}
+        {{ ads:head_code | defer_scripts }}
     {{ /if }}
 </head>

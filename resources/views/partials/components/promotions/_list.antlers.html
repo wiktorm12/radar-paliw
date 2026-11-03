@@ -23,7 +23,7 @@ sorts:
         {{ if paginated && get:page > 1 }}
             {{ 404 }}
         {{ /if }}
-        <p class="text-zinc-500">{{ status == 'expired' ? 'Brak zakończonych promocji dla wybranych filtrów.' : 'Brak aktywnych promocji dla wybranych filtrów.' }}</p>
+        <p class="text-zinc-600">{{ status == 'expired' ? 'Brak zakończonych promocji dla wybranych filtrów.' : 'Brak aktywnych promocji dla wybranych filtrów.' }}</p>
     {{ else }}
         <ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {{ promotions }}

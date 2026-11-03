@@ -1,10 +1,12 @@
 import adSticky from './modules/ad-sticky';
+import deferredScripts from './modules/deferred-scripts';
 import headerNav from './modules/header-nav';
 import promotionFilters from './modules/promotion-filters';
 
 document.documentElement.classList.replace('no-js', 'js');
 
 adSticky.init();
+deferredScripts.init();
 headerNav.init();
 promotionFilters.init();
 

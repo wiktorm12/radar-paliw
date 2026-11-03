@@ -74,7 +74,7 @@ return [
         */
 
         'defaults' => [
-            // 'quality' => 50,
+            'quality' => 80,
         ],
 
         /*

@@ -20,7 +20,7 @@ slots:
         </script>
       mode: htmlmixed
     type: ad
-    enabled: true
+    enabled: false
   -
     id: lcQb-1FbweR_4AA-zimOW
     label: 'AdSense - footer'
@@ -40,7 +40,7 @@ slots:
         </script>
       mode: htmlmixed
     type: ad
-    enabled: true
+    enabled: false
   -
     id: PIm2PmUT_cNqC2wpYn5VU
     label: 'AdSense - artykul 1'
@@ -62,7 +62,7 @@ slots:
         </script>
       mode: htmlmixed
     type: ad
-    enabled: true
+    enabled: false
 head_code:
   code: |-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2682211062149512"
