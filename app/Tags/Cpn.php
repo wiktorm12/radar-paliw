@@ -22,6 +22,24 @@ class Cpn extends Tags
     /** Mnożnik VAT 8% obowiązujący w programie CPN. */
     public const VAT = 1.08;
 
+    /** Ile dni naprzód (od ostatniego oficjalnego limitu) sięga projekcja trendu. */
+    public const PROJECTION_DAYS = 7;
+
+    /** Ile ostatnich notowań hurtu (dni robocze) wyznacza trend. */
+    public const TREND_WINDOW = 10;
+
+    /** Wygaszanie trendu na każde kolejne notowanie — dalsze dni zakładają coraz mniejszą zmianę. */
+    public const TREND_DAMPING = 0.8;
+
+    /** Kwantyl rozkładu normalnego dla przedziału 80%. */
+    public const BAND_Z = 1.28;
+
+    /** Zmiana poniżej tylu zł/tydzień to trend boczny. */
+    public const TREND_FLAT = 0.02;
+
+    /** Analiza rynku starsza o tyle dni od ostatniego limitu nie wpływa już na prognozę. */
+    public const OUTLOOK_MAX_AGE = 2;
+
     /**
      * Prognoza kolejnej ceny maksymalnej z ostatniej ceny hurtowej Orlenu:
      * (hurt netto + 0,30 zł) × 1,08. Znika, gdy ministerstwo opublikuje limit.
@@ -59,6 +77,56 @@ class Cpn extends Tags
                     ...$this->delta($this->predict($hurt[$fuel]), $latest[$fuel] ?? null),
                 ])->values()->all(),
             ...$this->accuracy($max),
+        ];
+    }
+
+    /**
+     * Trend i projekcja limitu na 7 dni: najbliższe dni ze wzoru z hurtu, dalej
+     * wygaszany trend liniowy z ostatnich notowań hurtu, z przedziałem 80%.
+     */
+    public function trend()
+    {
+        $projection = $this->projection();
+
+        if (! $projection) {
+            return $this->parseNoResults();
+        }
+
+        $latest = $this->rows('max')->last();
+        $lastDay = end($projection['days']);
+
+        return [
+            'start_date' => $projection['days'][0]['date'],
+            'end_date' => $lastDay['date'],
+            'window' => $projection['window'],
+            'window_start' => $projection['window_start'],
+            'outlook' => $projection['outlook'] !== null,
+            'outlook_date' => $projection['outlook']['date'] ?? null,
+            'summary' => $projection['outlook']['summary'] ?? null,
+            'factors' => $projection['outlook']['factors'] ?? [],
+            'source_name' => $projection['outlook']['source_name'] ?? null,
+            'source_url' => $projection['outlook']['source_url'] ?? null,
+            'fuels' => collect($projection['fuels'])->map(fn ($fuel, $key) => [
+                'key' => $key,
+                'label' => self::FUELS[$key],
+                'direction' => $fuel['direction'],
+                'weekly' => $this->signedGrosze($fuel['weekly']),
+                'market' => isset($fuel['market']) ? $this->signedGrosze($fuel['market']) : null,
+                'price' => $this->money($lastDay['values'][$key]['price']),
+                'low' => $this->money($lastDay['values'][$key]['low']),
+                'high' => $this->money($lastDay['values'][$key]['high']),
+                ...$this->delta($lastDay['values'][$key]['price'], $latest[$key] ?? null),
+            ])->values()->all(),
+            'days' => collect($projection['days'])->map(fn ($day) => [
+                'date' => $day['date'],
+                'kind' => $day['kind'],
+                'cells' => collect($day['values'])->map(fn ($value, $key) => [
+                    'key' => $key,
+                    'price' => $this->money($value['price']),
+                    'low' => $this->money($value['low']),
+                    'high' => $this->money($value['high']),
+                ])->values()->all(),
+            ])->all(),
         ];
     }
 
@@ -153,6 +221,7 @@ class Cpn extends Tags
     public function series()
     {
         $rows = $this->rows($this->params->get('type', 'max'));
+        $projection = $this->params->bool('projection') ? $this->projection() : null;
 
         return json_encode([
             'dates' => $rows->pluck('date')->all(),
@@ -161,6 +230,17 @@ class Cpn extends Tags
                 'label' => $label,
                 'values' => $rows->pluck($fuel)->all(),
             ])->values()->all(),
+            'projection' => $projection ? [
+                'dates' => array_column($projection['days'], 'date'),
+                'kinds' => array_column($projection['days'], 'kind'),
+                'method' => $projection['outlook'] ? 'market' : 'trend',
+                'series' => collect($projection['fuels'])->map(fn ($fuel, $key) => [
+                    'key' => $key,
+                    'values' => array_map(fn ($day) => $day['values'][$key]['price'], $projection['days']),
+                    'low' => array_map(fn ($day) => $day['values'][$key]['low'], $projection['days']),
+                    'high' => array_map(fn ($day) => $day['values'][$key]['high'], $projection['days']),
+                ])->values()->all(),
+            ] : null,
         ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
     }
 
@@ -226,6 +306,188 @@ class Cpn extends Tags
         return collect(range(1, $days))->map(fn ($i) => $day->copy()->addDays($i)->toDateString())->all();
     }
 
+    /**
+     * Limity na PROJECTION_DAYS dni po ostatnim oficjalnym. Dni wyznaczone przez znany
+     * już hurt liczy wzór ('formula'), dalsze: kotwica + wygaszany trend ('trend').
+     * Niepewność rośnie jak √(liczba notowań hurtu) — każde notowanie to nowy krok cen.
+     */
+    private function projection(): ?array
+    {
+        $max = $this->rows('max');
+        // Sobotnie notowania dublują poniedziałkowe — do trendu tylko dni robocze.
+        $hurt = $this->rows('hurt')->filter(fn ($row) => Carbon::parse($row['date'])->isWeekday())->values();
+
+        if ($max->isEmpty() || $hurt->count() < 3) {
+            return null;
+        }
+
+        $lastMax = $max->last();
+        $latestHurt = $hurt->last();
+        $formulaDates = array_values(array_filter(
+            $this->limitDates($latestHurt['date']),
+            fn ($date) => $date > $lastMax['date'],
+        ));
+        $anchorHurtDate = $formulaDates ? $latestHurt['date'] : $this->hurtDateFor($lastMax['date']);
+        $window = $hurt->slice(-self::TREND_WINDOW)->values();
+
+        $fuels = collect(['pb95', 'pb98', 'on'])
+            ->filter(fn ($fuel) => $lastMax[$fuel] !== null && $window->every(fn ($row) => $row[$fuel] !== null))
+            ->mapWithKeys(function ($fuel) use ($window, $formulaDates, $latestHurt, $lastMax) {
+                $limits = $window->map(fn ($row) => $this->predict($row[$fuel]))->all();
+                $slope = $this->slope($limits);
+
+                return [$fuel => [
+                    'anchor' => $formulaDates ? $this->predict($latestHurt[$fuel]) : $lastMax[$fuel],
+                    'slope' => $slope,
+                    'sigma' => $this->sigma($limits),
+                    'weekly' => round($slope * 5, 2),
+                    'direction' => abs($slope * 5) < self::TREND_FLAT ? 'flat' : ($slope > 0 ? 'up' : 'down'),
+                ]];
+            });
+
+        if ($fuels->isEmpty()) {
+            return null;
+        }
+
+        $endDate = Carbon::parse($lastMax['date'])->addDays(self::PROJECTION_DAYS)->toDateString();
+        $totalSteps = $this->weekdaysBetween($anchorHurtDate, $this->hurtDateFor($endDate));
+        $outlook = $this->outlook($lastMax['date']);
+
+        // Świeża analiza rynku zastępuje trend z danych: cena na koniec okresu = limit z dnia analizy + oczekiwana zmiana.
+        if ($outlook && $totalSteps > 0) {
+            $base = $max->filter(fn ($row) => $row['date'] <= $outlook['date'])->last() ?? $lastMax;
+            $fuels = $fuels->map(fn ($fuel, $key) => $outlook[$key] === null || $base[$key] === null ? $fuel : [
+                ...$fuel,
+                'target' => round($base[$key] + $outlook[$key], 2),
+                'market' => $outlook[$key],
+            ]);
+        }
+
+        $days = collect(range(1, self::PROJECTION_DAYS))->map(function ($offset) use ($lastMax, $formulaDates, $anchorHurtDate, $fuels, $totalSteps) {
+            $date = Carbon::parse($lastMax['date'])->addDays($offset)->toDateString();
+            $steps = $this->weekdaysBetween($anchorHurtDate, $this->hurtDateFor($date));
+            $drift = array_sum(array_map(fn ($i) => self::TREND_DAMPING ** $i, $steps ? range(1, $steps) : []));
+
+            return [
+                'date' => $date,
+                'kind' => in_array($date, $formulaDates, true) ? 'formula' : 'trend',
+                'values' => $fuels->map(function ($fuel) use ($steps, $drift, $totalSteps) {
+                    $price = round(isset($fuel['target'])
+                        ? $fuel['anchor'] + ($fuel['target'] - $fuel['anchor']) * $steps / $totalSteps
+                        : $fuel['anchor'] + $fuel['slope'] * $drift, 2);
+                    $band = self::BAND_Z * $fuel['sigma'] * sqrt($steps);
+
+                    return [
+                        'price' => $price,
+                        'low' => round($price - $band, 2),
+                        'high' => round($price + $band, 2),
+                    ];
+                })->all(),
+            ];
+        })->all();
+
+        return [
+            'days' => $days,
+            'fuels' => $fuels->all(),
+            'outlook' => $fuels->contains(fn ($fuel) => isset($fuel['target'])) ? $outlook : null,
+            'window' => $window->count(),
+            'window_start' => $window->first()['date'],
+        ];
+    }
+
+    /**
+     * Najnowsza analiza rynku (wpis `outlook`), jeśli jest najwyżej OUTLOOK_MAX_AGE dni starsza
+     * od ostatniego limitu. pb95/pb98/on = oczekiwana zmiana limitu w zł/l w ciągu 7 dni.
+     */
+    private function outlook(string $lastMaxDate): ?array
+    {
+        $entry = Entry::query()
+            ->where('collection', 'cpn_prices')
+            ->where('type', 'outlook')
+            ->orderBy('date', 'desc')
+            ->first();
+
+        if (! $entry || $entry->date()->toDateString() < Carbon::parse($lastMaxDate)->subDays(self::OUTLOOK_MAX_AGE)->toDateString()) {
+            return null;
+        }
+
+        return [
+            'date' => $entry->date()->toDateString(),
+            'pb95' => $this->float($entry->get('pb95')),
+            'pb98' => $this->float($entry->get('pb98')),
+            'on' => $this->float($entry->get('on')),
+            'summary' => $entry->get('summary'),
+            'factors' => collect($entry->get('factors') ?? [])->map(fn ($factor) => [
+                'name' => $factor['name'] ?? null,
+                'impact' => $factor['impact'] ?? 'neutral',
+                'note' => $factor['note'] ?? null,
+                'url' => $factor['url'] ?? null,
+            ])->values()->all(),
+            'source_name' => $entry->get('source_name'),
+            'source_url' => $entry->get('source_url'),
+        ];
+    }
+
+    /** Dzień notowania hurtu, z którego liczony jest limit na dany dzień (sob.–pon. → piątek). */
+    private function hurtDateFor(string $limitDate): string
+    {
+        $day = Carbon::parse($limitDate)->subDay();
+
+        while ($day->isWeekend()) {
+            $day->subDay();
+        }
+
+        return $day->toDateString();
+    }
+
+    /** Liczba dni roboczych w przedziale (od, do]. */
+    private function weekdaysBetween(string $from, string $to): int
+    {
+        $count = 0;
+
+        for ($day = Carbon::parse($from)->addDay(); $day->toDateString() <= $to; $day->addDay()) {
+            $count += $day->isWeekday() ? 1 : 0;
+        }
+
+        return $count;
+    }
+
+    /** Nachylenie prostej MNK (zł na notowanie). */
+    private function slope(array $values): float
+    {
+        $n = count($values);
+        $meanX = ($n - 1) / 2;
+        $meanY = array_sum($values) / $n;
+        $num = 0.0;
+        $den = 0.0;
+
+        foreach (array_values($values) as $x => $y) {
+            $num += ($x - $meanX) * ($y - $meanY);
+            $den += ($x - $meanX) ** 2;
+        }
+
+        return $den > 0 ? $num / $den : 0.0;
+    }
+
+    /** Odchylenie standardowe zmian z notowania na notowanie. */
+    private function sigma(array $values): float
+    {
+        $values = array_values($values);
+        $changes = [];
+
+        for ($i = 1; $i < count($values); $i++) {
+            $changes[] = $values[$i] - $values[$i - 1];
+        }
+
+        if (count($changes) < 2) {
+            return 0.0;
+        }
+
+        $mean = array_sum($changes) / count($changes);
+
+        return sqrt(array_sum(array_map(fn ($change) => ($change - $mean) ** 2, $changes)) / (count($changes) - 1));
+    }
+
     /** Ile opublikowanych limitów wzór trafił co do grosza. */
     private function accuracy(Collection $max): array
     {
@@ -288,6 +550,11 @@ class Cpn extends Tags
             'change' => ($diff > 0 ? '+' : ($diff < 0 ? '−' : '')).number_format(abs($diff) * 100, 0, ',', ' ').' gr',
             'change_pct' => ($diff > 0 ? '+' : ($diff < 0 ? '−' : '')).number_format(abs($diff / $reference * 100), 1, ',', ' ').'%',
         ];
+    }
+
+    private function signedGrosze(float $value): string
+    {
+        return ($value > 0 ? '+' : ($value < 0 ? '−' : '')).number_format(abs($value) * 100, 0, ',', ' ').' gr';
     }
 
     private function money(?float $value): ?string

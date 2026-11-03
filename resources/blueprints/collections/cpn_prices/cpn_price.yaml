@@ -30,7 +30,10 @@ tabs:
                 -
                   key: hurt
                   value: 'Cena hurtowa Orlen (netto)'
-              instructions: 'Cena hurtowa: zł/l netto (np. 6190 zł/m³ → 6,19). Służy do prognozy kolejnej ceny maksymalnej.'
+                -
+                  key: outlook
+                  value: 'Analiza rynku (prognoza 7 dni)'
+              instructions: 'Cena hurtowa: zł/l netto (np. 6190 zł/m³ → 6,19). Służy do prognozy kolejnej ceny maksymalnej. Analiza rynku: w polach paliw oczekiwana zmiana limitu w zł/l w ciągu 7 dni (np. -0,08).'
           -
             handle: pb95
             field:
@@ -55,6 +58,58 @@ tabs:
               type: float
               display: 'LPG (zł/l)'
               width: 25
+          -
+            handle: summary
+            field:
+              type: textarea
+              display: 'Podsumowanie analizy'
+              instructions: '2–4 zdania dla czytelników: co napędza ceny i co to oznacza dla limitu.'
+              if:
+                type: 'equals outlook'
+          -
+            handle: factors
+            field:
+              type: grid
+              display: 'Czynniki'
+              mode: stacked
+              add_row: 'Dodaj czynnik'
+              if:
+                type: 'equals outlook'
+              fields:
+                -
+                  handle: name
+                  field:
+                    type: text
+                    display: Czynnik
+                    width: 50
+                -
+                  handle: impact
+                  field:
+                    type: button_group
+                    display: 'Wpływ na cenę'
+                    default: neutral
+                    width: 50
+                    options:
+                      -
+                        key: up
+                        value: 'W górę'
+                      -
+                        key: down
+                        value: 'W dół'
+                      -
+                        key: neutral
+                        value: Neutralnie
+                -
+                  handle: note
+                  field:
+                    type: text
+                    display: Opis
+                -
+                  handle: url
+                  field:
+                    type: text
+                    input_type: url
+                    display: 'URL źródła'
           -
             handle: source_name
             field:

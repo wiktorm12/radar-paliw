@@ -54,7 +54,13 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   hurtu). Jeden wpis na dzień obowiązywania limitu.
 - Prognoza (`{{ cpn:forecast }}`, blok `#prognoza`): kolejny limit = round((hurt netto + 0,30) × 1,08, 2),
   hurt z dnia D → limit na D+1 (piątek → sob.–pon.). Ukrywa się, gdy oficjalny limit już jest.
-- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `forecast`, `stats`, `table`, `columns`, `series` (JSON),
+- Trend i prognoza 7 dni (`{{ cpn:trend }}`, blok `#trend`, na wykresie przez `cpn:series projection="true"`):
+  dni ze znanego hurtu = wzór; dalej, gdy jest świeży wpis `type: outlook` (analiza rynku, max 2 dni starszy
+  od ostatniego limitu), liniowo do limitu z dnia analizy + oczekiwana zmiana; bez niego wygaszany
+  (×0,8/notowanie) trend MNK z 10 ostatnich roboczych notowań hurtu. Zakres 80% = 1,28·σ(zmian)·√(liczba notowań).
+- Wpis `outlook`: `pb95`/`pb98`/`on` = oczekiwana zmiana limitu w zł/l w 7 dni, `summary`, `factors`
+  (`name`, `impact` up|down|neutral, `note`, `url`), `source_name`/`source_url`.
+- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `forecast`, `trend`, `stats`, `table`, `columns`, `series` (JSON),
   `compare`. Klucze w pętlach nie mogą nazywać się `first`/`last`/`count` — kolidują z
   wbudowanymi zmiennymi pętli Antlers.
 - Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.

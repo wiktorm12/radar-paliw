@@ -11,6 +11,18 @@ trend_labels:
     'up': 'wzrost'
     'down': 'spadek'
     'flat': 'bez zmian'
+trend_names:
+    'up': 'rosnący'
+    'down': 'spadkowy'
+    'flat': 'boczny'
+impact_labels:
+    'up': 'w górę'
+    'down': 'w dół'
+    'neutral': 'neutralnie'
+impact_classes:
+    'up': 'bg-red-100 text-red-800'
+    'down': 'bg-green-100 text-green-800'
+    'neutral': 'bg-zinc-100 text-zinc-700'
 ---
 
 {{ cpn:latest type="max" }}
@@ -147,7 +159,7 @@ trend_labels:
 {{ partial:section }}
     <div class="container">
         <h2 class="mb-2 text-3xl font-bold tracking-tight">Ceny maksymalne CPN dzień po dniu</h2>
-        <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto. Te same dane w formie tekstowej są w <a href="#tabela" class="underline hover:text-brand-600">tabeli</a>.</p>
+        <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto. Szare pole po prawej to <a href="#trend" class="underline hover:text-brand-600">prognoza na 7 dni</a>. Te same dane w formie tekstowej są w <a href="#tabela" class="underline hover:text-brand-600">tabeli</a>.</p>
         <div
             class="mb-12 min-h-90 rounded-2xl border border-zinc-200 bg-white p-4 md:min-h-108 md:p-6"
             data-price-chart
@@ -155,7 +167,7 @@ trend_labels:
             <script
                 type="application/json"
                 data-price-chart-data
-            >{{ cpn:series type="max" }}</script>
+            >{{ cpn:series type="max" projection="true" }}</script>
             <noscript>
                 <p class="text-sm text-zinc-500">
                     Wykres wymaga JavaScriptu — pełne dane znajdziesz w
@@ -166,6 +178,166 @@ trend_labels:
                 </p>
             </noscript>
         </div>
+
+        {{ cpn:trend }}
+            {{ unless no_results }}
+                <div
+                    id="trend"
+                    class="mb-12"
+                >
+                    <h2 class="mb-2 text-3xl font-bold tracking-tight">Trend i prognoza na 7 dni</h2>
+                    <p class="mb-6 max-w-3xl text-zinc-600">
+                        Szacunek ceny maksymalnej do <time datetime="{{ end_date }}">{{ end_date | format("j.m.Y") }}</time>.
+                        Najbliższe dni liczymy ze znanej już ceny hurtowej Orlenu, dalsze
+                        {{ if outlook }}
+                            z <a href="#analiza-rynku" class="underline hover:text-brand-600">analizy rynku</a> z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time> (ropa, kurs dolara, sytuacja geopolityczna).
+                        {{ else }}
+                            z trendu ostatnich {{ window }} notowań hurtu.
+                        {{ /if }}
+                        Zakres obejmuje 80% typowych wahań — im dalej, tym szerszy.
+                    </p>
+                    <ul class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        {{ fuels }}
+                            <li class="rounded-2xl border border-zinc-200 p-6">
+                                <p class="mb-2 text-sm font-medium text-zinc-500">{{ label }} · {{ end_date | format("j.m") }}</p>
+                                <p class="mb-1 text-3xl font-bold tracking-tight text-zinc-900">
+                                    ~{{ price }}
+                                    <span class="text-base font-medium text-zinc-500">zł/l</span>
+                                </p>
+                                <p class="mb-3 text-sm text-zinc-500 tabular-nums">zakres {{ low }}–{{ high }} zł</p>
+                                {{ if trend }}
+                                    <p class="mb-3 text-sm font-medium {{ view:trend_classes[trend] }}">
+                                        <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                        {{ view:trend_labels[trend] }} {{ change }} ({{ change_pct }}) vs obecny limit
+                                    </p>
+                                {{ /if }}
+                                <dl class="grid grid-cols-2 gap-x-4 gap-y-1 border-t border-zinc-200 pt-3 text-sm">
+                                    <dt class="text-zinc-500">Trend z danych</dt>
+                                    <dd class="text-right font-semibold {{ view:trend_classes[direction] }}">
+                                        {{ view:trend_names[direction] }}, {{ weekly }}/tydz.
+                                    </dd>
+                                    {{ if market }}
+                                        <dt class="text-zinc-500">Analiza rynku</dt>
+                                        <dd class="text-right font-semibold tabular-nums">{{ market }} w 7 dni</dd>
+                                    {{ /if }}
+                                </dl>
+                            </li>
+                        {{ /fuels }}
+                    </ul>
+
+                    {{ if outlook }}
+                        <div
+                            id="analiza-rynku"
+                            class="mb-6 rounded-2xl bg-zinc-100 p-6"
+                        >
+                            <h3 class="mb-2 text-lg font-semibold">
+                                Analiza rynku z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time>
+                            </h3>
+                            {{ if summary }}
+                                <p class="mb-2 max-w-3xl text-zinc-700">{{ summary }}</p>
+                            {{ /if }}
+                            <p class="mb-4 text-xs text-zinc-500">Analiza ma charakter informacyjny i nie jest poradą inwestycyjną.</p>
+                            {{ if factors }}
+                                <ul class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                                    {{ factors }}
+                                        <li class="rounded-xl bg-white p-4 text-sm">
+                                            <p class="mb-1 flex items-center gap-2 font-semibold text-zinc-900">
+                                                {{ name }}
+                                                <span class="ml-auto rounded-full px-2 py-0.5 text-xs font-medium {{ view:impact_classes[impact] ?? view:impact_classes.neutral }}">
+                                                    cena {{ view:impact_labels[impact] ?? 'neutralnie' }}
+                                                </span>
+                                            </p>
+                                            <p class="text-zinc-600">
+                                                {{ note }}
+                                                {{ if url }}
+                                                    <a
+                                                        href="{{ url }}"
+                                                        class="text-xs text-zinc-500 underline hover:text-brand-600"
+                                                        target="_blank"
+                                                        rel="noopener"
+                                                    >źródło</a>
+                                                {{ /if }}
+                                            </p>
+                                        </li>
+                                    {{ /factors }}
+                                </ul>
+                            {{ /if }}
+                        </div>
+                    {{ /if }}
+
+                    <details class="mb-4 rounded-2xl border border-zinc-200">
+                        <summary class="cursor-pointer px-4 py-3 text-sm font-semibold">Prognoza dzień po dniu</summary>
+                        <div class="overflow-x-auto border-t border-zinc-200">
+                            <table class="w-full min-w-xl text-left text-sm">
+                                <caption class="sr-only">Prognoza ceny maksymalnej w zł/l brutto z zakresem 80%</caption>
+                                <thead class="bg-zinc-100 text-zinc-600">
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 font-semibold"
+                                        >
+                                            Data
+                                        </th>
+                                        {{ fuels }}
+                                            <th
+                                                scope="col"
+                                                class="px-4 py-3 text-right font-semibold"
+                                            >
+                                                {{ label }}
+                                            </th>
+                                        {{ /fuels }}
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 font-semibold"
+                                        >
+                                            Podstawa
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-zinc-200">
+                                    {{ days }}
+                                        <tr>
+                                            <th
+                                                scope="row"
+                                                class="px-4 py-3 font-medium whitespace-nowrap"
+                                            >
+                                                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                                            </th>
+                                            {{ cells }}
+                                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
+                                                    ~{{ price }}
+                                                    {{ if low != high }}
+                                                        <span class="block text-xs text-zinc-500">{{ low }}–{{ high }}</span>
+                                                    {{ /if }}
+                                                </td>
+                                            {{ /cells }}
+                                            <td class="px-4 py-3 text-zinc-600">
+                                                {{ if kind == 'formula' }}cena hurtowa Orlenu{{ elseif outlook }}analiza rynku{{ else }}trend z danych{{ /if }}
+                                            </td>
+                                        </tr>
+                                    {{ /days }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <p class="text-xs text-zinc-500">
+                        To szacunek, nie zapowiedź — wiążące są wyłącznie obwieszczenia Ministra Energii.
+                        Prognoza i analiza rynku mają charakter wyłącznie informacyjny i nie stanowią porady inwestycyjnej
+                        ani rekomendacji w rozumieniu przepisów prawa. Trend z danych to nachylenie prostej
+                        dopasowanej do limitów wyliczonych z {{ window }} ostatnich notowań hurtu (od <time datetime="{{ window_start }}">{{ window_start | format("j.m") }}</time>).
+                        {{ if source_url }}
+                            Główne źródło analizy:
+                            <a
+                                href="{{ source_url }}"
+                                class="underline hover:text-brand-600"
+                                target="_blank"
+                                rel="noopener"
+                            >{{ source_name ?? 'link' }}</a>.
+                        {{ /if }}
+                    </p>
+                </div>
+            {{ /unless }}
+        {{ /cpn:trend }}
 
         <h2 class="mb-6 text-3xl font-bold tracking-tight">Statystyki programu CPN</h2>
         <ul class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
