@@ -4,7 +4,6 @@ title: Program CPN — ceny maksymalne paliw dziś
 blueprint: page
 template: templates/cpn
 schema_type: WebPage
-seo_description: 'Program CPN (Ceny Paliwa Niżej): dzisiejsze ceny maksymalne benzyny i diesla, wykres, statystyki i historia cen od 3 października. Aktualizacja codziennie.'
 content:
 - id: cpntxt01
   type: block_text
@@ -312,23 +311,46 @@ content:
   heading: Najczęstsze pytania o CPN
   background_color: gray
   faq:
+  - id: q6
+    question: Co oznacza skrót CPN?
+    answer: CPN to „Ceny Paliwa Niżej” – nazwa rządowego programu osłonowego, który obniża VAT i akcyzę na paliwa oraz wprowadza dzienne ceny maksymalne. Nie ma związku z dawną Centralą Produktów Naftowych, państwową siecią stacji z czasów PRL.
   - id: q0
     question: Do kiedy obowiązuje CPN?
     answer: Trzecia edycja programu CPN obowiązuje od 3 października do 31 grudnia 2026 r. Minister finansów zapowiedział, że decyzja o ewentualnym przedłużeniu zapadnie w grudniu.
-  - id: q1
-    question: Czy CPN obejmuje LPG?
-    answer: Nie. Obniżony VAT i ceny maksymalne dotyczą benzyny i oleju napędowego. Autogaz (LPG) i olej opałowy nie są objęte programem, a ich ceny nie mają limitu.
   - id: q2
     question: Gdzie sprawdzić dzisiejszą cenę maksymalną paliw?
-    answer: Na tej stronie — aktualizujemy ją codziennie. Oficjalne obwieszczenia Ministra Energii publikowane są na gov.pl/web/energia i w Monitorze Polskim; nowa cena obowiązuje od następnego dnia.
+    answer: Na tej stronie – aktualizujemy ją codziennie. Oficjalne obwieszczenia Ministra Energii publikowane są na gov.pl/web/energia i w Monitorze Polskim. Listę wszystkich obwieszczeń z III edycji znajdziesz w archiwum obwieszczeń (radarpaliw.pl/program-cpn/obwieszczenia).
+  - id: q7
+    question: Kiedy publikowana jest nowa cena maksymalna?
+    answer: Obwieszczenie Ministra Energii ukazuje się zwykle po południu w dniu roboczym, a nowa cena obowiązuje od następnego dnia. W piątek ogłaszany jest jeden limit na sobotę, niedzielę i poniedziałek, a w święta stosuje się cenę ogłoszoną w ostatnim dniu roboczym.
+  - id: q8
+    question: Jaka będzie cena maksymalna jutro?
+    answer: Jeśli obwieszczenie na jutro już się ukazało, pokazujemy oficjalne ceny na stronie radarpaliw.pl/program-cpn/jutro. Wcześniej publikujemy tam nieoficjalną prognozę wyliczoną z ceny hurtowej Orlenu według wzoru (hurt netto + 0,30 zł) × 1,08 – wiążące jest dopiero obwieszczenie.
+  - id: q9
+    question: Czy ceny maksymalne są brutto?
+    answer: Tak. Cena maksymalna to cena brutto za litr, którą płaci kierowca na stacji – zawiera VAT 8%, akcyzę i opłatę paliwową. Limit nie uwzględnia rabatów z aplikacji, więc po rabacie możesz zapłacić mniej.
   - id: q3
     question: Czy stacja może sprzedawać drożej niż cena maksymalna?
     answer: Nie. Cena maksymalna to obowiązkowy pułap na wszystkich stacjach, choć stacje mogą sprzedawać taniej. Kontrole prowadzi KAS, a według doniesień medialnych kara może sięgnąć 1 mln zł.
+  - id: q1
+    question: Czy CPN obejmuje LPG?
+    answer: Nie. Obniżony VAT i ceny maksymalne dotyczą benzyny 95, benzyny 98 i oleju napędowego. Autogaz (LPG) i olej opałowy nie są objęte programem, a ich ceny nie mają limitu.
   - id: q4
-    question: Dlaczego cena maksymalna rośnie, skoro CPN trwa?
-    answer: Limit jest wyliczany codziennie na podstawie cen hurtowych, więc zmienia się razem z rynkiem. Od startu trzeciej edycji cena maksymalna Pb95 wzrosła z 6,73 zł (3.10) do 7,11 zł (14.10).
+    question: Dlaczego cena maksymalna się zmienia, skoro CPN trwa?
+    answer: Limit nie jest stałą kwotą – Minister Energii wylicza go codziennie ze średniej ceny hurtowej, więc rośnie i spada razem z rynkiem ropy, kursem dolara i marżami rafinerii. O ile zmienił się od startu edycji, pokazują statystyki i wykres na tej stronie.
   - id: q5
     question: Jaki VAT i akcyza obowiązują na paliwo w CPN?
     answer: W trzeciej edycji VAT na benzynę i olej napędowy wynosi 8% zamiast 23%. Akcyza spadła z 1529 do 1239 zł/1000 l dla benzyny i z 1160 do 880 zł/1000 l dla oleju napędowego.
-seo_title: 'Program CPN: ceny maksymalne paliw dziś — Radar Paliw'
+  - id: q10
+    question: Ile z ceny paliwa to podatki?
+    answer: Akcyza wynosi w CPN 1,239 zł na litrze benzyny i 0,88 zł na litrze oleju napędowego, a opłata paliwowa według obwieszczenia Ministra Infrastruktury z 4 grudnia 2025 r. ok. 0,21 zł/l benzyny i 0,45 zł/l ON. Do tego VAT 8%, czyli ok. 7,4% ceny brutto. Przy benzynie za 6,50 zł podatki to łącznie ok. 1,93 zł, czyli ok. 30% ceny.
+  - id: q11
+    question: Ile zdrożeje paliwo po końcu CPN?
+    answer: Jeśli wróci VAT 23%, a cena hurtowa się nie zmieni, litr podrożeje o ok. 14% (cena ÷ 1,08 × 1,23). Gdyby wróciła też pełna akcyza, doszłoby jeszcze ok. 0,29 zł netto na litrze benzyny i 0,28 zł netto na litrze ON. Aktualne wyliczenie dla dzisiejszego limitu jest w sekcji „Co po końcu CPN”.
+  - id: q12
+    question: Czy Radar Paliw to strona rządowa?
+    answer: Nie. Radar Paliw to niezależny serwis, który codziennie przepisuje ceny maksymalne z obwieszczeń Ministra Energii publikowanych na gov.pl i zestawia je z wykresem, prognozą i historią. Wiążące są zawsze oficjalne obwieszczenia.
+  - id: q13
+    question: Czy mogę wykorzystać dane o cenach maksymalnych?
+    answer: Tak. Udostępniamy je w plikach CSV i JSON na licencji CC BY 4.0 – wystarczy podać źródło z linkiem do radarpaliw.pl/program-cpn. Na swojej stronie możesz też osadzić widget z dzisiejszymi cenami.
 ---

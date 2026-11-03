@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Lastmod;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Statamic\Facades\Entry;
 use Statamic\Facades\Site;
 
@@ -18,17 +20,13 @@ class CollectionSitemapController extends Controller
     {
         $base = rtrim(Site::default()->absoluteUrl(), '/');
 
-        $urls = Entry::query()
-            ->where('collection', $collection)
-            ->whereStatus('published')
-            ->get()
-            ->reject(fn ($entry) => $entry->get('noindex') || $entry->get('canonical_url') || ! $entry->url())
+        $urls = self::indexable($collection)
             ->map(function ($entry) use ($base) {
                 $url = $entry->url() === '/' ? $base.'/' : $base.$entry->url();
 
                 return [
                     'loc' => $url,
-                    'lastmod' => $entry->lastModified()->setTimezone('Europe/Warsaw')->toAtomString(),
+                    'lastmod' => Lastmod::of($entry)->toAtomString(),
                     'images' => $this->images($entry, $base),
                 ];
             });
@@ -36,6 +34,15 @@ class CollectionSitemapController extends Controller
         return response()
             ->view('sitemaps.collection-xml', ['urls' => $urls])
             ->header('Content-Type', 'text/xml; charset=UTF-8');
+    }
+
+    public static function indexable(string $collection): Collection
+    {
+        return Entry::query()
+            ->where('collection', $collection)
+            ->whereStatus('published')
+            ->get()
+            ->reject(fn ($entry) => $entry->get('noindex') || $entry->get('canonical_url') || ! $entry->url());
     }
 
     /** Featured image plus image sets from the raw Bard content, as absolute URLs. */

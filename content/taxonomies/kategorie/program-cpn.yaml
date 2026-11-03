@@ -7,12 +7,22 @@ description:
 - type: paragraph
   content:
   - type: text
-    text: 'Najświeższe ceny maksymalne, wykres i statystyki znajdziesz na stronie '
+    text: 'Aktualne '
   - type: text
-    text: Program CPN
+    text: ceny maksymalne paliw dziś
     marks:
     - type: link
       attrs:
         href: /program-cpn
   - type: text
+    text: ', wykres i statystyki znajdziesz na stronie programu, a prognozę limitu na kolejny dzień na podstronie '
+  - type: text
+    text: cena maksymalna na jutro
+    marks:
+    - type: link
+      attrs:
+        href: /program-cpn/jutro
+  - type: text
     text: . Artykuły opierają się na komunikatach Ministerstwa Energii, Dzienniku Ustaw i danych e-petrol.pl, ale wiążące są zawsze oficjalne obwieszczenia.
+seo_title: 'Artykuły o CPN: analizy, poradniki i ceny dzienne'
+seo_description: 'Artykuły o CPN (Ceny Paliwa Niżej): zasady programu, edycje, kontrole i analizy oraz dzienne ceny maksymalne Pb95, Pb98 i ON dzień po dniu.'

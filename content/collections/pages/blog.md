@@ -20,5 +20,5 @@ content:
   limit: 9
   paginate: true
   ad_every: 3
-seo_title: 'Blog o paliwach: poradniki i programy lojalnościowe'
+seo_title: 'Blog o paliwach: poradniki i programy stacji'
 ---

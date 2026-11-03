@@ -1,0 +1,181 @@
+{{ cpn:tomorrow }}
+    {{ if no_results }}
+        {{ section:seo_title }}Cena maksymalna paliw na jutro – CPN{{ /section:seo_title }}
+    {{ else }}
+        {{ section:seo_title }}Cena maksymalna paliw na jutro ({{ date | format("j.m.Y") }}) – CPN{{ /section:seo_title }}
+        {{ section:seo_description }}
+            {{ if official }}
+                Oficjalne ceny maksymalne na {{ date | format("j.m.Y") }}: Pb95 {{ price_pb95 }}, Pb98 {{ price_pb98 }}, ON {{ price_on }} zł/l. Zmiana względem dziś i link do obwieszczenia Ministra Energii.
+            {{ else }}
+                Prognoza ceny maksymalnej na {{ date | format("j.m.Y") }}: Pb95 ~{{ price_pb95 }}, Pb98 ~{{ price_pb98 }}, ON ~{{ price_on }} zł/l. Nieoficjalny szacunek – obwieszczenie zwykle po południu.
+            {{ /if }}
+        {{ /section:seo_description }}
+    {{ /if }}
+{{ /cpn:tomorrow }}
+{{ section:seo_modified }}{{ cpn:modified page="tomorrow" }}{{ /section:seo_modified }}
+{{ section:og_image_url }}{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}{{ /section:og_image_url }}
+
+{{ partial:section class="bg-zinc-100" }}
+    <div class="container">
+        {{ cpn:tomorrow }}
+            {{ if no_results }}
+                <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">Cena maksymalna paliw na jutro</h1>
+                <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+                    Nie mamy jeszcze ani obwieszczenia, ani prognozy na jutro. Aktualne limity znajdziesz na stronie
+                    <a
+                        href="/program-cpn"
+                        class="underline hover:text-brand-600"
+                    >programu CPN</a>.
+                </p>
+            {{ else }}
+                <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">
+                    {{ official ? 'Oficjalnie – obwieszczenie Ministra Energii' : 'Prognoza – nieoficjalnie' }}
+                </p>
+                <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">
+                    Cena maksymalna paliw na jutro
+                    (<time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>)
+                </h1>
+                <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+                    {{ if official }}
+                        Ministerstwo Energii opublikowało już limit na {{ weekday_acc }},
+                        <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>{{ if multi_day }} — obowiązuje do <time datetime="{{ date_end }}">{{ date_end | format("j.m.Y") }}</time>{{ /if }}.
+                        Porównanie z limitem z <time datetime="{{ today_date }}">{{ today_date | format("j.m.Y") }}</time>:
+                    {{ else }}
+                        Obwieszczenia na {{ weekday_acc }}, <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>, jeszcze nie ma.
+                        Poniżej nasza prognoza {{ kind == 'formula' ? 'ze wzoru z ceny hurtowej Orlenu' : 'z trendu ostatnich notowań hurtu' }}{{ if multi_day }} — limit będzie obowiązywał do <time datetime="{{ date_end }}">{{ date_end | format("j.m.Y") }}</time>{{ /if }}.
+                        To nieoficjalny szacunek, wiążące będzie dopiero obwieszczenie.
+                    {{ /if }}
+                </p>
+                <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    {{ fuels }}
+                        {{ partial:components/cpn/price-card
+                            :prefix="official ? '' : '~'"
+                            :range="low != high"
+                            compare="vs dziś"
+                        }}
+                    {{ /fuels }}
+                </ul>
+                <p class="mt-4 text-xs text-zinc-600">
+                    {{ if official }}
+                        Źródło:
+                        <a
+                            href="{{ source_url }}"
+                            class="underline hover:text-brand-600"
+                            target="_blank"
+                            rel="noopener"
+                        >{{ source_name ?? 'obwieszczenie Ministra Energii' }}</a>.
+                        Szczegóły dnia:
+                        <a
+                            href="/program-cpn/{{ date }}"
+                            class="underline hover:text-brand-600"
+                        >ceny maksymalne {{ date | format("j.m.Y") }}</a>.
+                    {{ elseif kind == 'formula' }}
+                        Wzór: (cena hurtowa Orlenu netto z <time datetime="{{ hurt_date }}">{{ hurt_date | format("j.m.Y") }}</time> + 0,30 zł) × 1,08.
+                        Wiążące jest wyłącznie obwieszczenie Ministra Energii.
+                    {{ else }}
+                        Prognoza z trendu ma zakres obejmujący 80% typowych wahań. Wiążące jest wyłącznie obwieszczenie Ministra Energii.
+                    {{ /if }}
+                </p>
+            {{ /if }}
+        {{ /cpn:tomorrow }}
+        {{ partial:components/cpn/subnav
+            current="/program-cpn/jutro"
+            class="mt-8"
+        }}
+    </div>
+{{ /partial:section }}
+
+{{ partial:section }}
+    <div class="container">
+        <div class="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <div>
+                <h2 class="mb-4 text-2xl font-bold tracking-tight">Kiedy poznamy cenę maksymalną na jutro?</h2>
+                <p class="mb-4 text-zinc-600">
+                    Obwieszczenie Ministra Energii ukazuje się zwykle po południu w dniu roboczym, a nowy limit obowiązuje od
+                    następnego dnia. W piątek ministerstwo ogłasza jeden limit na sobotę, niedzielę i poniedziałek, a w święta
+                    obowiązuje cena ogłoszona w ostatnim dniu roboczym.
+                </p>
+                <p class="text-zinc-600">
+                    Zanim pojawi się obwieszczenie, liczymy prognozę z ceny hurtowej Orlenu według wzoru
+                    (hurt netto + 0,30 zł) × 1,08. Gdy ministerstwo opublikuje limit, ta strona pokazuje już oficjalne ceny.
+                    Wszystkie dotychczasowe limity są w
+                    <a
+                        href="/program-cpn/obwieszczenia"
+                        class="underline hover:text-brand-600"
+                    >archiwum obwieszczeń</a>.
+                </p>
+            </div>
+            {{ partial:components/cpn/verdict class="rounded-2xl bg-zinc-100 p-6" }}
+        </div>
+
+        {{ cpn:trend }}
+            {{ unless no_results }}
+                <h2
+                    id="trend"
+                    class="mb-2 text-2xl font-bold tracking-tight"
+                >
+                    Prognoza ceny maksymalnej na 7 dni
+                </h2>
+                <p class="mb-6 max-w-3xl text-zinc-600">
+                    Najbliższe dni liczymy z ceny hurtowej Orlenu, dalsze
+                    {{ outlook ? 'z analizy rynku przygotowanej przez AI' : 'z trendu ostatnich notowań hurtu' }}.
+                    Szczegóły i wykres na stronie
+                    <a
+                        href="/program-cpn#trend"
+                        class="underline hover:text-brand-600"
+                    >programu CPN</a>.
+                </p>
+                <div class="mb-4 overflow-x-auto rounded-2xl border border-zinc-200">
+                    <table class="w-full min-w-xl text-left text-sm">
+                        <caption class="sr-only">Prognoza ceny maksymalnej w zł/l brutto z zakresem 80%</caption>
+                        <thead class="bg-zinc-100 text-zinc-600">
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-4 py-3 font-semibold"
+                                >
+                                    Data
+                                </th>
+                                {{ fuels }}
+                                    <th
+                                        scope="col"
+                                        class="px-4 py-3 text-right font-semibold"
+                                    >
+                                        {{ label }}
+                                    </th>
+                                {{ /fuels }}
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-200">
+                            {{ days }}
+                                <tr>
+                                    <th
+                                        scope="row"
+                                        class="px-4 py-3 font-medium whitespace-nowrap"
+                                    >
+                                        <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                                    </th>
+                                    {{ cells }}
+                                        <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
+                                            ~{{ price }}
+                                            {{ if low != high }}
+                                                <span class="block text-xs text-zinc-600">{{ low }}–{{ high }}</span>
+                                            {{ /if }}
+                                        </td>
+                                    {{ /cells }}
+                                </tr>
+                            {{ /days }}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mb-12 text-xs text-zinc-600">To szacunek, nie zapowiedź — ma charakter informacyjny i nie stanowi porady inwestycyjnej. Wiążące są wyłącznie obwieszczenia Ministra Energii.</p>
+            {{ /unless }}
+        {{ /cpn:trend }}
+
+        <h2 class="mb-6 text-2xl font-bold tracking-tight">Artykuły o cenach maksymalnych</h2>
+        {{ partial:components/articles/list
+            category="program-cpn"
+            per_page="3"
+        }}
+    </div>
+{{ /partial:section }}

@@ -7,7 +7,7 @@
             <ol class="flex flex-wrap items-center gap-2 text-sm text-zinc-600">
                 {{ crumbs }}
                     <li class="flex items-center gap-2">
-                        {{ if !last }}
+                        {{ if !last || breadcrumb_title }}
                             <a
                                 href="{{ url }}"
                                 class="inline-block py-2 hover:text-brand-700 hover:underline"
@@ -23,6 +23,14 @@
                         {{ /if }}
                     </li>
                 {{ /crumbs }}
+                {{ if breadcrumb_title }}
+                    <li class="flex items-center gap-2">
+                        <span
+                            aria-current="page"
+                            class="py-2"
+                        >{{ breadcrumb_title }}</span>
+                    </li>
+                {{ /if }}
             </ol>
         </nav>
         <script type="application/ld+json">
@@ -37,8 +45,16 @@
                         "position": {{ count }},
                         "name": {{ title | to_json }},
                         "item": "{{ permalink ?? url }}"
-                    }{{ !last ?= ',' }}
+                    }{{ (!last || breadcrumb_title) ?= ',' }}
                 {{ /crumbs }}
+                {{ if breadcrumb_title }}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ (crumbs | length) + 1 }},
+                        "name": {{ breadcrumb_title | to_json }},
+                        "item": "{{ current_url }}"
+                    }
+                {{ /if }}
             ]
         }
         </script>

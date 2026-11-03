@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Registered as global middleware (wraps session/CSRF and CP routes) so it sees the response after
@@ -55,9 +57,22 @@ class PublicResponseHeaders
             }
         }
 
-        $response->headers->set('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400');
         $response->headers->remove('Pragma');
         $response->headers->remove('Expires');
+
+        if (str_starts_with($path, '/og/')) {
+            return $response;
+        }
+
+        $sharedMaxAge = $path === '/program-cpn' || str_starts_with($path, '/program-cpn/') ? 600 : 3600;
+        $response->headers->set('Cache-Control', "public, max-age=300, s-maxage={$sharedMaxAge}, stale-while-revalidate=86400");
+
+        if (str_starts_with($contentType, 'text/html')
+            && ! $response instanceof StreamedResponse
+            && ! $response instanceof BinaryFileResponse) {
+            $response->setEtag(md5((string) $response->getContent()));
+            $response->isNotModified($request);
+        }
 
         return $response;
     }

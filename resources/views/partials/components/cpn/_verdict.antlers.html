@@ -1,0 +1,61 @@
+---
+headlines:
+    'wait': 'Lepiej poczekać – limit spadnie'
+    'buy': 'Lepiej zatankować dziś – limit wzrośnie'
+    'same': 'Bez różnicy – limit się nie zmienia'
+    'mixed': 'To zależy od paliwa'
+action_labels:
+    'wait': 'Poczekaj'
+    'buy': 'Tankuj dziś'
+    'same': 'Bez różnicy'
+action_classes:
+    'wait': 'bg-green-100 text-green-800'
+    'buy': 'bg-red-100 text-red-800'
+    'same': 'bg-zinc-100 text-zinc-700'
+---
+
+{{ cpn:verdict }}
+    {{ unless no_results }}
+        <div
+            id="tankowac-dzis-czy-poczekac"
+            class="{{ class }}"
+        >
+            <h2 class="mb-2 text-3xl font-bold tracking-tight">Tankować dziś czy poczekać?</h2>
+            <p class="mb-6 max-w-3xl text-zinc-600">
+                <strong class="text-zinc-900">{{ view:headlines[headline] }}.</strong>
+                Porównujemy limit z <time datetime="{{ today_date }}">{{ today_date | format("j.m.Y") }}</time>
+                z {{ official ? 'oficjalnym limitem' : 'prognozą limitu' }} na <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>.
+            </p>
+            <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {{ fuels }}
+                    <li class="rounded-2xl border border-zinc-200 bg-white p-6">
+                        <p class="mb-3 flex items-center justify-between gap-2 text-sm font-medium text-zinc-600">
+                            {{ label }}
+                            <span class="rounded-full px-3 py-1 text-xs font-semibold {{ view:action_classes[action] }}">{{ view:action_labels[action] }}</span>
+                        </p>
+                        <p class="mb-1 tabular-nums">
+                            {{ today_price }} zł →
+                            <strong>{{ official ? '' : '~' }}{{ next_price }} zł</strong>
+                        </p>
+                        {{ if action != 'same' }}
+                            <p class="text-sm text-zinc-600">{{ diff }}/l · bak 50 l {{ action == 'wait' ? 'taniej' : 'drożej' }} o {{ tank_50 }} zł</p>
+                        {{ /if }}
+                        {{ if week_price }}
+                            <p class="mt-3 border-t border-zinc-200 pt-3 text-xs text-zinc-600">
+                                Prognoza na {{ week_date | format("j.m") }}: ~{{ week_price }} zł ({{ change }} vs dziś)
+                            </p>
+                        {{ /if }}
+                    </li>
+                {{ /fuels }}
+            </ul>
+            <p class="mt-4 max-w-3xl text-xs text-zinc-600">
+                {{ if official }}
+                    Limit na {{ date | format("j.m") }} pochodzi z obwieszczenia Ministra Energii.
+                {{ else }}
+                    Limit na {{ date | format("j.m") }} to nieoficjalna prognoza Radaru Paliw ({{ kind == 'formula' ? 'wzór z ceny hurtowej Orlenu' : 'trend z danych' }}) — wiążące jest dopiero obwieszczenie Ministra Energii.
+                {{ /if }}
+                Cena maksymalna to górny pułap: stacje mogą sprzedawać taniej, a różnicę często zmieniają promocje w aplikacjach. To informacja, nie porada zakupowa.
+            </p>
+        </div>
+    {{ /unless }}
+{{ /cpn:verdict }}

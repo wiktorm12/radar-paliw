@@ -26,7 +26,7 @@ content:
   - type: paragraph
     content:
     - type: text
-      text: 'Administratorem danych osobowych jest witryna radarpaliw.pl (dalej: „Administrator”). Kontakt w sprawach danych osobowych: kontakt@radarpaliw.pl.'
+      text: 'Administratorem danych osobowych jest wydawca serwisu internetowego Radar Paliw (radarpaliw.pl) (dalej: „Administrator”). Kontakt w sprawach danych osobowych: kontakt@radarpaliw.pl.'
   - type: heading
     attrs:
       level: 2

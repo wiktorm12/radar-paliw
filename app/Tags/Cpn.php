@@ -2,6 +2,7 @@
 
 namespace App\Tags;
 
+use App\Cpn\CpnData;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Statamic\Facades\Entry;
@@ -21,6 +22,14 @@ class Cpn extends Tags
 
     /** Mnożnik VAT 8% obowiązujący w programie CPN. */
     public const VAT = 1.08;
+
+    /** Mnożnik standardowego VAT 23% (stawka sprzed programu). */
+    public const VAT_FULL = 1.23;
+
+    public const WEEKDAY_ACCUSATIVE = [1 => 'poniedziałek', 'wtorek', 'środę', 'czwartek', 'piątek', 'sobotę', 'niedzielę'];
+
+    /** Obniżka akcyzy w III edycji w zł/l: benzyny 1529 → 1239, ON 1160 → 880 zł/1000 l. */
+    public const EXCISE_RETURN = ['pb95' => 0.29, 'pb98' => 0.29, 'on' => 0.28];
 
     /** Ile dni naprzód (od ostatniego oficjalnego limitu) sięga projekcja trendu. */
     public const PROJECTION_DAYS = 7;
@@ -65,6 +74,7 @@ class Cpn extends Tags
             'date' => $dates[0],
             'date_end' => end($dates),
             'hurt_date' => $hurt['date'],
+            ...$this->flatPrices(collect(['pb95', 'pb98', 'on'])->mapWithKeys(fn ($fuel) => [$fuel => $hurt[$fuel] === null ? null : $this->predict($hurt[$fuel])])->all()),
             'source_url' => $hurt['source_url'],
             'source_name' => $hurt['source_name'],
             'fuels' => collect(['pb95', 'pb98', 'on'])
@@ -145,6 +155,7 @@ class Cpn extends Tags
             'date' => $current['date'],
             'source_url' => $current['source_url'],
             'source_name' => $current['source_name'],
+            ...$this->flatPrices($current),
             'fuels' => $this->fuelsIn($rows)->map(fn ($label, $fuel) => [
                 'key' => $fuel,
                 'label' => $label,
@@ -199,6 +210,7 @@ class Cpn extends Tags
 
             return [
                 'date' => $row['date'],
+                'day_url' => $this->params->get('type', 'max') === 'max' ? '/program-cpn/'.$row['date'] : null,
                 'source_url' => $row['source_url'],
                 'source_name' => $row['source_name'],
                 'cells' => $fuels->map(fn ($fuel) => [
@@ -234,7 +246,7 @@ class Cpn extends Tags
                 'dates' => array_column($projection['days'], 'date'),
                 'kinds' => array_column($projection['days'], 'kind'),
                 'method' => $projection['outlook'] ? 'market' : 'trend',
-                'series' => collect($projection['fuels'])->map(fn ($fuel, $key) => [
+                'series' => collect($projection['fuels'])->only($this->fuelsIn($rows)->keys()->all())->map(fn ($fuel, $key) => [
                     'key' => $key,
                     'values' => array_map(fn ($day) => $day['values'][$key]['price'], $projection['days']),
                     'low' => array_map(fn ($day) => $day['values'][$key]['low'], $projection['days']),
@@ -290,6 +302,431 @@ class Cpn extends Tags
                     ...$this->delta($max[$fuel], $before[$fuel]),
                 ])->values()->all(),
         ];
+    }
+
+    /** ISO 8601 ostatniej zmiany danych strony CPN (section:seo_modified, Dataset dateModified). */
+    public function modified()
+    {
+        return CpnData::modified($this->params->get('page', 'hub'), $this->params->get('date'));
+    }
+
+    /** Data ostatniego opublikowanego limitu (Y-m-d) — wersja obrazu OG. */
+    public function latestDate()
+    {
+        return $this->rows('max')->last()['date'] ?? '';
+    }
+
+    /** „Tankować dziś czy poczekać?”: dzisiejszy limit vs limit na kolejny dzień (oficjalny albo prognoza). */
+    public function verdict()
+    {
+        $max = $this->rows('max');
+        $today = CpnData::current($max);
+        $next = $today ? $this->nextLimit(Carbon::parse($today['date'])->addDay()->toDateString(), $max) : null;
+
+        if (! $next) {
+            return $this->parseNoResults();
+        }
+
+        $projection = $this->projection();
+        $week = $projection ? end($projection['days']) : null;
+
+        $fuels = collect(['pb95', 'pb98', 'on'])
+            ->filter(fn ($fuel) => $today[$fuel] !== null && isset($next['values'][$fuel]))
+            ->map(function ($fuel) use ($today, $next, $week) {
+                $diff = round($next['values'][$fuel]['price'] - $today[$fuel], 2);
+                $weekPrice = $week['values'][$fuel]['price'] ?? null;
+
+                return [
+                    'key' => $fuel,
+                    'label' => self::FUELS[$fuel],
+                    'today_price' => $this->money($today[$fuel]),
+                    'next_price' => $this->money($next['values'][$fuel]['price']),
+                    'action' => $diff < 0 ? 'wait' : ($diff > 0 ? 'buy' : 'same'),
+                    'diff' => $this->signedGrosze($diff),
+                    'tank_50' => $this->money(abs($diff) * 50),
+                    'week_date' => $week['date'] ?? null,
+                    'week_price' => $this->money($weekPrice),
+                    ...$this->delta($weekPrice, $today[$fuel]),
+                ];
+            })->values();
+
+        if ($fuels->isEmpty()) {
+            return $this->parseNoResults();
+        }
+
+        $actions = $fuels->pluck('action')->unique();
+
+        return [
+            'today_date' => $today['date'],
+            'date' => $next['date'],
+            'kind' => $next['kind'],
+            'official' => $next['kind'] === 'official',
+            'headline' => $actions->count() === 1 ? $actions->first() : 'mixed',
+            'fuels' => $fuels->all(),
+        ];
+    }
+
+    /** O ile podrożałby dzisiejszy limit przy VAT 23% (i opcjonalnie pełnej akcyzie) przy niezmienionym hurcie. */
+    public function vat()
+    {
+        $today = CpnData::current($this->rows('max'));
+
+        if (! $today) {
+            return $this->parseNoResults();
+        }
+
+        $fuels = collect(['pb95', 'pb98', 'on'])
+            ->filter(fn ($fuel) => $today[$fuel] !== null)
+            ->map(function ($fuel) use ($today) {
+                $net = $today[$fuel] / self::VAT;
+                $vat23 = round($net * self::VAT_FULL, 2);
+                $full = round(($net + self::EXCISE_RETURN[$fuel]) * self::VAT_FULL, 2);
+
+                return [
+                    'key' => $fuel,
+                    'label' => self::FUELS[$fuel],
+                    'price' => $this->money($today[$fuel]),
+                    'price_raw' => $today[$fuel],
+                    'vat23' => $this->money($vat23),
+                    'vat23_raw' => $vat23,
+                    'vat23_diff' => $this->signedGrosze($vat23 - $today[$fuel]),
+                    'vat23_tank_50' => $this->money(($vat23 - $today[$fuel]) * 50),
+                    'full' => $this->money($full),
+                    'full_diff' => $this->signedGrosze($full - $today[$fuel]),
+                    'full_tank_50' => $this->money(($full - $today[$fuel]) * 50),
+                    'excise' => $this->money(self::EXCISE_RETURN[$fuel]),
+                    'cost_50' => $this->money($today[$fuel] * 50),
+                    'cost_50_vat23' => $this->money($vat23 * 50),
+                ];
+            })->values();
+
+        return [
+            'date' => $today['date'],
+            'fuels' => $fuels->all(),
+            'prices_json' => json_encode($fuels->mapWithKeys(fn ($fuel) => [$fuel['key'] => [
+                'label' => $fuel['label'],
+                'price' => $fuel['price_raw'],
+                'vat23' => $fuel['vat23_raw'],
+            ]])->all(), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP),
+        ];
+    }
+
+    /** Limit na jutro: oficjalny (gdy obwieszczenie już jest) albo prognoza (wzór z hurtu / trend). */
+    public function tomorrow()
+    {
+        $max = $this->rows('max');
+        $today = CpnData::current($max);
+        $next = $this->nextLimit(CpnData::tomorrow(), $max);
+
+        if (! $next) {
+            return $this->parseNoResults();
+        }
+
+        return [
+            'date' => $next['date'],
+            'date_end' => $next['date_end'],
+            'multi_day' => $next['date_end'] !== $next['date'],
+            'weekday' => $this->weekday($next['date']),
+            'weekday_acc' => self::WEEKDAY_ACCUSATIVE[Carbon::parse($next['date'])->dayOfWeekIso],
+            'kind' => $next['kind'],
+            'official' => $next['kind'] === 'official',
+            'source_url' => $next['source_url'],
+            'source_name' => $next['source_name'],
+            'hurt_date' => $next['hurt_date'],
+            'today_date' => $today['date'] ?? null,
+            ...$this->flatPrices(array_map(fn ($value) => $value['price'], $next['values'])),
+            'fuels' => collect($next['values'])->map(fn ($value, $fuel) => [
+                'key' => $fuel,
+                'label' => self::FUELS[$fuel],
+                'price' => $this->money($value['price']),
+                'low' => $this->money($value['low']),
+                'high' => $this->money($value['high']),
+                'today_price' => $this->money($today[$fuel] ?? null),
+                ...$this->delta($value['price'], $today[$fuel] ?? null),
+            ])->values()->all(),
+        ];
+    }
+
+    /** Strona dnia /program-cpn/{data}: ceny, zmiany, obwieszczenie, opis z danych i artykuły. */
+    public function day()
+    {
+        $max = $this->rows('max');
+        $date = (string) $this->params->get('date');
+        $index = $max->search(fn ($row) => $row['date'] === $date);
+
+        if ($index === false) {
+            return $this->parseNoResults();
+        }
+
+        $row = $max[$index];
+        $previous = $index > 0 ? $max[$index - 1] : null;
+        $next = $max[$index + 1] ?? null;
+        $start = $max->first();
+        $dates = CpnData::noticeDates($row, $max);
+        $earlier = $max->slice(0, $index)->values();
+
+        return [
+            'date' => $row['date'],
+            'weekday' => $this->weekday($row['date']),
+            'weekday_acc' => self::WEEKDAY_ACCUSATIVE[Carbon::parse($row['date'])->dayOfWeekIso],
+            'weekday_in' => (Carbon::parse($row['date'])->isTuesday() ? 'we ' : 'w ').self::WEEKDAY_ACCUSATIVE[Carbon::parse($row['date'])->dayOfWeekIso],
+            'source_url' => $row['source_url'],
+            'source_name' => $row['source_name'],
+            'notice_start' => $dates[0],
+            'notice_end' => end($dates),
+            'multi_day' => count($dates) > 1,
+            'previous_date' => $previous['date'] ?? null,
+            'next_date' => $next['date'] ?? null,
+            'start_date' => $start['date'],
+            'is_start' => $index === 0,
+            ...$this->flatPrices($row),
+            'fuels' => collect(['pb95', 'pb98', 'on'])
+                ->filter(fn ($fuel) => $row[$fuel] !== null)
+                ->map(fn ($fuel) => [
+                    'key' => $fuel,
+                    'label' => self::FUELS[$fuel],
+                    'price' => $this->money($row[$fuel]),
+                    'start_price' => $this->money($start[$fuel]),
+                    ...$this->delta($row[$fuel], $previous[$fuel] ?? null),
+                    ...collect($this->delta($row[$fuel], $index > 0 ? $start[$fuel] : null))
+                        ->mapWithKeys(fn ($value, $key) => ["start_{$key}" => $value])->all(),
+                    'summary' => $this->daySummary($fuel, $row, $previous, $earlier),
+                ])->values()->all(),
+            'articles' => $this->articlesAround($row['date']),
+        ];
+    }
+
+    /** Dane strony paliwa /program-cpn/{benzyna-95|benzyna-98|olej-napedowy}. */
+    public function fuel()
+    {
+        $page = CpnData::FUEL_PAGES[$this->params->get('slug')] ?? null;
+        $max = $this->rows('max');
+        $today = CpnData::current($max);
+
+        if (! $page || ! $today || $today[$page['key']] === null) {
+            return $this->parseNoResults();
+        }
+
+        $fuel = $page['key'];
+        $index = $max->search(fn ($row) => $row['date'] === $today['date']);
+        $previous = $index > 0 ? $max[$index - 1] : null;
+        $next = $this->nextLimit(Carbon::parse($today['date'])->addDay()->toDateString(), $max);
+        $points = $max->filter(fn ($row) => $row[$fuel] !== null);
+        $min = $points->sortBy($fuel)->first();
+        $top = $points->sortByDesc($fuel)->first();
+
+        return [
+            ...$page,
+            'slug' => $this->params->get('slug'),
+            'date' => $today['date'],
+            'price' => $this->money($today[$fuel]),
+            'source_url' => $today['source_url'],
+            'source_name' => $today['source_name'],
+            ...$this->delta($today[$fuel], $previous[$fuel] ?? null),
+            'next_date' => $next['date'] ?? null,
+            'next_kind' => $next['kind'] ?? null,
+            'next_official' => ($next['kind'] ?? null) === 'official',
+            'next_price' => isset($next['values'][$fuel]) ? $this->money($next['values'][$fuel]['price']) : null,
+            ...collect($this->delta($next['values'][$fuel]['price'] ?? null, $today[$fuel]))
+                ->mapWithKeys(fn ($value, $key) => ["next_{$key}" => $value])->all(),
+            'others' => collect(CpnData::FUEL_PAGES)->except($this->params->get('slug'))
+                ->map(fn ($other, $slug) => ['url' => "/program-cpn/{$slug}", 'label' => $other['label']])
+                ->values()->all(),
+            'faq' => $this->fuelFaq($page, $today, $points, $min, $top),
+        ];
+    }
+
+    /** Archiwum obwieszczeń: wpisy max pogrupowane po źródle (jedno obwieszczenie może obejmować kilka dni). */
+    public function notices()
+    {
+        $notices = CpnData::notices($this->rows('max'));
+
+        if ($notices->isEmpty()) {
+            return $this->parseNoResults();
+        }
+
+        return [
+            'count' => $notices->count(),
+            'days' => $notices->sum(fn ($notice) => count($notice['dates'])),
+            'start_date' => $notices->last()['date'],
+            'end_date' => $notices->first()['date_end'],
+            'notices' => $notices->map(fn ($notice) => [
+                'date' => $notice['date'],
+                'date_end' => $notice['date_end'],
+                'multi_day' => $notice['date_end'] !== $notice['date'],
+                'source_url' => $notice['source_url'],
+                'source_name' => $notice['source_name'],
+                'official' => $notice['source_name'] === 'Ministerstwo Energii',
+                'day_links' => collect($notice['dates'])->map(fn ($date) => [
+                    'date' => $date,
+                    'url' => "/program-cpn/{$date}",
+                ])->all(),
+                ...$this->flatPrices($notice),
+            ])->all(),
+        ];
+    }
+
+    /**
+     * Limit na dany dzień: oficjalny wpis max, a bez niego dzień z projekcji
+     * (wzór z hurtu albo trend). Null, gdy nie ma ani jednego, ani drugiego.
+     */
+    private function nextLimit(string $date, Collection $max): ?array
+    {
+        if ($row = CpnData::find($date, $max)) {
+            $dates = CpnData::noticeDates($row, $max);
+
+            return [
+                'date' => $date,
+                'date_end' => end($dates),
+                'kind' => 'official',
+                'source_url' => $row['source_url'],
+                'source_name' => $row['source_name'],
+                'hurt_date' => null,
+                'values' => collect(['pb95', 'pb98', 'on'])
+                    ->filter(fn ($fuel) => $row[$fuel] !== null)
+                    ->mapWithKeys(fn ($fuel) => [$fuel => ['price' => $row[$fuel], 'low' => $row[$fuel], 'high' => $row[$fuel]]])
+                    ->all(),
+            ];
+        }
+
+        $days = collect($this->projection()['days'] ?? []);
+        $day = $days->firstWhere('date', $date);
+
+        if (! $day) {
+            return null;
+        }
+
+        $end = $date;
+
+        if ($day['kind'] === 'formula') {
+            $end = $days->where('kind', 'formula')->where('date', '>=', $date)->last()['date'];
+        }
+
+        return [
+            'date' => $date,
+            'date_end' => $end,
+            'kind' => $day['kind'],
+            'source_url' => null,
+            'source_name' => null,
+            'hurt_date' => $day['kind'] === 'formula' ? $this->hurtDateFor($date) : null,
+            'values' => $day['values'],
+        ];
+    }
+
+    private function daySummary(string $fuel, array $row, ?array $previous, Collection $earlier): string
+    {
+        $price = $row[$fuel];
+        $label = self::FUELS[$fuel];
+        $text = "{$label}: {$this->money($price)} zł/l";
+
+        if (! $previous || $previous[$fuel] === null) {
+            return "{$text} – pierwszy limit w danych tej edycji programu.";
+        }
+
+        $diff = round($price - $previous[$fuel], 2);
+        $text .= match (true) {
+            $diff < 0 => ', o '.$this->grosze($diff).' mniej niż w poprzednim dniu',
+            $diff > 0 => ', o '.$this->grosze($diff).' więcej niż w poprzednim dniu',
+            default => ', bez zmian względem poprzedniego dnia',
+        };
+
+        $values = $earlier->filter(fn ($item) => $item[$fuel] !== null);
+
+        if ($diff < 0 && $values->every(fn ($item) => $item[$fuel] > $price)) {
+            return "{$text} – najniższy limit od startu edycji.";
+        }
+
+        if ($diff > 0 && $values->every(fn ($item) => $item[$fuel] < $price)) {
+            return "{$text} – najwyższy limit od startu edycji.";
+        }
+
+        if ($diff !== 0.0) {
+            $since = $values->filter(fn ($item) => $diff < 0 ? $item[$fuel] <= $price : $item[$fuel] >= $price)->last();
+
+            if ($since && $values->count() - $values->search($since) > 2) {
+                return $text.' – '.($diff < 0 ? 'najniższy' : 'najwyższy').' od '.Carbon::parse($since['date'])->format('j.m').'.';
+            }
+        }
+
+        return "{$text}.";
+    }
+
+    private function articlesAround(string $date): array
+    {
+        $from = Carbon::parse($date)->subDay()->toDateString();
+
+        return Entry::query()
+            ->where('collection', 'articles')
+            ->whereStatus('published')
+            ->whereTaxonomy('kategorie::program-cpn')
+            ->orderBy('date', 'desc')
+            ->get()
+            ->filter(fn ($entry) => $entry->date()->toDateString() >= $from && $entry->date()->toDateString() <= $date)
+            ->map(fn ($entry) => [
+                'title' => $entry->get('title'),
+                'url' => $entry->url(),
+                'date' => $entry->date()->toDateString(),
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function fuelFaq(array $page, array $today, Collection $points, array $min, array $top): array
+    {
+        $fuel = $page['key'];
+        $genitive = $page['genitive'];
+        $date = Carbon::parse($today['date'])->format('j.m.Y');
+        $start = Carbon::parse($points->first()['date'])->format('j.m.Y');
+        $excise = $fuel === 'on' ? '880 zł za 1000 l oleju napędowego' : '1239 zł za 1000 l benzyny';
+
+        $faq = [
+            [
+                'question' => "Ile wynosi dziś cena maksymalna {$genitive}?",
+                'answer' => "Cena maksymalna {$genitive} na {$date} wynosi {$this->money($today[$fuel])} zł za litr brutto, według obwieszczenia Ministra Energii. Stacja nie może sprzedawać drożej, ale może taniej.",
+            ],
+            [
+                'question' => "Jak obliczana jest cena maksymalna {$genitive}?",
+                'answer' => "Limit to średnia hurtowa cena netto plus 0,30 zł na koszty stacji, pomnożone przez 1,08 (VAT 8%). Cena hurtowa zawiera już akcyzę i opłatę paliwową; w III edycji CPN akcyza wynosi {$excise}. Dlatego limit zmienia się razem z hurtem.",
+            ],
+            [
+                'question' => "Jaka była najniższa i najwyższa cena maksymalna {$genitive} w CPN?",
+                'answer' => "Od {$start} najniższy limit wyniósł {$this->money($min[$fuel])} zł/l (".Carbon::parse($min['date'])->format('j.m.Y')."), a najwyższy {$this->money($top[$fuel])} zł/l (".Carbon::parse($top['date'])->format('j.m.Y')."). Średnia z {$points->count()} dni to {$this->money($points->avg($fuel))} zł/l.",
+            ],
+        ];
+
+        $faq[] = match ($fuel) {
+            'on' => [
+                'question' => 'Czy cena maksymalna oleju napędowego dotyczy też oleju zimowego?',
+                'answer' => 'Tak. Limit dla oleju napędowego jest ogłaszany niezależnie od klasy sezonowej paliwa i obowiązuje w ramach III edycji CPN do 31 grudnia 2026 r.',
+            ],
+            'pb98' => [
+                'question' => 'Czy benzyna 98 jest objęta ceną maksymalną?',
+                'answer' => 'Tak. Program CPN wyznacza osobne ceny maksymalne dla benzyny 95, benzyny 98 i oleju napędowego. Limitem nie jest objęty autogaz (LPG).',
+            ],
+            default => [
+                'question' => 'Czy stacja może sprzedawać benzynę 95 taniej niż cena maksymalna?',
+                'answer' => 'Tak. Cena maksymalna to tylko górny pułap. Stacje mogą sprzedawać taniej, a dodatkowe rabaty dają promocje w aplikacjach sieci stacji.',
+            ],
+        };
+
+        return $faq;
+    }
+
+    private function flatPrices(array $prices): array
+    {
+        return collect(['pb95', 'pb98', 'on'])
+            ->mapWithKeys(fn ($fuel) => ["price_{$fuel}" => $this->money($prices[$fuel] ?? null)])
+            ->all();
+    }
+
+    private function weekday(string $date): string
+    {
+        return Carbon::parse($date)->locale('pl')->isoFormat('dddd');
+    }
+
+    private function grosze(float $value): string
+    {
+        return number_format(abs($value) * 100, 0, ',', ' ').' gr';
     }
 
     private function predict(float $hurt): float
@@ -515,26 +952,15 @@ class Cpn extends Tags
 
     private function rows(string $type): Collection
     {
-        return Entry::query()
-            ->where('collection', 'cpn_prices')
-            ->where('type', $type)
-            ->orderBy('date', 'asc')
-            ->get()
-            ->map(fn ($entry) => [
-                'date' => $entry->date()->toDateString(),
-                'pb95' => $this->float($entry->get('pb95')),
-                'pb98' => $this->float($entry->get('pb98')),
-                'on' => $this->float($entry->get('on')),
-                'lpg' => $this->float($entry->get('lpg')),
-                'source_name' => $entry->get('source_name'),
-                'source_url' => $entry->get('source_url'),
-            ])
-            ->values();
+        return CpnData::rows($type);
     }
 
     private function fuelsIn(Collection $rows): Collection
     {
-        return collect(self::FUELS)->filter(fn ($label, $fuel) => $rows->contains(fn ($row) => $row[$fuel] !== null));
+        $only = $this->params->get('fuel');
+
+        return collect(self::FUELS)
+            ->filter(fn ($label, $fuel) => (! $only || $fuel === $only) && $rows->contains(fn ($row) => $row[$fuel] !== null));
     }
 
     private function delta(?float $current, ?float $reference): array

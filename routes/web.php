@@ -1,24 +1,42 @@
 <?php
 
 use App\Http\Controllers\CollectionSitemapController;
+use App\Http\Controllers\CpnController;
+use App\Http\Controllers\NewsSitemapController;
+use App\Http\Controllers\OgImageController;
+use App\Http\Controllers\SitemapIndexController;
+use App\Http\Controllers\TaxonomySitemapController;
 use Illuminate\Support\Facades\Route;
 use Statamic\Facades\GlobalSet;
 
-Route::statamic('sitemap.xml', 'sitemaps/index', ['layout' => null, 'content_type' => 'xml']);
+Route::get('sitemap.xml', SitemapIndexController::class);
+
+Route::get('sitemap-news.xml', NewsSitemapController::class);
 
 Route::get('sitemap-{collection}.xml', CollectionSitemapController::class)
     ->whereIn('collection', ['pages', 'promotions', 'stations', 'articles', 'authors']);
 
-foreach (['paliwa', 'kategorie'] as $taxonomy) {
-    Route::statamic("sitemap-{$taxonomy}.xml", 'sitemaps/taxonomy', [
-        'layout' => null,
-        'content_type' => 'xml',
-        'sitemap_taxonomy' => $taxonomy,
-    ]);
-}
+Route::get('sitemap-{taxonomy}.xml', TaxonomySitemapController::class)
+    ->whereIn('taxonomy', ['paliwa', 'kategorie']);
 
 Route::statamic('blog/feed.xml', 'feeds/articles', ['layout' => null, 'content_type' => 'rss']);
 Route::statamic('promocje/feed.xml', 'feeds/promotions', ['layout' => null, 'content_type' => 'rss']);
+
+Route::get('og/program-cpn.png', [OgImageController::class, 'programCpn']);
+
+Route::get('sitemap-cpn.xml', [CpnController::class, 'sitemap']);
+Route::get('program-cpn/dane.csv', [CpnController::class, 'csv']);
+Route::get('program-cpn/dane.json', [CpnController::class, 'json']);
+Route::get('program-cpn/widget', [CpnController::class, 'widget']);
+Route::get('program-cpn/jutro', [CpnController::class, 'tomorrow']);
+Route::get('program-cpn/obwieszczenia', [CpnController::class, 'notices']);
+Route::get('program-cpn/{fuel}', [CpnController::class, 'fuel'])
+    ->whereIn('fuel', ['benzyna-95', 'benzyna-98', 'olej-napedowy']);
+Route::get('program-cpn/{date}', [CpnController::class, 'day'])
+    ->where('date', '20\d{2}-\d{2}-\d{2}');
+
+Route::permanentRedirect('blog/cpn-3-tabela-dzien-po-dniu-3-14-pazdziernika', '/program-cpn/obwieszczenia');
+Route::permanentRedirect('blog/cpn-3-tabela-cen-maksymalnych-3-19-pazdziernika-2026', '/program-cpn/obwieszczenia');
 
 Route::permanentRedirect('promotions/paliwa/{slug}', '/paliwa/{slug}');
 Route::permanentRedirect('articles/kategorie/{slug}', '/kategorie/{slug}');

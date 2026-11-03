@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * 301-redirects duplicate URL variants (trailing slash, double slashes, invalid ?page=)
- * to their canonical form.
+ * 301-redirects duplicate URL variants (trailing slash, double slashes, upper-case paths,
+ * invalid ?page=) to their canonical form.
  */
 class NormalizeUrl
 {
@@ -33,6 +33,10 @@ class NormalizeUrl
             $normalized = '/';
         }
 
+        if (! $this->isStaticAssetPath($normalized)) {
+            $normalized = preg_replace_callback('/%[0-9A-Fa-f]{2}(*SKIP)(*FAIL)|[A-Z]+/', fn ($m) => strtolower($m[0]), $normalized);
+        }
+
         $query = $request->server->get('QUERY_STRING', '');
         $changed = $normalized !== $path;
 
@@ -54,5 +58,16 @@ class NormalizeUrl
         $target = $request->getSchemeAndHttpHost().$normalized.($query !== '' ? '?'.$query : '');
 
         return redirect($target, 301);
+    }
+
+    private function isStaticAssetPath(string $path): bool
+    {
+        foreach (['/img/', '/build/', '/og/', '/vendor/', '/storage/'] as $prefix) {
+            if (str_starts_with($path.'/', $prefix)) {
+                return true;
+            }
+        }
+
+        return (bool) preg_match('/\.[A-Za-z0-9]{1,5}$/', basename($path));
     }
 }

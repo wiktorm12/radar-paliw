@@ -1,0 +1,188 @@
+{{ section:seo_title }}Obwieszczenia o cenie maksymalnej paliw – archiwum CPN{{ /section:seo_title }}
+{{ section:seo_description }}
+    Obwieszczenia Ministra Energii w sprawie maksymalnej ceny paliw w III edycji CPN: daty obowiązywania, limity Pb95, Pb98 i ON oraz linki do gov.pl.
+{{ /section:seo_description }}
+{{ section:seo_modified }}{{ cpn:modified page="notices" }}{{ /section:seo_modified }}
+{{ section:og_image_url }}{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}{{ /section:og_image_url }}
+
+{{ cpn:notices }}
+    {{ push:schema }}
+        ,{
+            "@type": "ItemList",
+            "@id": "{{ current_url }}#itemlist",
+            "name": "Obwieszczenia o maksymalnej cenie paliw – III edycja CPN",
+            "numberOfItems": {{ count }},
+            "itemListOrder": "https://schema.org/ItemListOrderDescending",
+            "itemListElement": [
+                {{ notices }}
+                    {
+                        "@type": "ListItem",
+                        "position": {{ index + 1 }},
+                        "url": "{{ site:permalink }}/program-cpn/{{ date }}",
+                        "name": {{ ('Ceny maksymalne paliw od ' + (date | format('j.m.Y'))) | to_json }}
+                    }{{ !last ?= ',' }}
+                {{ /notices }}
+            ]
+        }
+    {{ /push:schema }}
+
+    {{ partial:section class="bg-zinc-100" }}
+        <div class="container">
+            <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">Program CPN · archiwum</p>
+            <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">Obwieszczenia Ministra Energii o cenach maksymalnych paliw</h1>
+            <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+                {{ count }} obwieszczeń i komunikatów z III edycji programu CPN, obejmujących {{ days }} dni — od
+                <time datetime="{{ start_date }}">{{ start_date | format("j.m.Y") }}</time> do
+                <time datetime="{{ end_date }}">{{ end_date | format("j.m.Y") }}</time>.
+                Jedno obwieszczenie może ustalać limit na kilka dni, np. na sobotę–poniedziałek.
+            </p>
+            {{ partial:components/cpn/subnav
+                current="/program-cpn/obwieszczenia"
+            }}
+        </div>
+    {{ /partial:section }}
+
+    {{ partial:section }}
+        <div class="container">
+            <h2 class="mb-2 text-3xl font-bold tracking-tight">III edycja CPN (od 3.10.2026)</h2>
+            <p class="mb-6 max-w-3xl text-zinc-600">
+                Ceny w zł/l brutto. Kliknij datę, aby zobaczyć zmiany z danego dnia. W pierwszych dniach programu limity
+                przepisywaliśmy z serwisów informacyjnych cytujących komunikat ministerstwa — źródło podajemy przy każdym wpisie.
+            </p>
+            <div class="mb-4 overflow-x-auto rounded-2xl border border-zinc-200">
+                <table class="w-full min-w-2xl text-left text-sm">
+                    <caption class="sr-only">Obwieszczenia o maksymalnej cenie paliw w III edycji CPN, od najnowszych</caption>
+                    <thead class="bg-zinc-100 text-zinc-600">
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 font-semibold"
+                            >
+                                Obowiązuje
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Benzyna 95
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Benzyna 98
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Olej napędowy
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 font-semibold"
+                            >
+                                Źródło
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-200">
+                        {{ notices }}
+                            <tr>
+                                <th
+                                    scope="row"
+                                    class="px-4 py-3 font-medium"
+                                >
+                                    {{ day_links }}
+                                        <a
+                                            href="{{ url }}"
+                                            class="text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:text-brand-700"
+                                        ><time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time></a>{{ !last ?= ',' }}
+                                    {{ /day_links }}
+                                </th>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ price_pb95 ?? '—' }}</td>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ price_pb98 ?? '—' }}</td>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ price_on ?? '—' }}</td>
+                                <td class="px-4 py-3">
+                                    {{ if source_url }}
+                                        <a
+                                            href="{{ source_url }}"
+                                            class="text-brand-700 hover:underline"
+                                            target="_blank"
+                                            rel="noopener"
+                                        >{{ official ? 'Obwieszczenie (gov.pl)' : source_name }}</a>
+                                    {{ /if }}
+                                </td>
+                            </tr>
+                        {{ /notices }}
+                    </tbody>
+                </table>
+            </div>
+            <p class="mb-12 text-xs text-zinc-600">
+                Obwieszczenia publikuje Minister Energii na
+                <a
+                    href="https://www.gov.pl/web/energia"
+                    class="underline hover:text-brand-600"
+                    target="_blank"
+                    rel="noopener"
+                >gov.pl/web/energia</a>
+                i w Monitorze Polskim. Wiążąca jest zawsze treść obwieszczenia. Dane możesz pobrać w
+                <a
+                    href="/program-cpn/dane.csv"
+                    class="underline hover:text-brand-600"
+                >CSV</a>
+                lub
+                <a
+                    href="/program-cpn/dane.json"
+                    class="underline hover:text-brand-600"
+                >JSON</a>.
+            </p>
+
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <div>
+                    <h2 class="mb-4 text-2xl font-bold tracking-tight">Edycje I i II</h2>
+                    <p class="mb-4 text-zinc-600">
+                        Archiwum dziennych limitów obejmuje tylko III edycję. Wcześniejsze edycje znamy z podsumowań:
+                    </p>
+                    <ul class="flex list-disc flex-col gap-2 pl-5 text-zinc-700">
+                        <li>
+                            <strong>I edycja: 31 marca – 30 czerwca 2026.</strong>
+                            Pierwsze limity ogłoszono 30 marca w Monitorze Polskim: Pb95 6,16 zł, Pb98 6,76 zł, ON 7,60 zł.
+                        </li>
+                        <li>
+                            <strong>II edycja: 17–31 sierpnia 2026.</strong>
+                            VAT 8% i ceny maksymalne, bez obniżki akcyzy.
+                        </li>
+                    </ul>
+                    <p class="mt-4 text-sm text-zinc-600">
+                        Więcej w artykule
+                        <a
+                            href="/blog/historia-programu-cpn"
+                            class="underline hover:text-brand-600"
+                        >historia programu CPN</a>.
+                    </p>
+                </div>
+                <div>
+                    <h2 class="mb-4 text-2xl font-bold tracking-tight">Jak czytać obwieszczenie?</h2>
+                    <p class="mb-4 text-zinc-600">
+                        Obwieszczenie ukazuje się zwykle po południu w dniu roboczym i ustala cenę maksymalną od następnego dnia.
+                        W piątek ministerstwo ogłasza jeden limit na sobotę, niedzielę i poniedziałek. Limit to cena brutto za litr
+                        — stacje mogą sprzedawać taniej, ale nie drożej.
+                    </p>
+                    <p class="text-zinc-600">
+                        Najnowsze ceny są na stronie
+                        <a
+                            href="/program-cpn"
+                            class="underline hover:text-brand-600"
+                        >programu CPN</a>,
+                        a limit lub prognozę na kolejny dzień — na stronie
+                        <a
+                            href="/program-cpn/jutro"
+                            class="underline hover:text-brand-600"
+                        >cena maksymalna na jutro</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    {{ /partial:section }}
+{{ /cpn:notices }}

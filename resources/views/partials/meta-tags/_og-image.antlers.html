@@ -8,6 +8,7 @@
         {{ og_image_url = permalink }}
     {{ /unless }}
 {{ /if }}
+{{ push:og_image_url }}{{ og_image_url }}{{ /push:og_image_url }}
 <meta
     property="og:image"
     content="{{ og_image_url }}"

@@ -1,0 +1,36 @@
+title: 'Block: CPN Prices'
+fields:
+  -
+    handle: section_header
+    field:
+      type: section
+      display: Nagłówek
+      instructions: 'Kafel z dzisiejszymi cenami maksymalnymi (dane z kolekcji cpn_prices).'
+  -
+    handle: heading
+    field:
+      type: text
+      display: Nagłówek
+      instructions: 'Puste = „Ceny maksymalne paliw dziś (CPN)”.'
+  -
+    handle: section_content
+    field:
+      type: section
+      display: Treść
+  -
+    handle: show_links
+    field:
+      type: toggle
+      display: 'Pokaż linki'
+      instructions: 'Linki do podstron programu CPN pod cenami.'
+      default: true
+  -
+    handle: section_settings
+    field:
+      type: section
+      display: Ustawienia
+      instructions: 'Wygląd i układ bloku.'
+  -
+    import: partial_background
+  -
+    import: partial_section_id

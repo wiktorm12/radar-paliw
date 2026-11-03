@@ -32,7 +32,7 @@ content:
       - type: paragraph
         content:
         - type: text
-          text: 'Właścicielem i wydawcą Serwisu jest witryna radarpaliw.pl (dalej: „Wydawca”).'
+          text: 'Właścicielem i wydawcą Serwisu jest redakcja serwisu internetowego Radar Paliw, dostępnego pod adresem radarpaliw.pl (dalej: „Wydawca”).'
     - type: listItem
       content:
       - type: paragraph

@@ -47,8 +47,9 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
 
 - Strona `/program-cpn` (wpis `pages` z `template: templates/cpn`): kafelki z dzisiejszą ceną
   maksymalną, wykres (`modules/price-chart.js`, dane w `<script type="application/json"
-  data-price-chart-data>`), statystyki, porównanie z ceną sprzed programu, tabela, a pod spodem
-  zwykły builder (`content`) z opisem i FAQ.
+  data-price-chart-data>`), `#tankowac-dzis-czy-poczekac`, statystyki, porównanie z ceną sprzed programu,
+  tabela (daty linkują do stron dni), `#po-koncu-cpn` (VAT 23%), `#kalkulator`, `#dane` (eksport i widget),
+  a pod spodem zwykły builder (`content`) z opisem i FAQ (14 pytań → FAQPage).
 - Dane: kolekcja `cpn_prices` (dated, bez route), `type` = `max` (dzienne ceny maksymalne ME) albo
   `retail` (średnie e-petrol) albo `hurt` (ceny hurtowe Orlen netto w zł/l, data = dzień obowiązywania
   hurtu). Jeden wpis na dzień obowiązywania limitu.
@@ -60,9 +61,27 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   (×0,8/notowanie) trend MNK z 10 ostatnich roboczych notowań hurtu. Zakres 80% = 1,28·σ(zmian)·√(liczba notowań).
 - Wpis `outlook`: `pb95`/`pb98`/`on` = oczekiwana zmiana limitu w zł/l w 7 dni, `summary`, `factors`
   (`name`, `impact` up|down|neutral, `note`, `url`), `source_name`/`source_url`.
-- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`): `latest`, `forecast`, `trend`, `stats`, `table`, `columns`, `series` (JSON),
-  `compare`. Klucze w pętlach nie mogą nazywać się `first`/`last`/`count` — kolidują z
-  wbudowanymi zmiennymi pętli Antlers.
+- Tag `{{ cpn:* }}` (`app/Tags/Cpn.php`, dane z `App\Cpn\CpnData`): `latest`, `forecast`, `trend`, `stats`, `table`,
+  `columns`, `series` (JSON), `compare`, `meta` oraz `verdict` (tankować dziś czy poczekać), `vat` (limit przy VAT 23%
+  i z pełną akcyzą), `tomorrow`, `day date=…`, `fuel slug=…`, `notices`, `modified page=…`, `latest_date`.
+  `stats`/`table`/`columns`/`series` przyjmują `fuel="pb95|pb98|on"` (jedna seria). Klucze w pętlach nie mogą
+  nazywać się `first`/`last`/`count`/`next`, ani powtarzać klucza z zewnętrznego zakresu (np. `days` w pętli
+  pod `days`) — kolidują ze zmiennymi Antlers i potrafią wyciąć cały blok.
+- Podstrony (`App\Http\Controllers\CpnController`, szablony `templates/cpn/*`, partiale `components/cpn/*`):
+  `/program-cpn/jutro` (oficjalny limit na jutro albo prognoza), `/program-cpn/{benzyna-95|benzyna-98|olej-napedowy}`,
+  `/program-cpn/{RRRR-MM-DD}` (tylko daty z wpisem `max`, inne → 404), `/program-cpn/obwieszczenia` (wpisy `max`
+  pogrupowane po `source_url`). To trasy, nie wpisy `pages`: kontroler renderuje szablon z layoutem, a kaskadę
+  ładuje wpis huba (`page-program-cpn`), więc działają `seo:meta` i okruszki. Ostatni okruszek podaje zmienna
+  `breadcrumb_title` (obsługa w `layout/_breadcrumbs`). Linki między podstronami: `components/cpn/subnav`.
+- Eksport: `/program-cpn/dane.csv` i `/program-cpn/dane.json` (wszystkie wpisy `max`, licencja CC BY 4.0 z linkiem
+  do źródła). Widget do osadzania: `/program-cpn/widget` (bez layoutu, noindex, `frame-ancestors *`), kod iframe
+  w sekcji `#dane` huba. Kalkulator tankowania: `modules/cpn-calculator.js` (bez JS widać tabelę dla 50 l).
+- `/sitemap-cpn.xml` (`CpnController@sitemap`, widok `sitemaps/cpn.blade.php`): jutro, paliwa, obwieszczenia i dni;
+  hub jest w `sitemap-pages.xml`. lastmod = `CpnData::modified()`.
+- Kontrakty sekcji: każdy szablon CPN ustawia `{{ section:seo_modified }}` (`cpn:modified` — data wpisu, gdy już
+  nastała, albo czas pliku; hub: najnowszy `max`/`outlook`, ta sama reguła co `App\Support\Lastmod::cpn()` i `Lastmod::cpnEntry()`),
+  `{{ section:og_image_url }}` (`/og/program-cpn.png?v={data ostatniego limitu}`) oraz `seo_title`/`seo_description`
+  budowane z danych (hub nie ma `seo_title` we wpisie).
 - Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.
 - Kolory serii wykresu (paleta zwalidowana dla CVD): Pb95 `#2a78d6`, Pb98 `#eb6834`,
   ON `#1baf7a`, LPG `#eda100`.
@@ -75,12 +94,13 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
 ## Strony prawne
 
 `/o-nas`, `/kontakt`, `/regulamin`, `/polityka-prywatnosci` — wpisy w `pages`, w menu `footer`.
-Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
+Wydawca to „redakcja serwisu internetowego Radar Paliw (radarpaliw.pl)”, kontakt `kontakt@radarpaliw.pl` — bez danych osobowych.
 
 ## Bloki buildera
 
 `block_hero`, `block_text`, `block_promotions_list`, `block_ad`, `block_articles_list`,
-`block_stations_grid`, `block_faq`, `block_offers`.
+`block_stations_grid`, `block_faq`, `block_offers`, `block_cpn_prices` (kafel z dzisiejszymi cenami CPN
+z `{{ cpn:latest }}` + linki do podstron `/program-cpn/*`; na stronie głównej po hero).
 
 ## Reklamy
 
@@ -118,6 +138,11 @@ Zawierają placeholdery `[…]` do uzupełnienia danymi wydawcy.
   Breadcrumbs (`_breadcrumbs`) mają osobny BreadcrumbList z `@id …#breadcrumb`.
 - W Antlers `a ?? b | modyfikator` stosuje modyfikator tylko do `b` — zawsze nawiasy:
   `(a ?? b) | to_json`.
+- Data ostatniej zmiany (`App\Support\Lastmod::of()`; mtime plików jest niewiarygodny, bo deploy = nowe pliki):
+  `updated_at` z front-matter (edycje w CP) > manifest `content/.lastmod` (linie `ścieżka<TAB>ISO8601`,
+  `merge=union`, czytnik bierze najpóźniejszą datę duplikatu) > data wpisu > `lastModified()`. Manifest utrzymuje
+  hook `.githooks/pre-commit` (`php artisan content:lastmod --staged`; włącz raz: `git config core.hooksPath .githooks`),
+  pełna przebudowa: `content:lastmod --rebuild`. W szablonach używaj `{{ lastmod }}`, nie `last_modified`.
 - Sitemapy: `/sitemap.xml` (index) + `/sitemap-{kolekcja|taksonomia}.xml` (`routes/web.php`,
   widoki `resources/views/sitemaps`). `/robots.txt` z trasy — Herd/Forge nginx ma
   `location = /robots.txt` bez fallbacku do PHP, trzeba go usunąć albo dodać `try_files`.

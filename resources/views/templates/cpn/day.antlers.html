@@ -1,0 +1,198 @@
+---
+trend_icons:
+    'up': '▲'
+    'down': '▼'
+    'flat': '■'
+trend_classes:
+    'up': 'text-red-700'
+    'down': 'text-green-700'
+    'flat': 'text-zinc-600'
+---
+
+{{ cpn:day :date="cpn_date" }}
+    {{ section:seo_title }}Ceny maksymalne paliw {{ date | format("j.m.Y") }} (CPN): Pb95 {{ price_pb95 }}, ON {{ price_on }} zł{{ /section:seo_title }}
+    {{ section:seo_description }}
+        Limity CPN na {{ weekday_acc }} {{ date | format("j.m.Y") }}: Pb95 {{ price_pb95 }}, Pb98 {{ price_pb98 }}, ON {{ price_on }} zł/l.
+        Zmiana względem poprzedniego dnia i startu edycji oraz link do obwieszczenia.
+    {{ /section:seo_description }}
+{{ /cpn:day }}
+{{ section:seo_modified }}{{ cpn:modified page="day" :date="cpn_date" }}{{ /section:seo_modified }}
+{{ section:og_image_url }}{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}{{ /section:og_image_url }}
+
+{{ cpn:day :date="cpn_date" }}
+    {{ partial:section class="bg-zinc-100" }}
+        <div class="container">
+            <p class="mb-3 text-sm font-semibold uppercase tracking-wide text-brand-600">Program CPN · {{ weekday }}</p>
+            <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">
+                Ceny maksymalne paliw
+                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+            </h1>
+            <p class="mb-8 max-w-3xl text-lg text-zinc-600">
+                Limity cen benzyny i oleju napędowego obowiązujące {{ weekday_in }}
+                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                w programie CPN („Ceny Paliwa Niżej”){{ if multi_day }} — jedno obwieszczenie objęło dni
+                <time datetime="{{ notice_start }}">{{ notice_start | format("j.m") }}</time>–<time datetime="{{ notice_end }}">{{ notice_end | format("j.m.Y") }}</time>{{ /if }}.
+            </p>
+            <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {{ fuels }}
+                    {{ partial:components/cpn/price-card compare="vs poprzedni dzień" }}
+                {{ /fuels }}
+            </ul>
+            <p class="mt-4 text-xs text-zinc-600">
+                Źródło:
+                {{ if source_url }}
+                    <a
+                        href="{{ source_url }}"
+                        class="underline hover:text-brand-600"
+                        target="_blank"
+                        rel="noopener"
+                    >{{ source_name ?? 'obwieszczenie Ministra Energii' }}</a>.
+                {{ else }}
+                    obwieszczenie Ministra Energii.
+                {{ /if }}
+                Ceny brutto za litr.
+            </p>
+            {{ partial:components/cpn/subnav class="mt-8" }}
+        </div>
+    {{ /partial:section }}
+
+    {{ partial:section }}
+        <div class="container">
+            <div class="mb-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <div>
+                    <h2 class="mb-4 text-2xl font-bold tracking-tight">Co się zmieniło {{ date | format("j.m.Y") }}</h2>
+                    <ul class="mb-4 flex flex-col gap-2 text-zinc-700">
+                        {{ fuels }}
+                            <li>{{ summary }}</li>
+                        {{ /fuels }}
+                    </ul>
+                    {{ unless is_start }}
+                        <p class="text-sm text-zinc-600">
+                            Porównanie z poprzednim dniem dotyczy limitu z
+                            <a
+                                href="/program-cpn/{{ previous_date }}"
+                                class="underline hover:text-brand-600"
+                            >{{ previous_date | format("j.m.Y") }}</a>.
+                        </p>
+                    {{ /unless }}
+                </div>
+                {{ unless is_start }}
+                    <div>
+                        <h2 class="mb-4 text-2xl font-bold tracking-tight">Względem startu III edycji</h2>
+                        <div class="overflow-x-auto rounded-2xl border border-zinc-200">
+                            <table class="w-full text-left text-sm">
+                                <caption class="sr-only">Cena maksymalna {{ date | format("j.m.Y") }} w porównaniu ze startem edycji, zł/l brutto</caption>
+                                <thead class="bg-zinc-100 text-zinc-600">
+                                    <tr>
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 font-semibold"
+                                        >
+                                            Paliwo
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 text-right font-semibold"
+                                        >
+                                            {{ start_date | format("j.m.Y") }}
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 text-right font-semibold"
+                                        >
+                                            {{ date | format("j.m.Y") }}
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-4 py-3 text-right font-semibold"
+                                        >
+                                            Zmiana
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-zinc-200">
+                                    {{ fuels }}
+                                        <tr>
+                                            <th
+                                                scope="row"
+                                                class="px-4 py-3 font-medium"
+                                            >
+                                                {{ label }}
+                                            </th>
+                                            <td class="px-4 py-3 text-right tabular-nums">{{ start_price }} zł</td>
+                                            <td class="px-4 py-3 text-right tabular-nums">{{ price }} zł</td>
+                                            <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap {{ view:trend_classes[start_trend] }}">
+                                                <span aria-hidden="true">{{ view:trend_icons[start_trend] }}</span>
+                                                {{ start_change }} ({{ start_change_pct }})
+                                            </td>
+                                        </tr>
+                                    {{ /fuels }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {{ /unless }}
+            </div>
+
+            <nav
+                class="mb-12 flex flex-wrap items-center justify-between gap-4 border-y border-zinc-200 py-4 text-sm font-medium"
+                aria-label="Sąsiednie dni"
+            >
+                {{ if previous_date }}
+                    <a
+                        href="/program-cpn/{{ previous_date }}"
+                        class="hover:text-brand-700 hover:underline"
+                        rel="prev"
+                    >← {{ previous_date | format("j.m.Y") }}</a>
+                {{ else }}
+                    <span></span>
+                {{ /if }}
+                <a
+                    href="/program-cpn#tabela"
+                    class="hover:text-brand-700 hover:underline"
+                >Wszystkie dni</a>
+                {{ if next_date }}
+                    <a
+                        href="/program-cpn/{{ next_date }}"
+                        class="hover:text-brand-700 hover:underline"
+                        rel="next"
+                    >{{ next_date | format("j.m.Y") }} →</a>
+                {{ else }}
+                    <a
+                        href="/program-cpn/jutro"
+                        class="hover:text-brand-700 hover:underline"
+                    >Cena na jutro →</a>
+                {{ /if }}
+            </nav>
+
+            {{ if articles }}
+                <h2 class="mb-4 text-2xl font-bold tracking-tight">Artykuły z tych dni</h2>
+                <ul class="mb-12 flex flex-col gap-3">
+                    {{ articles }}
+                        <li>
+                            <a
+                                href="{{ url }}"
+                                class="font-medium text-brand-700 hover:underline"
+                            >{{ title }}</a>
+                            <span class="text-sm text-zinc-600">· <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time></span>
+                        </li>
+                    {{ /articles }}
+                </ul>
+            {{ /if }}
+
+            <p class="max-w-3xl text-sm text-zinc-600">
+                Cena maksymalna to górny limit ceny litra na stacji — stacje mogą sprzedawać taniej. Limity ustala Minister
+                Energii w obwieszczeniach; wszystkie znajdziesz w
+                <a
+                    href="/program-cpn/obwieszczenia"
+                    class="underline hover:text-brand-600"
+                >archiwum obwieszczeń</a>,
+                a aktualne ceny, wykres i prognozę na stronie
+                <a
+                    href="/program-cpn"
+                    class="underline hover:text-brand-600"
+                >programu CPN</a>.
+            </p>
+        </div>
+    {{ /partial:section }}
+{{ /cpn:day }}

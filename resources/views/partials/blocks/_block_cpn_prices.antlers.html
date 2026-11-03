@@ -1,0 +1,56 @@
+---
+bg:
+    'white': 'bg-white'
+    'gray': 'bg-zinc-100'
+    'dark': 'bg-zinc-900 text-white'
+trend_icons:
+    'up': '▲'
+    'down': '▼'
+    'flat': '■'
+trend_classes:
+    'up': 'text-red-700'
+    'down': 'text-green-700'
+    'flat': 'text-zinc-600'
+---
+
+{{ cpn:latest type="max" }}
+    {{ partial:section class="{{ view:bg[background_color] }}" }}
+        <div class="container">
+            <h2 class="mb-2 text-3xl font-bold tracking-tight">{{ heading ?? 'Ceny maksymalne paliw dziś (CPN)' }}</h2>
+            <p class="mb-6 {{ background_color == 'dark' ? 'text-zinc-300' : 'text-zinc-600' }}">
+                Obowiązują
+                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                — rządowy program „Ceny Paliwa Niżej”.
+            </p>
+            <ul class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {{ fuels }}
+                    {{ if key == 'pb95' || key == 'pb98' || key == 'on' }}
+                        <li class="rounded-2xl bg-white p-6 text-zinc-900 shadow-sm">
+                            <p class="mb-2 text-sm font-medium text-zinc-600">{{ label }}</p>
+                            <p class="mb-2 text-4xl font-bold tracking-tight">
+                                {{ price }}
+                                <span class="text-base font-medium text-zinc-600">zł/l</span>
+                            </p>
+                            {{ if trend }}
+                                <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
+                                    <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+                                    {{ change }} vs dzień wcześniej
+                                </p>
+                            {{ /if }}
+                        </li>
+                    {{ /if }}
+                {{ /fuels }}
+            </ul>
+            {{ if show_links }}
+                <nav aria-label="Program CPN">
+                    <ul class="flex flex-wrap gap-3">
+                        <li>{{ partial:components/cpn_prices/link href="/program-cpn" label="Ceny maksymalne paliw dziś" }}</li>
+                        <li>{{ partial:components/cpn_prices/link href="/program-cpn/jutro" label="Cena maksymalna na jutro" }}</li>
+                        <li>{{ partial:components/cpn_prices/link href="/program-cpn/olej-napedowy" label="Olej napędowy" }}</li>
+                        <li>{{ partial:components/cpn_prices/link href="/program-cpn/benzyna-95" label="Benzyna 95" }}</li>
+                    </ul>
+                </nav>
+            {{ /if }}
+        </div>
+    {{ /partial:section }}
+{{ /cpn:latest }}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pl">
+    <head>
+        <meta charset="utf-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        >
+        <meta
+            name="robots"
+            content="noindex, follow"
+        >
+        <title>Ceny maksymalne paliw CPN – Radar Paliw</title>
+        <style>
+            *{box-sizing:border-box}
+            body{margin:0;font:14px/1.4 ui-sans-serif,system-ui,sans-serif;color:#27272a;background:#fff}
+            .cpn{border:1px solid #e4e4e7;border-radius:12px;padding:14px 16px;max-width:420px}
+            .cpn h1{margin:0 0 2px;font-size:15px;color:#18181b}
+            .cpn p{margin:0;color:#52525b;font-size:12px}
+            .cpn ul{display:flex;gap:8px;margin:12px 0;padding:0;list-style:none}
+            .cpn li{flex:1;background:#f4f4f5;border-radius:8px;padding:8px}
+            .cpn li span{display:block;font-size:12px;color:#52525b}
+            .cpn li strong{font-size:20px;color:#18181b;font-variant-numeric:tabular-nums}
+            .cpn li em{display:block;font-style:normal;font-size:11px}
+            .up{color:#b91c1c}.down{color:#15803d}.flat{color:#52525b}
+            .cpn a{color:#c2410c;font-weight:600}
+        </style>
+    </head>
+    <body>
+        {{ cpn:latest type="max" }}
+            <div class="cpn">
+                <h1>Ceny maksymalne paliw (CPN)</h1>
+                <p>Obowiązują <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time> · zł/l brutto</p>
+                <ul>
+                    {{ fuels }}
+                        <li>
+                            <span>{{ label }}</span>
+                            <strong>{{ price }}</strong>
+                            {{ if trend }}
+                                <em class="{{ trend }}">{{ change }}</em>
+                            {{ /if }}
+                        </li>
+                    {{ /fuels }}
+                </ul>
+                <p>
+                    <a
+                        href="{{ site:permalink }}/program-cpn"
+                        target="_blank"
+                        rel="noopener"
+                    >Ceny maksymalne CPN – Radar Paliw</a>
+                </p>
+            </div>
+        {{ /cpn:latest }}
+    </body>
+</html>

@@ -14,6 +14,10 @@ content:
   type: block_ad
   enabled: true
   placement: home_after_hero
+- id: cpnprices01
+  type: block_cpn_prices
+  enabled: true
+  show_links: true
 - id: promos01
   type: block_promotions_list
   enabled: true

@@ -102,7 +102,7 @@ return [
                     'urls' => ['/', '/blog', '/blog/*', '/kategorie/*'],
                 ],
                 'cpn_prices' => [
-                    'urls' => ['/', '/program-cpn'],
+                    'urls' => ['/', '/program-cpn', '/program-cpn/*', '/sitemap-cpn.xml'],
                 ],
                 'stations' => [
                     'urls' => ['/', '/stacje', '/promocje'],

@@ -26,8 +26,23 @@ impact_classes:
 ---
 
 {{ cpn:latest type="max" }}
-    {{ section:seo_title }}{{ seo_title ?? 'Program CPN – ceny maksymalne paliw dziś ({date | format("j.m.Y")}) · {site:name}' }}{{ /section:seo_title }}
+    {{ section:seo_title }}Ceny maksymalne paliw {{ date | format("j.m.Y") }} – Pb95 {{ price_pb95 }}, ON {{ price_on }} zł | CPN{{ /section:seo_title }}
 {{ /cpn:latest }}
+{{ section:seo_description }}
+    {{ cpn:latest type="max" }}
+        Ceny maksymalne CPN na {{ date | format("j.m.Y") }}: Pb95 {{ price_pb95 }}, Pb98 {{ price_pb98 }}, ON {{ price_on }} zł/l.
+    {{ /cpn:latest }}
+    {{ cpn:forecast }}
+        {{ unless no_results }}
+            Prognoza {{ date | format("j.m") }}: Pb95 ~{{ price_pb95 }}, ON ~{{ price_on }}.
+        {{ /unless }}
+    {{ /cpn:forecast }}
+    {{ cpn:meta type="max" }}
+        Wykres, prognoza 7 dni i historia od {{ start_date | format("j.m") }}.
+    {{ /cpn:meta }}
+{{ /section:seo_description }}
+{{ section:seo_modified }}{{ cpn:modified }}{{ /section:seo_modified }}
+{{ section:og_image_url }}{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}{{ /section:og_image_url }}
 
 {{ section:schema_main_entity }},
             "mainEntity": { "@id": "{{ permalink }}#dataset" }{{ /section:schema_main_entity }}
@@ -41,6 +56,9 @@ impact_classes:
             "url": "{{ permalink }}",
             "inLanguage": "pl-PL",
             "isAccessibleForFree": true,
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "creditText": "Radar Paliw (radarpaliw.pl/program-cpn) na podstawie obwieszczeń Ministra Energii",
+            "image": "{{ site:permalink }}/og/program-cpn.png?v={{ cpn:latest_date }}",
             "creator": { "@id": "{{ site:permalink }}/#organization" },
             "publisher": { "@id": "{{ site:permalink }}/#organization" },
             "keywords": ["program CPN", "Ceny Paliwa Niżej", "cena maksymalna paliwa", "benzyna 95", "benzyna 98", "olej napędowy", "ceny paliw"],
@@ -52,7 +70,12 @@ impact_classes:
                 {{ /sources }}
                 { "@type": "WebPage", "name": "e-petrol.pl – ceny na stacjach paliw", "url": "https://www.e-petrol.pl/notowania/rynek-krajowy/ceny-stacje-paliw" }
             ],
-            "dateModified": "{{ end_date }}",
+            "datePublished": "2026-10-03",
+            "dateModified": "{{ cpn:modified }}",
+            "distribution": [
+                { "@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "{{ site:permalink }}/program-cpn/dane.csv" },
+                { "@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "{{ site:permalink }}/program-cpn/dane.json" }
+            ],
             "temporalCoverage": "{{ start_date }}/{{ end_date }}",
             "spatialCoverage": { "@type": "Place", "name": "Polska" },
             "variableMeasured": [
@@ -70,9 +93,10 @@ impact_classes:
         <h1 class="mb-4 max-w-4xl text-4xl font-bold tracking-tight text-balance md:text-5xl">{{ title }}</h1>
         {{ cpn:latest type="max" }}
             <p class="mb-8 max-w-3xl text-lg text-zinc-600">
-                Ceny maksymalne obowiązujące
+                CPN to skrót od <strong class="text-zinc-900">„Ceny Paliwa Niżej”</strong> — rządowego programu, w którym
+                Minister Energii codziennie ustala ceny maksymalne benzyny i oleju napędowego. Limity obowiązujące
                 <strong class="text-zinc-900"><time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time></strong>
-                — ustalane codziennie przez Ministerstwo Energii. Poniżej wykres, statystyki i wszystkie ceny od startu programu.
+                — poniżej wykres, prognoza, statystyki i wszystkie ceny od startu programu.
             </p>
             <ul class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {{ fuels }}
@@ -153,11 +177,16 @@ impact_classes:
                 </div>
             {{ /unless }}
         {{ /cpn:forecast }}
+        {{ partial:components/cpn/subnav
+            current="/program-cpn"
+            class="mt-8"
+        }}
     </div>
 {{ /partial:section }}
 
 {{ partial:section }}
     <div class="container">
+        {{ partial:components/cpn/verdict class="mb-12" }}
         <h2 class="mb-2 text-3xl font-bold tracking-tight">Ceny maksymalne CPN dzień po dniu</h2>
         <p class="mb-6 text-zinc-600">Najedź na wykres, aby zobaczyć ceny z wybranego dnia. Wartości w zł/l brutto. Szare pole po prawej to <a href="#trend" class="underline hover:text-brand-600">prognoza na 7 dni</a>. Te same dane w formie tekstowej są w <a href="#tabela" class="underline hover:text-brand-600">tabeli</a>.</p>
         <div
@@ -439,7 +468,10 @@ impact_classes:
                                 scope="row"
                                 class="px-4 py-3 font-medium whitespace-nowrap"
                             >
-                                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                                <a
+                                    href="{{ day_url }}"
+                                    class="text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:text-brand-700"
+                                ><time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time></a>
                             </th>
                             {{ cells }}
                                 <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
@@ -467,7 +499,7 @@ impact_classes:
                 </tbody>
             </table>
         </div>
-        <p class="text-xs text-zinc-600">
+        <p class="mb-12 text-xs text-zinc-600">
             Źródła: obwieszczenia Ministra Energii publikowane na
             <a
                 href="https://www.gov.pl/web/energia"
@@ -479,7 +511,15 @@ impact_classes:
             {{ cpn:meta type="max" }}
                 Tabela jest aktualizowana codziennie — ostatnio <time datetime="{{ end_date }}">{{ end_date | format("j.m.Y") }}</time>.
             {{ /cpn:meta }}
+            Kliknij datę, aby zobaczyć stronę dnia, albo przejrzyj
+            <a
+                href="/program-cpn/obwieszczenia"
+                class="underline hover:text-brand-600"
+            >archiwum obwieszczeń</a>.
         </p>
+        {{ partial:components/cpn/vat }}
+        {{ partial:components/cpn/calculator }}
+        {{ partial:components/cpn/data }}
     </div>
 {{ /partial:section }}
 

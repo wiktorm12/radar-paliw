@@ -1,0 +1,38 @@
+---
+links:
+    -
+        url: '/program-cpn'
+        label: 'Ceny dziś'
+    -
+        url: '/program-cpn/jutro'
+        label: 'Cena na jutro'
+    -
+        url: '/program-cpn/benzyna-95'
+        label: 'Benzyna 95'
+    -
+        url: '/program-cpn/benzyna-98'
+        label: 'Benzyna 98'
+    -
+        url: '/program-cpn/olej-napedowy'
+        label: 'Olej napędowy'
+    -
+        url: '/program-cpn/obwieszczenia'
+        label: 'Obwieszczenia'
+---
+
+<nav
+    class="{{ class }}"
+    aria-label="Ceny maksymalne CPN – podstrony"
+>
+    <ul class="flex flex-wrap gap-2 text-sm font-medium">
+        {{ view:links }}
+            <li>
+                <a
+                    href="{{ url }}"
+                    class="inline-block rounded-full border px-4 py-2 {{ url == current ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-300 bg-white text-zinc-800 hover:border-brand-600 hover:text-brand-700' }}"
+                    {{ url == current ?= 'aria-current="page"' }}
+                >{{ label }}</a>
+            </li>
+        {{ /view:links }}
+    </ul>
+</nav>

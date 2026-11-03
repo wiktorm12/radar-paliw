@@ -51,7 +51,9 @@
             name="twitter:card"
             content="summary_large_image"
         >
-        {{ if og_image }}
+        {{ if meta_og_image_url }}
+            {{ partial:meta-tags/og-image :image_url="meta_og_image_url" }}
+        {{ elseif og_image }}
             {{ og_image }}
                 {{ partial:meta-tags/og-image }}
             {{ /og_image }}

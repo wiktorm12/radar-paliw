@@ -1,0 +1,54 @@
+<div
+    id="dane"
+    class="rounded-2xl border border-zinc-200 p-6 md:p-8"
+>
+    <h2 class="mb-2 text-2xl font-bold tracking-tight">Pobierz dane i osadź ceny na swojej stronie</h2>
+    <p class="mb-4 max-w-3xl text-zinc-600">
+        Wszystkie ceny maksymalne z obwieszczeń Ministra Energii od startu III edycji CPN, aktualizowane codziennie.
+        Dane udostępniamy na licencji
+        <a
+            href="https://creativecommons.org/licenses/by/4.0/deed.pl"
+            class="underline hover:text-brand-600"
+            target="_blank"
+            rel="license noopener"
+        >CC BY 4.0</a>
+        — możesz je wykorzystywać, także komercyjnie, pod warunkiem podania źródła z linkiem:
+        <strong class="text-zinc-900">„Źródło: Radar Paliw (radarpaliw.pl/program-cpn)”</strong>.
+    </p>
+    <ul class="mb-8 flex flex-wrap gap-3">
+        <li>
+            <a
+                href="/program-cpn/dane.csv"
+                class="button"
+                download
+            >Pobierz CSV</a>
+        </li>
+        <li>
+            <a
+                href="/program-cpn/dane.json"
+                class="button"
+            >Dane JSON</a>
+        </li>
+    </ul>
+    <h3 class="mb-2 text-lg font-semibold">Widget z dzisiejszymi cenami maksymalnymi</h3>
+    <p class="mb-3 max-w-3xl text-sm text-zinc-600">
+        Skopiuj kod i wklej go w HTML swojej strony — widget sam pokazuje aktualne ceny.
+        <a
+            href="/program-cpn/widget"
+            class="underline hover:text-brand-600"
+            target="_blank"
+            rel="noopener"
+        >Podgląd widgetu</a>
+    </p>
+    <label
+        for="cpn-embed-code"
+        class="sr-only"
+    >Kod do osadzenia widgetu</label>
+    <textarea
+        id="cpn-embed-code"
+        rows="4"
+        class="w-full rounded-lg border-zinc-300 bg-zinc-50 font-mono text-xs text-zinc-800"
+        readonly
+    >&lt;iframe src="{{ site:permalink }}/program-cpn/widget" title="Ceny maksymalne paliw CPN" width="100%" height="240" style="border:0;max-width:420px" loading="lazy"&gt;&lt;/iframe&gt;
+&lt;p&gt;&lt;a href="{{ site:permalink }}/program-cpn"&gt;Ceny maksymalne CPN – Radar Paliw&lt;/a&gt;&lt;/p&gt;</textarea>
+</div>

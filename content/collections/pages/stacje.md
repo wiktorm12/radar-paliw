@@ -13,5 +13,5 @@ content:
 - id: stacje02
   type: block_stations_grid
   enabled: true
-seo_title: 'Promocje paliwowe według sieci: Orlen, BP, Shell, MOL'
+seo_title: 'Sieci stacji: promocje Orlen, BP, Shell, MOL'
 ---

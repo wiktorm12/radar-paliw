@@ -2,6 +2,7 @@
 
 namespace App\Tags;
 
+use App\Support\Lastmod;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -23,7 +24,9 @@ class Seo extends Tags
 
     private const TITLE_LIMIT = 60;
 
-    private const DESCRIPTION_LIMIT = 160;
+    private const DESCRIPTION_LIMIT = 155;
+
+    private const MIN_SENTENCE_CUT = 70;
 
     private const NOINDEX_PARAMS = ['stacja', 'paliwo', 'bez_aplikacji', 'sortuj'];
 
@@ -65,7 +68,8 @@ class Seo extends Tags
             'meta_is_404' => $isNotFound,
             'meta_page' => $pageNumber,
             'meta_published' => $content instanceof Entry && $content->hasDate() ? $this->iso($content->date()) : null,
-            'meta_modified' => $content && method_exists($content, 'lastModified') ? $this->iso($content->lastModified()) : null,
+            'meta_modified' => $this->modified($content),
+            'meta_og_image_url' => $this->ogImageUrl(),
             'meta_section' => $this->articleSection($content),
             'meta_author' => $this->articleAuthor($content),
             'meta_has_itemlist' => $this->hasItemList(),
@@ -210,6 +214,31 @@ class Seo extends Tags
             ->contains(fn ($node) => Str::contains($node, "\"{$current}#itemlist\""));
     }
 
+    private function modified($content): ?string
+    {
+        $override = $this->plain(Cascade::instance()->sections()->get('seo_modified'));
+
+        if ($override !== '') {
+            try {
+                return $this->iso(Carbon::parse($override, self::TIMEZONE));
+            } catch (\Throwable) {
+            }
+        }
+
+        return $content && method_exists($content, 'lastModified') ? $this->iso(Lastmod::of($content)) : null;
+    }
+
+    private function ogImageUrl(): ?string
+    {
+        $url = $this->plain(Cascade::instance()->sections()->get('og_image_url'));
+
+        if (Str::startsWith($url, '/')) {
+            $url = url($url);
+        }
+
+        return preg_match('#^https?://\S+$#i', $url) ? $url : null;
+    }
+
     private function articleSection($content): ?string
     {
         if ($this->collectionHandle($content) !== 'articles') {
@@ -277,6 +306,22 @@ class Seo extends Tags
     {
         if (mb_strlen($text) <= $limit) {
             return $text;
+        }
+
+        $fit = '';
+
+        foreach (preg_split('/(?<=[.!?])\s+/u', $text) ?: [] as $sentence) {
+            $candidate = $fit === '' ? $sentence : "{$fit} {$sentence}";
+
+            if (mb_strlen($candidate) > $limit) {
+                break;
+            }
+
+            $fit = $candidate;
+        }
+
+        if (mb_strlen($fit) >= self::MIN_SENTENCE_CUT) {
+            return $fit;
         }
 
         $cut = mb_substr($text, 0, $limit - 1);

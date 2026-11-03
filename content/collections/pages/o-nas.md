@@ -3,7 +3,7 @@ id: page-o-nas
 title: O nas
 blueprint: page
 schema_type: AboutPage
-seo_description: Kim jesteśmy, skąd bierzemy promocje na paliwo, jak je weryfikujemy i z czego utrzymuje się niezależny serwis Radar Paliw.
+seo_description: 'Radar Paliw to niezależny serwis o promocjach na paliwo i cenach maksymalnych w programie CPN. Skąd bierzemy dane, jak je sprawdzamy i kto wydaje serwis.'
 content:
 - id: o-nas01
   type: block_hero
@@ -36,6 +36,32 @@ content:
       level: 2
     content:
     - type: text
+      text: Ceny maksymalne w programie CPN
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Od startu programu „Ceny Paliwa Niżej” codziennie publikujemy '
+    - type: text
+      text: ceny maksymalne benzyny i oleju napędowego
+      marks:
+      - type: link
+        attrs:
+          href: /program-cpn
+    - type: text
+      text: ' przepisane z obwieszczeń Ministra Energii na gov.pl, z linkiem do każdego obwieszczenia w '
+    - type: text
+      text: archiwum
+      marks:
+      - type: link
+        attrs:
+          href: /program-cpn/obwieszczenia
+    - type: text
+      text: '. Zanim pojawi się nowe obwieszczenie, pokazujemy prognozę limitu liczoną ze wzoru na podstawie hurtowych cen Orlenu, a dalszy trend — z analizy rynku przygotowanej z pomocą AI. Prognozy zawsze oznaczamy jako nieoficjalne; wiążące są wyłącznie obwieszczenia. Zebrane dane udostępniamy do pobrania na licencji CC BY 4.0.'
+  - type: heading
+    attrs:
+      level: 2
+    content:
+    - type: text
       text: Niezależność
   - type: paragraph
     content:
@@ -57,6 +83,22 @@ content:
       - type: link
         attrs:
           href: /zasady-redakcyjne
+    - type: text
+      text: .
+  - type: paragraph
+    content:
+    - type: text
+      text: 'Wydawca:'
+      marks:
+      - type: bold
+    - type: text
+      text: ' redakcja serwisu internetowego Radar Paliw (radarpaliw.pl). Kontakt z redakcją: '
+    - type: text
+      text: kontakt@radarpaliw.pl
+      marks:
+      - type: link
+        attrs:
+          href: mailto:kontakt@radarpaliw.pl
     - type: text
       text: .
   - type: heading

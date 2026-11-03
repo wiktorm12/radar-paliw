@@ -1,0 +1,76 @@
+{{ cpn:vat }}
+    {{ unless no_results }}
+        <div
+            id="po-koncu-cpn"
+            class="mb-12"
+        >
+            <h2 class="mb-2 text-3xl font-bold tracking-tight">Co po końcu CPN? Limit przy VAT 23%</h2>
+            <p class="mb-6 max-w-3xl text-zinc-600">
+                W programie CPN paliwo ma VAT 8% zamiast 23%. Poniżej przeliczamy limit z
+                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>
+                tak, jakby obowiązywał standardowy VAT, a cena hurtowa i marża stacji się nie zmieniły:
+                <strong class="text-zinc-900">cena ÷ 1,08 × 1,23</strong>.
+            </p>
+            <div class="mb-4 overflow-x-auto rounded-2xl border border-zinc-200">
+                <table class="w-full min-w-xl text-left text-sm">
+                    <caption class="sr-only">Dzisiejsza cena maksymalna przeliczona na VAT 23% oraz na VAT 23% z pełną akcyzą, w zł/l brutto</caption>
+                    <thead class="bg-zinc-100 text-zinc-600">
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 font-semibold"
+                            >
+                                Paliwo
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Limit (VAT 8%)
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Przy VAT 23%
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                VAT 23% i pełna akcyza
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-200">
+                        {{ fuels }}
+                            <tr>
+                                <th
+                                    scope="row"
+                                    class="px-4 py-3 font-medium"
+                                >
+                                    {{ label }}
+                                </th>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ price }} zł</td>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
+                                    {{ vat23 }} zł
+                                    <span class="block text-xs text-red-700">{{ vat23_diff }}/l · bak 50 l +{{ vat23_tank_50 }} zł</span>
+                                </td>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">
+                                    {{ full }} zł
+                                    <span class="block text-xs text-red-700">{{ full_diff }}/l · bak 50 l +{{ full_tank_50 }} zł</span>
+                                </td>
+                            </tr>
+                        {{ /fuels }}
+                    </tbody>
+                </table>
+            </div>
+            <p class="max-w-3xl text-xs text-zinc-600">
+                Ostatnia kolumna zakłada dodatkowo powrót akcyzy sprzed III edycji: 1529 zamiast 1239 zł za 1000 l benzyny
+                (+0,29 zł/l netto) i 1160 zamiast 880 zł za 1000 l oleju napędowego (+0,28 zł/l netto), doliczonej przed VAT.
+                Po zakończeniu programu nie będzie też ceny maksymalnej — stacje ustalą ceny same, więc to rachunek „przy
+                pozostałych warunkach bez zmian”, a nie prognoza. Trzecia edycja CPN ma obowiązywać do 31 grudnia 2026 r.
+            </p>
+        </div>
+    {{ /unless }}
+{{ /cpn:vat }}

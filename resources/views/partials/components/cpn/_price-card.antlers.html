@@ -1,0 +1,36 @@
+---
+trend_icons:
+    'up': '▲'
+    'down': '▼'
+    'flat': '■'
+trend_classes:
+    'up': 'text-red-700'
+    'down': 'text-green-700'
+    'flat': 'text-zinc-600'
+trend_labels:
+    'up': 'wzrost'
+    'down': 'spadek'
+    'flat': 'bez zmian'
+---
+
+<li class="rounded-2xl bg-white p-6 shadow-sm">
+    <p class="mb-2 text-sm font-medium text-zinc-600">{{ label }}</p>
+    <p class="mb-2 text-4xl font-bold tracking-tight text-zinc-900">
+        {{ prefix }}{{ price }}
+        <span class="text-base font-medium text-zinc-600">zł/l</span>
+    </p>
+    {{ if range }}
+        <p class="mb-2 text-sm text-zinc-600 tabular-nums">zakres {{ low }}–{{ high }} zł</p>
+    {{ /if }}
+    {{ if trend == 'flat' }}
+        <p class="text-sm font-medium text-zinc-600">
+            <span aria-hidden="true">{{ view:trend_icons.flat }}</span>
+            bez zmian {{ compare }}
+        </p>
+    {{ elseif trend }}
+        <p class="text-sm font-medium {{ view:trend_classes[trend] }}">
+            <span aria-hidden="true">{{ view:trend_icons[trend] }}</span>
+            {{ view:trend_labels[trend] }} {{ change }} ({{ change_pct }}) {{ compare }}
+        </p>
+    {{ /if }}
+</li>

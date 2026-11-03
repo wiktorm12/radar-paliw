@@ -13,3 +13,7 @@ promotionFilters.init();
 if (document.querySelector('[data-price-chart]')) {
     import('./modules/price-chart').then((module) => module.default.init());
 }
+
+if (document.querySelector('[data-cpn-calculator]')) {
+    import('./modules/cpn-calculator').then((module) => module.default.init());
+}

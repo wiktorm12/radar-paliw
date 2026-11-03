@@ -1,0 +1,106 @@
+{{ cpn:vat }}
+    {{ unless no_results }}
+        <div
+            id="kalkulator"
+            class="mb-12 rounded-2xl bg-brand-50 p-6 md:p-8"
+            data-cpn-calculator
+        >
+            <h2 class="mb-2 text-2xl font-bold tracking-tight">Kalkulator tankowania</h2>
+            <p class="mb-6 max-w-3xl text-zinc-600">
+                Ile zapłacisz, tankując po cenie maksymalnej z
+                <time datetime="{{ date }}">{{ date | format("j.m.Y") }}</time>,
+                i ile oszczędzasz dzięki VAT 8% zamiast 23%.
+            </p>
+            <script
+                type="application/json"
+                data-cpn-calculator-prices
+            >{{ prices_json }}</script>
+            <form
+                class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3"
+                data-cpn-calculator-form
+                hidden
+            >
+                <label class="text-sm font-medium text-zinc-700">
+                    Ile litrów
+                    <input
+                        type="number"
+                        name="litry"
+                        value="50"
+                        min="1"
+                        max="1000"
+                        step="1"
+                        inputmode="numeric"
+                        class="mt-1 block w-full rounded-lg border-zinc-300 tabular-nums"
+                        data-cpn-calculator-litres
+                    >
+                </label>
+                <label class="text-sm font-medium text-zinc-700">
+                    Paliwo
+                    <select
+                        name="paliwo"
+                        class="mt-1 block w-full rounded-lg border-zinc-300"
+                        data-cpn-calculator-fuel
+                    >
+                        {{ fuels }}
+                            <option value="{{ key }}">{{ label }}</option>
+                        {{ /fuels }}
+                    </select>
+                </label>
+                <output
+                    class="rounded-xl bg-white p-4 text-sm text-zinc-700 sm:row-span-2"
+                    aria-live="polite"
+                    data-cpn-calculator-result
+                ></output>
+            </form>
+            <div class="overflow-x-auto rounded-xl bg-white">
+                <table class="w-full min-w-md text-left text-sm">
+                    <caption class="px-4 pt-4 text-left font-semibold text-zinc-900">Bak 50 l po dzisiejszym limicie</caption>
+                    <thead class="text-zinc-600">
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 font-semibold"
+                            >
+                                Paliwo
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Koszt (VAT 8%)
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Przy VAT 23%
+                            </th>
+                            <th
+                                scope="col"
+                                class="px-4 py-3 text-right font-semibold"
+                            >
+                                Oszczędność
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-zinc-200">
+                        {{ fuels }}
+                            <tr>
+                                <th
+                                    scope="row"
+                                    class="px-4 py-3 font-medium"
+                                >
+                                    {{ label }}
+                                </th>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ cost_50 }} zł</td>
+                                <td class="px-4 py-3 text-right tabular-nums whitespace-nowrap">{{ cost_50_vat23 }} zł</td>
+                                <td class="px-4 py-3 text-right font-semibold text-green-700 tabular-nums whitespace-nowrap">{{ vat23_tank_50 }} zł</td>
+                            </tr>
+                        {{ /fuels }}
+                    </tbody>
+                </table>
+            </div>
+            <p class="mt-4 text-xs text-zinc-600">Liczymy po cenie maksymalnej — na stacji możesz zapłacić mniej. Przeliczenie na VAT 23% zakłada niezmienioną cenę hurtową.</p>
+        </div>
+    {{ /unless }}
+{{ /cpn:vat }}

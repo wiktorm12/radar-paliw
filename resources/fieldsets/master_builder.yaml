@@ -59,3 +59,9 @@ fields:
               fields:
                 -
                   import: block_offers
+            block_cpn_prices:
+              display: 'Ceny CPN'
+              icon: money-cashier-price-tag
+              fields:
+                -
+                  import: block_cpn_prices

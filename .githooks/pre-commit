@@ -1,0 +1,9 @@
+#!/bin/sh
+# Keeps content/.lastmod (last-change dates used by sitemaps and SEO) in sync with staged content.
+# Enable once per clone: git config core.hooksPath .githooks
+
+if ! git diff --cached --quiet --diff-filter=ACMRD -- content/; then
+    php artisan content:lastmod --staged || echo "pre-commit: content:lastmod failed (ignored)" >&2
+fi
+
+exit 0
