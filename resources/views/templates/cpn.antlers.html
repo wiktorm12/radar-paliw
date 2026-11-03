@@ -185,12 +185,17 @@ impact_classes:
                     id="trend"
                     class="mb-12"
                 >
-                    <h2 class="mb-2 text-3xl font-bold tracking-tight">Trend i prognoza na 7 dni</h2>
+                    <h2 class="mb-2 flex flex-wrap items-center gap-3 text-3xl font-bold tracking-tight">
+                        Trend i prognoza na 7 dni
+                        {{ if outlook }}
+                            <span class="rounded-full bg-brand-100 px-3 py-1 text-sm font-semibold tracking-normal text-brand-800">Prognoza AI</span>
+                        {{ /if }}
+                    </h2>
                     <p class="mb-6 max-w-3xl text-zinc-600">
                         Szacunek ceny maksymalnej do <time datetime="{{ end_date }}">{{ end_date | format("j.m.Y") }}</time>.
                         Najbliższe dni liczymy ze znanej już ceny hurtowej Orlenu, dalsze
                         {{ if outlook }}
-                            z <a href="#analiza-rynku" class="underline hover:text-brand-600">analizy rynku</a> z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time> (ropa, kurs dolara, sytuacja geopolityczna).
+                            z <a href="#analiza-rynku" class="underline hover:text-brand-600">analizy rynku</a> z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time> (ropa, kurs dolara, sytuacja geopolityczna), którą przygotowuje sztuczna inteligencja (AI).
                         {{ else }}
                             z trendu ostatnich {{ window }} notowań hurtu.
                         {{ /if }}
@@ -231,12 +236,12 @@ impact_classes:
                             class="mb-6 rounded-2xl bg-zinc-100 p-6"
                         >
                             <h3 class="mb-2 text-lg font-semibold">
-                                Analiza rynku z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time>
+                                Analiza rynku AI z <time datetime="{{ outlook_date }}">{{ outlook_date | format("j.m.Y") }}</time>
                             </h3>
                             {{ if summary }}
                                 <p class="mb-2 max-w-3xl text-zinc-700">{{ summary }}</p>
                             {{ /if }}
-                            <p class="mb-4 text-xs text-zinc-500">Analiza ma charakter informacyjny i nie jest poradą inwestycyjną.</p>
+                            <p class="mb-4 text-xs text-zinc-500">Analizę codziennie przygotowuje model AI na podstawie publicznych źródeł podlinkowanych przy czynnikach — może zawierać błędy. Ma charakter informacyjny i nie jest poradą inwestycyjną.</p>
                             {{ if factors }}
                                 <ul class="grid grid-cols-1 gap-3 md:grid-cols-2">
                                     {{ factors }}
@@ -322,6 +327,7 @@ impact_classes:
                     </details>
                     <p class="text-xs text-zinc-500">
                         To szacunek, nie zapowiedź — wiążące są wyłącznie obwieszczenia Ministra Energii.
+                        {{ if outlook }}Prognozę na dalsze dni wyznacza analiza rynku przygotowana przez AI.{{ /if }}
                         Prognoza i analiza rynku mają charakter wyłącznie informacyjny i nie stanowią porady inwestycyjnej
                         ani rekomendacji w rozumieniu przepisów prawa. Trend z danych to nachylenie prostej
                         dopasowanej do limitów wyliczonych z {{ window }} ostatnich notowań hurtu (od <time datetime="{{ window_start }}">{{ window_start | format("j.m") }}</time>).

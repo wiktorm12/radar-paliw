@@ -28,7 +28,7 @@ const INK = {
 
 const PROJECTION_NOTES = {
     formula: 'Prognoza z ceny hurtowej Orlenu',
-    market: 'Prognoza z analizy rynku (zakres 80%)',
+    market: 'Prognoza AI z analizy rynku (zakres 80%)',
     trend: 'Prognoza z trendu (zakres 80%)',
 };
 
@@ -152,7 +152,7 @@ class PriceChart {
             itemElement.className = 'flex items-center gap-2 text-zinc-500';
             swatchElement.className = 'h-3 w-7 shrink-0 rounded-sm border border-dashed border-zinc-400 bg-zinc-200/70';
             swatchElement.setAttribute('aria-hidden', 'true');
-            itemElement.append(swatchElement, 'Prognoza z zakresem 80%');
+            itemElement.append(swatchElement, `${this.projection.method === 'market' ? 'Prognoza AI' : 'Prognoza'} z zakresem 80%`);
             legendElement.append(itemElement);
         }
 
@@ -275,7 +275,7 @@ class PriceChart {
             'letter-spacing': '0.04em',
         });
 
-        labelElement.textContent = 'PROGNOZA';
+        labelElement.textContent = this.projection.method === 'market' ? 'PROGNOZA AI' : 'PROGNOZA';
         groupElement.append(
             createSvgElement('rect', {
                 x: startX,
