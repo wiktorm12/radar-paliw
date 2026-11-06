@@ -80,7 +80,7 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   hub jest w `sitemap-pages.xml`. lastmod = `CpnData::modified()`.
 - Kontrakty sekcji: każdy szablon CPN ustawia `{{ section:seo_modified }}` (`cpn:modified` — data wpisu, gdy już
   nastała, albo czas pliku; hub: najnowszy `max`/`outlook`, ta sama reguła co `App\Support\Lastmod::cpn()` i `Lastmod::cpnEntry()`),
-  `{{ section:og_image_url }}` (`/og/program-cpn.png?v={data ostatniego limitu}`) oraz `seo_title`/`seo_description`
+  `{{ section:og_image_url }}` (`/og/program-cpn.png?v={data dzisiejszego limitu}`, obraz z dzisiejszym limitem — `CpnPrices::latest(untilToday: true)`) oraz `seo_title`/`seo_description`
   budowane z danych (hub nie ma `seo_title` we wpisie).
 - Strona `/dane-cpn` (`CpnController::docs`, `templates/cpn/docs`): dokumentacja widgetu, API JSON, CSV, licencji i kontakt dla mediów;
   przycisk „Kopiuj” to `modules/copy-button.js` (`components/cpn/code-block`). `/program-cpn/dane.json` ma pole `version` (1) —

@@ -14,7 +14,7 @@ class OgImageController extends Controller
 
     public function programCpn()
     {
-        $latest = CpnPrices::latest();
+        $latest = CpnPrices::latest(untilToday: true);
         $date = $latest['date'] ?? null;
         $path = storage_path('app/og/program-cpn-'.($date ?? 'empty').'.png');
 

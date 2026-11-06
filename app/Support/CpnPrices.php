@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Cpn\CpnData;
 use Statamic\Facades\Entry;
 
 class CpnPrices
@@ -14,18 +15,21 @@ class CpnPrices
 
     /**
      * Najnowsza cena maksymalna (dzisiejsza albo już opublikowana jutrzejsza) wraz z różnicą
-     * względem poprzedniego wpisu.
+     * względem poprzedniego wpisu. Z $untilToday — limit obowiązujący dziś (ministerstwo
+     * publikuje czasem limity na kilka dni naprzód).
      *
      * @return array{date: string, fuels: array<string, array{label: string, price: float, diff: ?float}>}|null
      */
-    public static function latest(): ?array
+    public static function latest(bool $untilToday = false): ?array
     {
         $entries = Entry::query()
             ->where('collection', 'cpn_prices')
             ->where('type', 'max')
             ->orderBy('date', 'desc')
-            ->limit(2)
-            ->get();
+            ->get()
+            ->when($untilToday, fn ($entries) => $entries->filter(fn ($entry) => $entry->date()->toDateString() <= CpnData::today()))
+            ->take(2)
+            ->values();
 
         $current = $entries->first();
 

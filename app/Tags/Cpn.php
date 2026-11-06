@@ -68,7 +68,7 @@ class Cpn extends Tags
             return $this->parseNoResults();
         }
 
-        $latest = $max->last();
+        $latest = CpnData::current($max);
 
         return [
             'date' => $dates[0],
@@ -102,7 +102,7 @@ class Cpn extends Tags
             return $this->parseNoResults();
         }
 
-        $latest = $this->rows('max')->last();
+        $latest = CpnData::current($this->rows('max'));
         $lastDay = end($projection['days']);
 
         return [
@@ -143,13 +143,15 @@ class Cpn extends Tags
     public function latest()
     {
         $rows = $this->rows($this->params->get('type', 'max'));
-        $current = $rows->last();
+        $current = CpnData::current($rows);
 
         if (! $current) {
             return $this->parseNoResults();
         }
 
-        $previous = $rows->count() > 1 ? $rows->get($rows->count() - 2) : null;
+        // Ministerstwo bywa, że publikuje limity z góry na kilka dni — „aktualny” to dzisiejszy, nie najnowszy.
+        $index = $rows->search(fn ($row) => $row['date'] === $current['date']);
+        $previous = $index > 0 ? $rows->get($index - 1) : null;
 
         return [
             'date' => $current['date'],
@@ -167,7 +169,7 @@ class Cpn extends Tags
 
     public function stats()
     {
-        $rows = $this->rows($this->params->get('type', 'max'));
+        $rows = $this->untilToday($this->rows($this->params->get('type', 'max')));
 
         return $this->fuelsIn($rows)->map(function ($label, $fuel) use ($rows) {
             $points = $rows->filter(fn ($row) => $row[$fuel] !== null)->values();
@@ -279,7 +281,7 @@ class Cpn extends Tags
 
     public function compare()
     {
-        $max = $this->rows('max')->last();
+        $max = CpnData::current($this->rows('max'));
         $retail = $this->rows('retail');
         $before = $retail->filter(fn ($row) => $max && $row['date'] < $this->rows('max')->first()['date'])->last();
 
@@ -310,10 +312,10 @@ class Cpn extends Tags
         return CpnData::modified($this->params->get('page', 'hub'), $this->params->get('date'));
     }
 
-    /** Data ostatniego opublikowanego limitu (Y-m-d) — wersja obrazu OG. */
+    /** Data limitu obowiązującego dziś (Y-m-d) — wersja obrazu OG, zmienia się razem z jego treścią. */
     public function latestDate()
     {
-        return $this->rows('max')->last()['date'] ?? '';
+        return CpnData::current($this->rows('max'))['date'] ?? '';
     }
 
     /** „Tankować dziś czy poczekać?”: dzisiejszy limit vs limit na kolejny dzień (oficjalny albo prognoza). */
@@ -953,6 +955,14 @@ class Cpn extends Tags
     private function rows(string $type): Collection
     {
         return CpnData::rows($type);
+    }
+
+    /** Wiersze do dziś włącznie — limity opublikowane z wyprzedzeniem nie są jeszcze „dzisiejsze”. */
+    private function untilToday(Collection $rows): Collection
+    {
+        $past = $rows->filter(fn ($row) => $row['date'] <= CpnData::today())->values();
+
+        return $past->isEmpty() ? $rows : $past;
     }
 
     private function fuelsIn(Collection $rows): Collection
