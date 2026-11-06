@@ -86,6 +86,9 @@ parametry `stations`, `station_slug`, `fuel_type`, `no_app`, `exclude`), `articl
   przycisk „Kopiuj” to `modules/copy-button.js` (`components/cpn/code-block`). `/program-cpn/dane.json` ma pole `version` (1) —
   zmiany muszą być wstecznie zgodne: nowa wersja = nowe pola, nigdy zmiana ani usunięcie istniejących (`today`, `tomorrow` korzystają z `CpnData::current()` i `Cpn::nextLimit()`).
 - Kategoria bloga `program-cpn` (25 artykułów). Codzienne zadanie uzupełnia ceny CPN.
+- `cpn:latest` = limit obowiązujący dziś (nie najnowszy — ME publikuje czasem kilka dni naprzód); `tomorrow_date`
+  i w `fuels` `tomorrow_price`/`tomorrow_trend`/`tomorrow_change` tylko przy oficjalnym limicie na jutro (bez prognoz),
+  render `components/cpn/tomorrow-change`.
 - Kolory serii wykresu (paleta zwalidowana dla CVD): Pb95 `#2a78d6`, Pb98 `#eb6834`,
   ON `#1baf7a`, LPG `#eda100`.
 

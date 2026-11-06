@@ -1,0 +1,26 @@
+---
+trend_icons:
+    'up': '▲'
+    'down': '▼'
+    'flat': '■'
+trend_classes:
+    'up': 'text-red-700'
+    'down': 'text-green-700'
+    'flat': 'text-zinc-600'
+trend_labels:
+    'up': 'wzrośnie'
+    'down': 'spadnie'
+---
+
+{{# Potwierdzona zmiana limitu na jutro (oficjalne obwieszczenie); w pętli fuels z cpn:latest. #}}
+{{ if tomorrow_trend }}
+    <p class="mt-1 text-sm font-medium {{ view:trend_classes[tomorrow_trend] }}">
+        <span aria-hidden="true">{{ view:trend_icons[tomorrow_trend] }}</span>
+        Jutro (<time datetime="{{ date }}">{{ date | format("j.m") }}</time>)
+        {{ if tomorrow_trend == 'flat' }}
+            bez zmian
+        {{ else }}
+            {{ view:trend_labels[tomorrow_trend] }} o {{ tomorrow_change | replace('+', '') | replace('−', '') }} do {{ tomorrow_price }} zł
+        {{ /if }}
+    </p>
+{{ /if }}

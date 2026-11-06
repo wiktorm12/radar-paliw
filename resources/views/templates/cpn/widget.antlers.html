@@ -39,6 +39,9 @@
                             {{ if trend }}
                                 <em class="{{ trend }}">{{ change }}</em>
                             {{ /if }}
+                            {{ if tomorrow_trend }}
+                                <em class="{{ tomorrow_trend }}">jutro {{ tomorrow_trend == 'flat' ? 'bez zmian' : tomorrow_change }}</em>
+                            {{ /if }}
                         </li>
                     {{ /fuels }}
                 </ul>

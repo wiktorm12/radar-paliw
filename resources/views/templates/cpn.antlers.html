@@ -112,6 +112,7 @@ impact_classes:
                                 {{ view:trend_labels[trend] }} {{ change }} ({{ change_pct }}) vs dzień wcześniej
                             </p>
                         {{ /if }}
+                        {{ partial:components/cpn/tomorrow-change :date="tomorrow_date" }}
                     </li>
                 {{ /fuels }}
             </ul>

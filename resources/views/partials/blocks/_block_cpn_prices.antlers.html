@@ -37,6 +37,7 @@ trend_classes:
                                     {{ change }} vs dzień wcześniej
                                 </p>
                             {{ /if }}
+                            {{ partial:components/cpn/tomorrow-change :date="tomorrow_date" }}
                         </li>
                     {{ /if }}
                 {{ /fuels }}

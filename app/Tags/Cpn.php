@@ -152,17 +152,23 @@ class Cpn extends Tags
         // Ministerstwo bywa, że publikuje limity z góry na kilka dni — „aktualny” to dzisiejszy, nie najnowszy.
         $index = $rows->search(fn ($row) => $row['date'] === $current['date']);
         $previous = $index > 0 ? $rows->get($index - 1) : null;
+        // Tylko potwierdzony (już opublikowany) limit na dzień po dzisiejszym — bez prognoz.
+        $tomorrow = $rows->firstWhere('date', Carbon::parse($current['date'])->addDay()->toDateString());
 
         return [
             'date' => $current['date'],
             'source_url' => $current['source_url'],
             'source_name' => $current['source_name'],
+            'tomorrow_date' => $tomorrow['date'] ?? null,
             ...$this->flatPrices($current),
             'fuels' => $this->fuelsIn($rows)->map(fn ($label, $fuel) => [
                 'key' => $fuel,
                 'label' => $label,
                 'price' => $this->money($current[$fuel]),
                 ...$this->delta($current[$fuel], $previous[$fuel] ?? null),
+                'tomorrow_price' => $this->money($tomorrow[$fuel] ?? null),
+                ...collect($this->delta($tomorrow[$fuel] ?? null, $current[$fuel]))
+                    ->mapWithKeys(fn ($value, $key) => ["tomorrow_{$key}" => $value])->all(),
             ])->filter(fn ($fuel) => $fuel['price'] !== null)->values()->all(),
         ];
     }
