@@ -31,6 +31,38 @@ content:
     content:
       -
         type: text
+        text: 'Promocja nie jest jeszcze potwierdzona na stronie operatora. Źródło: '
+      -
+        type: text
+        marks:
+          -
+            type: link
+            attrs:
+              href: 'https://www.pepper.pl/kupony/na-urodziny-widzewa-040-zl-taniej-na-litrze-paliwa-na-stacjach-benzynowych-avia-1401380'
+              rel: 'noopener nofollow'
+              target: _blank
+        text: 'wpis w serwisie Pepper.pl'
+      -
+        type: text
+        text: '. Aktualne akcje sieci sprawdzisz też na '
+      -
+        type: text
+        marks:
+          -
+            type: link
+            attrs:
+              href: 'https://aviastacjapaliw.pl'
+              rel: 'noopener nofollow'
+              target: _blank
+        text: 'stronie AVIA'
+      -
+        type: text
+        text: '.'
+  -
+    type: paragraph
+    content:
+      -
+        type: text
         marks:
           -
             type: bold

@@ -33,6 +33,38 @@ content:
     content:
       -
         type: text
+        text: 'Promocja nie jest jeszcze potwierdzona na stronie operatora. Źródło: '
+      -
+        type: text
+        marks:
+          -
+            type: link
+            attrs:
+              href: 'https://hotshops.pl/okazje/rabat-od-moya-tankuj-taniej-30-gr-l-w-dniach-27-29-11-123960'
+              rel: 'noopener nofollow'
+              target: _blank
+        text: 'wpis w serwisie HotShops.pl'
+      -
+        type: text
+        text: '. Aktualne akcje sieci sprawdzisz też na '
+      -
+        type: text
+        marks:
+          -
+            type: link
+            attrs:
+              href: 'https://moyaexpress.pl'
+              rel: 'noopener nofollow'
+              target: _blank
+        text: 'stronie MOYA Express'
+      -
+        type: text
+        text: '.'
+  -
+    type: paragraph
+    content:
+      -
+        type: text
         marks:
           -
             type: bold
