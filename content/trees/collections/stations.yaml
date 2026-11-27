@@ -17,3 +17,9 @@ tree:
     entry: station-auchan
   -
     entry: station-carrefour
+  -
+    entry: station-avia
+  -
+    entry: station-huzar
+  -
+    entry: station-intermarche

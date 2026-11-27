@@ -9,7 +9,7 @@ paliwa:
 discount_type: cents_per_liter
 discount_value: 10
 valid_from: '2026-09-11'
-valid_to: '2026-10-31'
+valid_to: '2026-12-29'
 requires_app: true
 source_url: 'https://www.bp.com/pl_pl/poland/home/produkty_uslugi/promocje/promocje_paliwa/promocja_paliwa_korzystaj_rabaty_bpme.html'
 terms_url: 'https://www.bp.com/content/dam/bp/country-sites/pl_pl/poland/home/regulaminy/Regulamin%20Korzystaj%20z%20rabat%C3%B3w%20BPme%2011_09_2026%2031_10_2026.pdf'
@@ -20,7 +20,7 @@ content:
     content:
       -
         type: text
-        text: 'Maksymalnie 10 kuponów w miesiącu, do 50 litrów na transakcję. Kupon aktywujesz w aplikacji i skanujesz kartę BPme przed płatnością. Promocja nie obejmuje paliw Ultimate, LPG ani płatności kartami paliwowymi i nie łączy się z innymi rabatami.'
+        text: 'Maksymalnie 10 kuponów w miesiącu, do 50 litrów na transakcję. Kupon aktywujesz w aplikacji i skanujesz kartę BPme przed płatnością. Promocja nie obejmuje paliw Ultimate, LPG ani płatności kartami paliwowymi i nie łączy się z innymi rabatami. Promocję przedłużono do 29 grudnia 2026 r.'
   -
     type: paragraph
     content:
