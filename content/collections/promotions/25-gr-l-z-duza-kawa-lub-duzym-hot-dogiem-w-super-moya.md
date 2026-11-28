@@ -11,7 +11,7 @@ paliwa:
 discount_type: cents_per_liter
 discount_value: 25
 valid_from: '2026-10-26'
-valid_to: '2026-11-30'
+valid_to: '2026-12-01'
 requires_app: true
 source_url: 'https://moyastacja.pl/super-moya'
 terms_url: 'https://www.moyastacja.pl/Uploads/duza-kawa-duzy-hot-dog-duzy-rabat-na-paliwo-25-gr-na-litr.pdf'
@@ -28,7 +28,7 @@ content:
     content:
       -
         type: text
-        text: 'Dwa kupony tygodniowo, każdy ważny tylko w danym tygodniu (pon.–niedz.). LPG wyłączony. Regulamin obowiązuje do odwołania — datę końca podamy, gdy operator ją ogłosi.'
+        text: 'Dwa kupony tygodniowo, każdy ważny tylko w danym tygodniu (pon.–niedz.). LPG wyłączony. Promocja trwa do 1 grudnia 2026 r.'
   -
     type: paragraph
     content:
